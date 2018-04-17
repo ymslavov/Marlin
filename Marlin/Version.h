@@ -48,7 +48,7 @@
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2018-03-17"
+  #define STRING_DISTRIBUTION_DATE "2018-04-16"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -89,6 +89,6 @@
    * The WEBSITE_URL is the location where users can get more information such as
    * documentation about a specific Marlin release.
    */
-  #define WEBSITE_URL "http://tinymachines3d.com"
+  #define WEBSITE_URL "http://www.formbotusa.com"
 
 #endif // USE_AUTOMATIC_VERSIONING
