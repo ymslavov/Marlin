@@ -384,9 +384,9 @@
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
 #if(ENABLED(BED_AC))
-#define BED_MAXTEMP 100
-#else
 #define BED_MAXTEMP 150
+#else
+#define BED_MAXTEMP 100
 #endif
 
 //===========================================================================
