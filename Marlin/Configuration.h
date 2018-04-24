@@ -116,6 +116,7 @@
  */
 //#define BED_AC
 
+//#define HotendAllMetal
 /**
  * Enable if you install a filament runout sensor from www.formbotusa.com
  */
@@ -412,10 +413,15 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Ultimaker
-  #define  DEFAULT_Kp 22.2
-  #define  DEFAULT_Ki 1.08
-  #define  DEFAULT_Kd 114
-
+  #if(ENABLED(HotendAllMetal))
+    #define  DEFAULT_Kp 21.9
+    #define  DEFAULT_Ki 1.5
+    #define  DEFAULT_Kd 79.88
+  #else
+    #define  DEFAULT_Kp 22.2
+    #define  DEFAULT_Ki 1.08
+    #define  DEFAULT_Kd 114
+  #endif
   // MakerGear
   //#define  DEFAULT_Kp 7.0
   //#define  DEFAULT_Ki 0.1
