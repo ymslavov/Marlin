@@ -90,6 +90,11 @@
  * respecfully request that you retain the unmodified Marlin boot screen.
  */
 
+
+#define X_2208
+#define Y_2208
+
+
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
 #define SHOW_CUSTOM_BOOTSCREEN
 
@@ -543,7 +548,14 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
+
+
+ #if(ENABLED(Y_2208))
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 92.599 }
+#else
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 160, 1600, 92.599 }
+#endif
+
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -770,10 +782,17 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
+#if(ENABLED(X_2208))
+#define INVERT_X_DIR true
+#else
 #define INVERT_X_DIR false
+#endif
+ #if(ENABLED(Y_2208))
+#define INVERT_Y_DIR true
+#else
 #define INVERT_Y_DIR false
+#endif
 #define INVERT_Z_DIR true
-
 // Enable this option for Toshiba stepper drivers
 //#define CONFIG_STEPPERS_TOSHIBA
 
