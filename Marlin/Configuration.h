@@ -130,7 +130,7 @@
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
 #define CUSTOM_MACHINE_NAME "TM3D Mamorubot"
-#define UBL
+//#define UBL
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
 // You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
 //#define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
@@ -708,8 +708,8 @@
  *      O-- FRONT --+
  *    (0,0)
  */
-#define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]
-#define Y_PROBE_OFFSET_FROM_EXTRUDER -10  // Y offset: -front +behind [the nozzle]
+#define X_PROBE_OFFSET_FROM_EXTRUDER 37  // X offset: -left  +right  [of the nozzle]
+#define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 
 // Certain types of probes need to stay away from edges
@@ -961,10 +961,10 @@
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Set the boundaries for probing (where the probe can reach).
-  #define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE
-  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - MIN_PROBE_EDGE)
-  #define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE
-  #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - MIN_PROBE_EDGE)
+  #define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE + X_PROBE_OFFSET_FROM_EXTRUDER + 5
+  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - X_PROBE_OFFSET_FROM_EXTRUDER - 5)
+  #define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE + Y_PROBE_OFFSET_FROM_EXTRUDER + 5
+  #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - 5)
 
   // Probe along the Y axis, advancing X after each column
   //#define PROBE_Y_FIRST
