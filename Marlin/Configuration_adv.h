@@ -1471,7 +1471,7 @@
 /**
  * User-defined menu items that execute custom GCode
  */
-#if(ENABLED(ABL_UBL))
+#if(ENABLED(UBL))
   #define CUSTOM_USER_MENUS
 #endif
 
