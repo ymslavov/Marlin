@@ -1493,7 +1493,7 @@
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
     #define USER_DESC_1 "UBL Commission Step 1"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
  
   #define USER_DESC_2 "UBL Commission Step 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
