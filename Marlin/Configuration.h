@@ -20,6 +20,9 @@
  *
  */
 
+//#define X_2208
+//#define Y_2208
+
 /**
  * Configuration.h
  *
@@ -90,9 +93,6 @@
  * respecfully request that you retain the unmodified Marlin boot screen.
  */
 
-
-//#define X_2208
-#define Y_2208
 
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
@@ -1100,7 +1100,7 @@
 #endif
 
 // Homing speeds (mm/m)
-#define HOMING_FEEDRATE_XY (50*60)
+#define HOMING_FEEDRATE_XY (80*60)
 #define HOMING_FEEDRATE_Z  (4*60)
 
 // @section calibrate

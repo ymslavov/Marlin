@@ -6506,6 +6506,24 @@ inline void gcode_G92() {
 
 #endif // SPINDLE_LASER_ENABLE
 
+#if ENABLED(FAN_AS_LASER)
+  /**
+   * M3, M4: Laser On
+   */
+  inline void gcode_M3_M4(bool is_M3) {
+    stepper.synchronize();
+    fanSpeeds[FAN_NUM_AS_LASER] = parser.byteval('S', 255);
+  }
+
+  /**
+   * M5: Laser Off
+   */
+  inline void gcode_M5() {
+    stepper.synchronize();
+    fanSpeeds[FAN_NUM_AS_LASER] = 0;
+  }
+#endif
+
 /**
  * M17: Enable power on all stepper motors
  */
@@ -7937,6 +7955,11 @@ inline void gcode_M105() {
    */
   inline void gcode_M106() {
     const uint8_t p = parser.byteval('P');
+    
+    #if(ENABLED(LASER_PIN_DEDICATED) && ENABLED(FAN_AS_LASER) && (FAN_NUM_AS_LASER==p))
+      return
+    #endif
+      
     if (p < FAN_COUNT) {
       #if ENABLED(EXTRA_FAN_SPEED)
         const int16_t t = parser.intval('T');
@@ -7966,6 +7989,9 @@ inline void gcode_M105() {
    */
   inline void gcode_M107() {
     const uint16_t p = parser.ushortval('P');
+    #if(ENABLED(LASER_PIN_DEDICATED) && ENABLED(FAN_AS_LASER) && (FAN_NUM_AS_LASER==p))
+      return
+    #endif
     if (p < FAN_COUNT) fanSpeeds[p] = 0;
   }
 
@@ -12075,7 +12101,10 @@ void process_parsed_command() {
         case 4: gcode_M3_M4(false); break;                        // M4: Laser/CCW-Spindle Power
         case 5: gcode_M5(); break;                                // M5: Laser/Spindle OFF
       #endif
-
+      #if ENABLED(FAN_AS_LASER)
+        case 3: gcode_M3_M4(true); break;                                // M3: Laser Power On
+        case 5: gcode_M5(); break;                                // M5: Laser OFF
+      #endif
       case 17: gcode_M17(); break;                                // M17: Enable all steppers
 
       #if ENABLED(SDSUPPORT)
