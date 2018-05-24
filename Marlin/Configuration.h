@@ -24,6 +24,8 @@
 //#define Y_2208
 
 //#define BedAC
+
+//#define tallVersion
 /**
  * Configuration.h
  *
@@ -849,8 +851,12 @@
 #define Z_MIN_POS 0
 #define X_MAX_POS 450
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 500
 
+#if(ENABLED(tallVersion))
+  #define Z_MAX_POS 700
+#else
+  #define Z_MAX_POS 500
+#endif
 /**
  * Software Endstops
  *
