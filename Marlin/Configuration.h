@@ -107,9 +107,17 @@
 /**
  * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
  * underneath the stepper driver! Plug and Play will result in Stealth Chop 2 Mode enabled
+ * Stealthchop with 2208 on E will disabe inear Advance! Please enable stealthchop if
+ * you require Linear Advance with a TMC2208 on the extruder!
+ * If you have used a UART connection to program the driver to SpreadCycle mode, pease seect that as well
  */
 //#define X_2208
+//#define X_SpreadCycle
 //#define Y_2208
+//#define Y_SpreadCycle
+//#define E_2208
+//#define E_SpreadCycle
+
 
 /**
  * Enable if you install a KEENOVO AC BED with Solid State Relay
@@ -609,7 +617,26 @@
  * Override with M201
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 1500, 500, 400, 4000 }
+ #if(ENABLED(X_2208))
+  #if(ENABLED(X_SpreadCycle))
+    #define x_accel 1750
+  #else
+    #define x_accel 1000
+  #endif
+ #else
+  #define x_accel 1500
+ #endif
+
+  #if(ENABLED(Y_2208))
+  #if(ENABLED(Y_SpreadCycle))
+    #define y_accel 500
+  #else
+    #define y_accel 300
+  #endif
+ #else
+  #define y_accel 500
+ #endif
+#define DEFAULT_MAX_ACCELERATION      { x_accel, y_accel, 400, 4000 }
 
 /**
  * Default Acceleration (change/s) change = mm/s
@@ -631,8 +658,17 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 10.0
+#if(ENABLED(X_SpreadCycle) || !ENABLED(X_2208))
+  #define DEFAULT_XJERK                 20.0
+#else
+  #define DEFAULT_XJERK                 10.0
+#endif
+
+#if(ENABLED(Y_SpreadCycle) || !ENABLED(Y_2208))
+  #define DEFAULT_YJERK                 10.0
+#else
+  #define DEFAULT_YJERK                 5.0
+#endif
 #define DEFAULT_ZJERK                  0.4
 #define DEFAULT_EJERK                  5.0
 
@@ -832,8 +868,13 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
+#if(ENABLED(E_2208))
+#define INVERT_E0_DIR false
+#define INVERT_E1_DIR false
+#else
 #define INVERT_E0_DIR true
 #define INVERT_E1_DIR true
+#endif
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
 #define INVERT_E4_DIR false
