@@ -1379,8 +1379,9 @@
   //#define SPEED_POWER_MAX      100      // 0-100%
 #endif
 
-
-#define FAN_AS_LASER
+#if(!ENABLED(FilamentSensor))
+  #define FAN_AS_LASER
+#endif
 #if ENABLED(FAN_AS_LASER)
   #define FAN_NUM_AS_LASER 1
   #define LASER_PIN_DEDICATED true

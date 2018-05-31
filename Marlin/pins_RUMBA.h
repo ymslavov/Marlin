@@ -147,7 +147,9 @@
 #define LASER_PIN          -1   
 
 #define FAN_PIN             9
-#define FAN1_PIN            4
+#if(!ENABLED(FilamentSensor))
+  #define FAN1_PIN            4
+#endif
 
 //
 // Misc. Functions
