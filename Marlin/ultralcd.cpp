@@ -939,7 +939,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
       // ^ Main
       //
       MENU_BACK(MSG_MAIN);
-      MENU_ITEM_EDIT_CALLBACK(int8, MSG_CASE_LIGHT_BRIGHTNESS, &case_light_brightness, 0, 255, update_case_light, true);
+      //MENU_ITEM_EDIT_CALLBACK(int8, MSG_CASE_LIGHT_BRIGHTNESS, &case_light_brightness, 0, 255, update_case_light, true);
       MENU_ITEM_EDIT_CALLBACK(bool, MSG_CASE_LIGHT, (bool*)&case_light_on, update_case_light);
       END_MENU();
     }
