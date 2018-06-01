@@ -1385,6 +1385,8 @@
 #if ENABLED(FAN_AS_LASER)
   #define FAN_NUM_AS_LASER 1
   #define LASER_PIN_DEDICATED true
+  #else
+  #define FAN_NUM_AS_LASER -1
 #endif
 /**
  * Filament Width Sensor
