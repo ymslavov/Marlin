@@ -1,3 +1,50 @@
+
+// CUSTOMIZE FOR YOUR MACHINE BELOW
+// CUSTOMIZE FOR YOUR MACHINE BELOW
+// CUSTOMIZE FOR YOUR MACHINE BELOW
+// CUSTOMIZE FOR YOUR MACHINE BELOW
+// CUSTOMIZE FOR YOUR MACHINE BELOW
+
+/**
+ * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
+ * underneath the stepper driver! Plug and Play will result in Stealth Chop 2 Mode enabled
+ * Stealthchop with 2208 on E will disabe inear Advance! Please enable stealthchop if
+ * you require Linear Advance with a TMC2208 on the extruder!
+ * If you have used a UART connection to program the driver to SpreadCycle mode, pease seect that as well
+ */
+//#define X_2208
+//#define X_SpreadCycle
+//#define Y_2208
+//#define Y_SpreadCyclebed
+//#define E_2208
+//#define E_SpreadCycle
+
+
+/**
+ * Enable if you install a KEENOVO AC BED with Solid State Relay
+ */
+//#define BED_AC
+
+//#define HotendAllMetal
+/**
+ * Enable if you install a filament runout sensor from www.formbotusa.com
+ */
+//#define RunoutSensor
+
+/**
+ * Enable if you wish to change the auto level strategy to Unified Bed Leveling. Under CUSTOM COMMANDS, run Step 1 and 2 before setting Z Offset
+ */
+//#define UBL
+
+//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
+//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
+//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
+//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
+//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
+
+
+
+
 /**
  * Marlin 3D Printer Firmware
  * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
@@ -97,49 +144,6 @@
 #define CUSTOM_STATUS_SCREEN_IMAGE
 
 // @section machine
-
-// CUSTOMIZE FOR YOUR MACHINE BELOW
-// CUSTOMIZE FOR YOUR MACHINE BELOW
-// CUSTOMIZE FOR YOUR MACHINE BELOW
-// CUSTOMIZE FOR YOUR MACHINE BELOW
-// CUSTOMIZE FOR YOUR MACHINE BELOW
-
-/**
- * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
- * underneath the stepper driver! Plug and Play will result in Stealth Chop 2 Mode enabled
- * Stealthchop with 2208 on E will disabe inear Advance! Please enable stealthchop if
- * you require Linear Advance with a TMC2208 on the extruder!
- * If you have used a UART connection to program the driver to SpreadCycle mode, pease seect that as well
- */
-//#define X_2208
-//#define X_SpreadCycle
-//#define Y_2208
-//#define Y_SpreadCycle
-//#define E_2208
-//#define E_SpreadCycle
-
-
-/**
- * Enable if you install a KEENOVO AC BED with Solid State Relay
- */
-//#define BED_AC
-
-//#define HotendAllMetal
-/**
- * Enable if you install a filament runout sensor from www.formbotusa.com
- */
-//#define RunoutSensor
-
-/**
- * Enable if you wish to change the auto level strategy to Unified Bed Leveling. Under CUSTOM COMMANDS, run Step 1 and 2 before setting Z Offset
- */
-//#define UBL
-
-//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
-//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
-//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
-//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
-//ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
 
 /**
  * Select the serial port on the board to use for communication with the host.
