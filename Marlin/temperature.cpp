@@ -53,10 +53,10 @@
 #if HOTEND_USES_THERMISTOR
   #if ENABLED(TEMP_SENSOR_1_AS_REDUNDANT)
     static void* heater_ttbl_map[2] = { (void*)HEATER_0_TEMPTABLE, (void*)HEATER_1_TEMPTABLE };
-    static uint8_t heater_ttbllen_map[2] = { HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN };
+    static constexpr uint8_t heater_ttbllen_map[2] = { HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN };
   #else
     static void* heater_ttbl_map[HOTENDS] = ARRAY_BY_HOTENDS((void*)HEATER_0_TEMPTABLE, (void*)HEATER_1_TEMPTABLE, (void*)HEATER_2_TEMPTABLE, (void*)HEATER_3_TEMPTABLE, (void*)HEATER_4_TEMPTABLE);
-    static uint8_t heater_ttbllen_map[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN, HEATER_2_TEMPTABLE_LEN, HEATER_3_TEMPTABLE_LEN, HEATER_4_TEMPTABLE_LEN);
+    static constexpr uint8_t heater_ttbllen_map[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMPTABLE_LEN, HEATER_1_TEMPTABLE_LEN, HEATER_2_TEMPTABLE_LEN, HEATER_3_TEMPTABLE_LEN, HEATER_4_TEMPTABLE_LEN);
   #endif
 #endif
 
@@ -386,13 +386,13 @@ uint8_t Temperature::soft_pwm_amount[HOTENDS];
               SERIAL_PROTOCOLPAIR(MSG_T_MIN, min);
               SERIAL_PROTOCOLPAIR(MSG_T_MAX, max);
               if (cycles > 2) {
-                Ku = (4.0 * d) / (M_PI * (max - min) * 0.5);
-                Tu = ((float)(t_low + t_high) * 0.001);
+                Ku = (4.0f * d) / (M_PI * (max - min) * 0.5f);
+                Tu = ((float)(t_low + t_high) * 0.001f);
                 SERIAL_PROTOCOLPAIR(MSG_KU, Ku);
                 SERIAL_PROTOCOLPAIR(MSG_TU, Tu);
-                workKp = 0.6 * Ku;
+                workKp = 0.6f * Ku;
                 workKi = 2 * workKp / Tu;
-                workKd = workKp * Tu * 0.125;
+                workKd = workKp * Tu * 0.125f;
                 SERIAL_PROTOCOLLNPGM("\n" MSG_CLASSIC_PID);
                 SERIAL_PROTOCOLPAIR(MSG_KP, workKp);
                 SERIAL_PROTOCOLPAIR(MSG_KI, workKi);
@@ -633,7 +633,7 @@ float Temperature::get_pid_output(const int8_t e) {
   #if ENABLED(PIDTEMP)
     #if DISABLED(PID_OPENLOOP)
       pid_error[HOTEND_INDEX] = target_temperature[HOTEND_INDEX] - current_temperature[HOTEND_INDEX];
-      dTerm[HOTEND_INDEX] = PID_K2 * PID_PARAM(Kd, HOTEND_INDEX) * (current_temperature[HOTEND_INDEX] - temp_dState[HOTEND_INDEX]) + PID_K1 * dTerm[HOTEND_INDEX];
+      dTerm[HOTEND_INDEX] = PID_K2 * PID_PARAM(Kd, HOTEND_INDEX) * (current_temperature[HOTEND_INDEX] - temp_dState[HOTEND_INDEX]) + float(PID_K1) * dTerm[HOTEND_INDEX];
       temp_dState[HOTEND_INDEX] = current_temperature[HOTEND_INDEX];
       #if HEATER_IDLE_HANDLER
         if (heater_idle_timeout_exceeded[HOTEND_INDEX]) {
@@ -918,17 +918,25 @@ void Temperature::manage_heater() {
 #define TEMP_AD595(RAW)  ((RAW) * 5.0 * 100.0 / 1024.0 / (OVERSAMPLENR) * (TEMP_SENSOR_AD595_GAIN) + TEMP_SENSOR_AD595_OFFSET)
 #define TEMP_AD8495(RAW) ((RAW) * 6.6 * 100.0 / 1024.0 / (OVERSAMPLENR) * (TEMP_SENSOR_AD8495_GAIN) + TEMP_SENSOR_AD8495_OFFSET)
 
-#define SCAN_THERMISTOR_TABLE(TBL,LEN) do{                          \
-  for (uint8_t i = 1; i < LEN; i++) {                               \
-    const short entry10 = (short)pgm_read_word(&TBL[i][0]);         \
-    if (entry10 > raw) {                                            \
-      const short entry00 = (short)pgm_read_word(&TBL[i-1][0]),     \
-                  entry01 = (short)pgm_read_word(&TBL[i-1][1]),     \
-                  entry11 = (short)pgm_read_word(&TBL[i][1]);       \
-      return entry01 + (raw - entry00) * float(entry11 - entry01) / float(entry10 - entry00); \
-    }                                                               \
-  }                                                                 \
-  return (short)pgm_read_word(&TBL[LEN-1][1]);                      \
+/**
+ * Bisect search for the range of the 'raw' value, then interpolate
+ * proportionally between the under and over values.
+ */
+#define SCAN_THERMISTOR_TABLE(TBL,LEN) do{                             \
+  uint8_t l = 0, r = LEN, m;                                           \
+  for (;;) {                                                           \
+    m = (l + r) >> 1;                                                  \
+    if (m == l || m == r) return (short)pgm_read_word(&TBL[LEN-1][1]); \
+    short v00 = pgm_read_word(&TBL[m-1][0]),                           \
+          v10 = pgm_read_word(&TBL[m-0][0]);                           \
+         if (raw < v00) r = m;                                         \
+    else if (raw > v10) l = m;                                         \
+    else {                                                             \
+      const short v01 = (short)pgm_read_word(&TBL[m-1][1]),            \
+                  v11 = (short)pgm_read_word(&TBL[m-0][1]);            \
+      return v01 + (raw - v00) * float(v11 - v01) / float(v10 - v00);  \
+    }                                                                  \
+  }                                                                    \
 }while(0)
 
 // Derived from RepRap FiveD extruder::getTemperature()
@@ -1071,7 +1079,7 @@ void Temperature::updateTemperaturesFromRawValues() {
 
   // Convert raw Filament Width to millimeters
   float Temperature::analog2widthFil() {
-    return current_raw_filwidth * 5.0 * (1.0 / 16383.0);
+    return current_raw_filwidth * 5.0f * (1.0f / 16383.0);
   }
 
   /**
@@ -1084,7 +1092,7 @@ void Temperature::updateTemperaturesFromRawValues() {
    */
   int8_t Temperature::widthFil_to_size_ratio() {
     if (ABS(filament_width_nominal - filament_width_meas) <= FILWIDTH_ERROR_MARGIN)
-      return int(100.0 * filament_width_nominal / filament_width_meas) - 100;
+      return int(100.0f * filament_width_nominal / filament_width_meas) - 100;
     return 0;
   }
 
@@ -1201,9 +1209,7 @@ void Temperature::init() {
     HAL_ANALOG_SELECT(FILWIDTH_PIN);
   #endif
 
-  // Use timer0 for temperature measurement
-  // Interleave temperature interrupt with millies interrupt
-  OCR0B = 128;
+  HAL_timer_start(TEMP_TIMER_NUM, TEMP_TIMER_FREQUENCY);
   ENABLE_TEMPERATURE_INTERRUPT();
 
   #if HAS_AUTO_FAN_0
@@ -2122,7 +2128,7 @@ void Temperature::isr() {
         HAL_START_ADC(TEMP_CHAMBER_PIN);
         break;
       case MeasureTemp_CHAMBER:
-        raw_temp_chamber_value += ADC;
+        raw_temp_chamber_value += HAL_READ_ADC;
         break;
     #endif
 
@@ -2180,7 +2186,7 @@ void Temperature::isr() {
         break;
       case Measure_ADC_KEY:
         if (ADCKey_count < 16) {
-          raw_ADCKey_value = ADC;
+          raw_ADCKey_value = HAL_READ_ADC;
           if (raw_ADCKey_value > 900) {
             //ADC Key release
             ADCKey_count = 0;

@@ -721,7 +721,7 @@
 #if ENABLED(BABYSTEPPING)
   //#define BABYSTEP_XY              // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false    // Change if Z babysteps should go the other way
-  #define BABYSTEP_MULTIPLICATOR 1   // Babysteps are very small. Increase for faster motion.
+  #define BABYSTEP_MULTIPLICATOR 40   // Babysteps are very small. Increase for faster motion.
   #define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING // Double-click on the Status Screen for Z Babystepping.
   #define DOUBLECLICK_MAX_INTERVAL 1250 // Maximum interval between clicks, in milliseconds.
@@ -1493,13 +1493,13 @@
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "UBL Commission Step 1"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
  
   #define USER_DESC_2 "UBL Commission Step 2"
-  #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M106 S128 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
+  #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n T0 \n M106 S128 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_3 "Prep for Z Adjust"
-  #define USER_GCODE_3 "M190 75 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n"
+  #define USER_GCODE_3 "M190 75 \n T0 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n"
 
    #define USER_DESC_4 "Fill Mesh Points"
   #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n"
