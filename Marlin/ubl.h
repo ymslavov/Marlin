@@ -54,8 +54,7 @@ enum MeshPointType : char { INVALID, REAL, SET_IN_BITMAP };
 // External references
 
 char *ftostr43sign(const float&, char);
-//void home_all_axes();
-//void tool_change(const uint8_t tmp_extruder, const float fr_mm_s=0.0, bool no_move=false);
+
 extern uint8_t ubl_cnt;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -296,12 +296,11 @@
 
     // Check for commands that require the printer to be homed
     if (may_move) {
-      if (axis_unhomed_error()) enqueue_and_echo_commands_P(PSTR("G28"));
       #if ENABLED(DUAL_X_CARRIAGE)
-        if (active_extruder != 0) enqueue_and_echo_commands_P(PSTR("T0"));
+        if (active_extruder != 0) tool_change(0);
       #endif
+      if (axis_unhomed_error()) home_all_axes();
     }
-
 
     // Invalidate Mesh Points. This command is a little bit asymmetrical because
     // it directly specifies the repetition count and does not use the 'R' parameter.
