@@ -7,7 +7,7 @@
    Choose this for CR10 Original Melzi Board
    You still need to select a machine size below!
 */
-#define MachineCR10Orig
+//#define MachineCR10Orig
 
 /*
    Enabled this for linear advance instead of mesh leveling on a melzi board
@@ -53,7 +53,7 @@
  //#define E3DTitan
 
  /*
-  * 
+  *
   * If any dual extruder is used, define type here
   */
 
@@ -61,7 +61,7 @@
   //#define Dual_CyclopsSingleNozzle
   //#define Dual_ChimeraDualNozzle
 
-  
+
 /*
    Choose bed type below. If you have an extenrally controlled
    ac bed, leave both disabled
@@ -81,15 +81,15 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Any NC Sensor
-#define ABL_BLTOUCH
+//#define ABL_BLTOUCH
 
 /*
    Choose bed leveling type here
    Requires a sensor from above
    Melzi board users may only select ABL_BI for bilinear leveling
 */
-#define ABL_BI
-//#define ABL_UBL 
+//#define ABL_BI
+//#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
 /*
@@ -198,7 +198,9 @@
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
 #define STRING_CONFIG_H_AUTHOR "TinyMachines3D" // Who made the changes.
+#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define SHOW_BOOTSCREEN
+#endif
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
 
@@ -214,7 +216,7 @@
  */
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
-#if(!ENABLED(MachineEnder4))
+#if(!ENABLED(MachineEnder4) && !ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define SHOW_CUSTOM_BOOTSCREEN
 #endif
 // Enable to show the bitmap in Marlin/_Statusscreen.h on the status screen.
@@ -610,7 +612,9 @@
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
+#if(!ENABLED(MachineCR10Orig))
   #define PID_AUTOTUNE_MENU // Add PID Autotune to the LCD "Temperature" menu to run M303 and apply the result.
+#endif
   //#define PID_DEBUG // Sends debug data to the serial port.
   //#define PID_OPENLOOP 1 // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
@@ -670,8 +674,9 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
+ #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define PIDTEMPBED
-
+#endif
 //#define BED_LIMIT_SWITCHING
 
 /**
@@ -1398,11 +1403,11 @@
   #define MAX_SOFTWARE_ENDSTOP_Y
   #define MAX_SOFTWARE_ENDSTOP_Z
 #endif
-
+#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS) || ENABLED(MAX_SOFTWARE_ENDSTOPS)
   #define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
 #endif
-
+#endif
 /**
  * Filament Runout Sensors
  * Mechanical or opto endstops are used to check for the presence of filament.
@@ -1419,7 +1424,7 @@
 #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
 #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
 #define FILAMENT_RUNOUT_SCRIPT "M600"
-#define FIL_RUNOUT_PIN 2 
+#define FIL_RUNOUT_PIN 2
 #endif
 
 //===========================================================================
@@ -1614,7 +1619,7 @@ GRID_MAX_POINTS_X 3
  * Override if the automatically selected points are inadequate.
  */
 #if ENABLED(AUTO_BED_LEVELING_3POINT) || ENABLED(AUTO_BED_LEVELING_UBL)
-  
+
 #if(!ENABLED(MachineCR10Orig) && !ENABLED(MachineEnder4))
 #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 #endif
@@ -1708,9 +1713,10 @@ GRID_MAX_POINTS_X 3
   #define LCD_PROBE_Z_RANGE 8 // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 
+#if(!ENABLED(MachineCR10Orig))
 // Add a menu item to move between bed corners for manual bed adjustment
-#define LEVEL_BED_CORNERS
-
+  #define LEVEL_BED_CORNERS
+#endif
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET 30    // (mm) An inset for corner leveling
   #define LEVEL_CENTER_TOO        // Move to the center after the last corner
@@ -1975,8 +1981,9 @@ GRID_MAX_POINTS_X 3
  *   M76 - Pause the print job timer
  *   M77 - Stop the print job timer
  */
-#define PRINTJOB_TIMER_AUTOSTART
-
+ #if(!ENABLED(MachineCR10Orig))
+ #define PRINTJOB_TIMER_AUTOSTART
+#endif
 /**
  * Print Counter
  *
@@ -1989,8 +1996,9 @@ GRID_MAX_POINTS_X 3
  *
  * View the current statistics with M78.
  */
-#define PRINTCOUNTER
-
+ #if(!ENABLED(MachineCR10Orig))
+ #define PRINTCOUNTER
+#endif
 //=============================================================================
 //============================= LCD and SD support ============================
 //=============================================================================
@@ -2067,7 +2075,6 @@ GRID_MAX_POINTS_X 3
  */
 //#define NO_LCD_MENUS
 //#define SLIM_LCD_MENUS
-
 //
 // ENCODER SETTINGS
 //

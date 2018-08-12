@@ -102,14 +102,14 @@
 
   #define THERMAL_PROTECTION_BED_PERIOD 50    // Seconds
   #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
-  
+
   #define WATCH_BED_TEMP_PERIOD 180                // Seconds
   #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
 #else
 
   #define THERMAL_PROTECTION_BED_PERIOD 30    // Seconds
   #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
-  
+
   #define WATCH_BED_TEMP_PERIOD 120                // Seconds
   #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
 #endif
@@ -447,8 +447,9 @@
 #define DEFAULT_MINSEGMENTTIME        20000
 
 // If defined the movements slow down when the look ahead buffer is only half full
+#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define SLOWDOWN
-
+#endif
 // Frequency limit
 // See nophead's blog for more info
 // Not working O
@@ -556,8 +557,9 @@
 #define LCD_TIMEOUT_TO_STATUS 15000
 
 // Add an 'M73' G-code to set the current percentage
+ #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define LCD_SET_PROGRESS_MANUALLY
-
+#endif
 #if ENABLED(SDSUPPORT) || ENABLED(LCD_SET_PROGRESS_MANUALLY)
   #if((ENABLED(MachineEnder4) && !ENABLED(GraphicLCD)))
   #define LCD_PROGRESS_BAR
@@ -665,8 +667,9 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
+  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
   #define SCROLL_LONG_FILENAMES
-
+#endif
   /**
    * This option allows you to abort SD printing when any endstop is triggered.
    * This feature must be enabled with "M540 S1" or from the LCD menu.
@@ -684,8 +687,9 @@
   /**
    * Auto-report SdCard status with M27 S<seconds>
    */
+   #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
   #define AUTO_REPORT_SD_STATUS
-
+#endif
 #endif // SDSUPPORT
 
 /**
@@ -739,7 +743,9 @@
      * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
      * This will prevent position updates from being displayed.
      */
-    //#define LIGHTWEIGHT_UI
+     #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+    #define LIGHTWEIGHT_UI
+    #endif
     #if ENABLED(LIGHTWEIGHT_UI)
       #define STATUS_EXPIRE_SECONDS 20
     #endif
@@ -776,7 +782,7 @@
   #define BABYSTEP_MULTIPLICATOR 10   // Babysteps are very small. Increase for faster motion.
   #if(ENABLED(ABL_EZABL) || ENABLED(ABL_BLTOUCH))
     #define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
-     #if(!ENABLED(MachineEnder4))
+     #if(!ENABLED(MachineEnder4) && !ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
     #define BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
     #endif
   #endif
@@ -951,7 +957,11 @@
 // The number of linear motions that can be in the plan at any give time.
 // THE BLOCK_BUFFER_SIZE NEEDS TO BE A POWER OF 2 (e.g. 8, 16, 32) because shifts and ors are used to do the ring-buffering.
 #if ENABLED(SDSUPPORT)
-  #define BLOCK_BUFFER_SIZE 16 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
+ #if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
+  #define BLOCK_BUFFER_SIZE 4 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
+  #else
+    #define BLOCK_BUFFER_SIZE 16
+  #endif
 #else
   #define BLOCK_BUFFER_SIZE 16 // maximize block buffer
 #endif
@@ -960,8 +970,11 @@
 
 // The ASCII buffer for serial input
 #define MAX_CMD_SIZE 96
+#if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
+#define BUFSIZE 2
+#else
 #define BUFSIZE 4
-
+#endif
 // Transmission to Host Buffer Size
 // To save 386 bytes of PROGMEM (and TX_BUFFER_SIZE+3 bytes of RAM) set to 0.
 // To buffer a simple "ok" you need 4 bytes.
@@ -1026,7 +1039,9 @@
  * Note that M207 / M208 / M209 settings are saved to EEPROM.
  *
  */
-//#define FWRETRACT  // ONLY PARTIALLY TESTED
+ #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#define FWRETRACT  // ONLY PARTIALLY TESTED
+#endif
 #if ENABLED(FWRETRACT)
   #define MIN_AUTORETRACT 0.1             // When auto-retract is on, convert E moves of this length and over
   #define MAX_AUTORETRACT 10.0            // Upper limit for auto-retract conversion
@@ -1059,7 +1074,7 @@
  * Requires NOZZLE_PARK_FEATURE.
  * This feature is required for the default FILAMENT_RUNOUT_SCRIPT.
  */
- 
+
 #define ADVANCED_PAUSE_FEATURE
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -1097,9 +1112,10 @@
 
   #define PARK_HEAD_ON_PAUSE                      // Park the nozzle during pause and filament change.
   #define HOME_BEFORE_FILAMENT_CHANGE             // Ensure homing has been completed prior to parking for filament change
-
-  //#define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
-  //#define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
+#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+  #define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
+  #define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
+  #endif
 #endif
 
 // @section tmc
@@ -1518,8 +1534,9 @@
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
+  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define AUTO_REPORT_TEMPERATURES
-
+#endif
 /**
  * Include capabilities in M115 output
  */
@@ -1563,8 +1580,9 @@
 /**
  * Spend 28 bytes of SRAM to optimize the GCode parser
  */
+ #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
 #define FASTER_GCODE_PARSER
-
+#endif
 /**
  * User-defined menu items that execute custom GCode
  */
@@ -1580,18 +1598,18 @@
 #if ENABLED(BedDC)
     #define USER_DESC_1 "UBL Commission Step 1"
   #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S55 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
- 
+
   #define USER_DESC_2 "UBL Commission Step 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_3 "Prep for Z Adjust"
   #define USER_GCODE_3 "M190 55 \n M104 235 \n G28 \n G29 L1 \n G1 X100 Y 100 \n G1 Z0"
 #endif
-  
+
 #if ENABLED(BedAC)
     #define USER_DESC_1 "UBL Commission Step 1"
   #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
- 
+
   #define USER_DESC_2 "UBL Commission Step 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
