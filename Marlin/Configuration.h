@@ -1468,14 +1468,14 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 #if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH))
-#if ((ENABLED(ABL_UBL)))
-#define AUTO_BED_LEVELING_UBL
-#endif
-#if ((ENABLED(ABL_BI)))
-#define AUTO_BED_LEVELING_BILINEAR
-#endif
+  #if ((ENABLED(ABL_UBL)))
+    #define AUTO_BED_LEVELING_UBL
+    #endif
+    #if ((ENABLED(ABL_BI)))
+      #define AUTO_BED_LEVELING_BILINEAR
+    #endif
 #elif (!ENABLED(OrigLA))
-#define MESH_BED_LEVELING
+  #define MESH_BED_LEVELING
 #endif
 /**
  * Normally G28 leaves leveling disabled on completion. Enable
@@ -1597,7 +1597,7 @@ GRID_MAX_POINTS_X 3
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
   #define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500
 
-  //#define UBL_Z_RAISE_WHEN_OFF_MESH 2.5 // When the nozzle is off the mesh, this value is used
+  #define UBL_Z_RAISE_WHEN_OFF_MESH 0 // When the nozzle is off the mesh, this value is used
                                           // as the Z-Height correction value.
 
 #elif ENABLED(MESH_BED_LEVELING)
