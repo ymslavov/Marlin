@@ -21,8 +21,8 @@
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
-//#define MachineCR10Std
-#define MachineCRX
+#define MachineCR10Std
+//#define MachineCRX
 //#define MachineS4
 //#define MachineS5
 
@@ -635,10 +635,16 @@
 
 #if ENABLED(HotendStock)
 
-// Stock CR-10 Hotend fan 100%
-#define  DEFAULT_Kp 17.42
-#define  DEFAULT_Ki 1.27
-#define  DEFAULT_Kd 59.93
+    #if(ENABLED(MachineCRX))
+      #define  DEFAULT_Kp 20.84
+      #define  DEFAULT_Ki 1.96
+      #define  DEFAULT_Kd 55.47
+    #else
+      // Stock CR-10 Hotend fan 100%
+      #define  DEFAULT_Kp 17.42
+      #define  DEFAULT_Ki 1.27
+      #define  DEFAULT_Kd 59.93
+    #endif
 #endif
 
 #if ENABLED(HotendE3D)
@@ -1225,38 +1231,42 @@
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 
 #if(ENABLED(MachineCR10Orig))
-#define INVERT_X_DIR true
-#define INVERT_Y_DIR true
-#define INVERT_Z_DIR false
-#if(ENABLED(E3DTitan))
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
-#else
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
+  #define INVERT_X_DIR true
+  #define INVERT_Y_DIR true
+  #define INVERT_Z_DIR false
+  #if(ENABLED(E3DTitan))
+    #define INVERT_E0_DIR false
+    #define INVERT_E1_DIR false
+  #else
+  #define INVERT_E0_DIR true
+  #define INVERT_E1_DIR true
 #endif
 #elif(ENABLED(MachineEnder4))
-#define INVERT_X_DIR true
-#define INVERT_Y_DIR true
-#define INVERT_Z_DIR true
-#if(ENABLED(E3DTitan))
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
+  #define INVERT_X_DIR true
+  #define INVERT_Y_DIR true
+  #define INVERT_Z_DIR true
+  #if(ENABLED(E3DTitan))
+    #define INVERT_E0_DIR false
+    #define INVERT_E1_DIR false
+  #else
+    #define INVERT_E0_DIR true
+    #define INVERT_E1_DIR true
+  #endif
 #else
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
-#endif
-#else
-#define INVERT_X_DIR false
-#define INVERT_Y_DIR false
-#define INVERT_Z_DIR true
-#if(ENABLED(E3DTitan))
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
-#else
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
-#endif
+  #define INVERT_X_DIR false
+  #if(ENABLED(MachineCRX))
+    #define INVERT_Y_DIR true
+  #else
+    #define INVERT_Y_DIR false
+  #endif
+  #define INVERT_Z_DIR true
+  #if(ENABLED(E3DTitan))
+    #define INVERT_E0_DIR true
+    #define INVERT_E1_DIR true
+  #else
+    #define INVERT_E0_DIR false
+    #define INVERT_E1_DIR false
+  #endif
 #endif
 // @section extruder
 
@@ -1424,8 +1434,8 @@
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
  * By default the firmware assumes HIGH=FILAMENT PRESENT.
  */
-#if(!ENABLED(MachineCR10Orig) &&(!ENABLED(MachineCR20)|| ENABLED(AddonFilSensor)) && (!ENABLED(MachineEnder4) || ENABLED(AddonFilSensor)))
-#define FILAMENT_RUNOUT_SENSOR
+#if(DISABLED(MachineCR10Orig) &&(DISABLED(MachineCR20)|| ENABLED(AddonFilSensor)) && (!ENABLED(MachineEnder4) || ENABLED(AddonFilSensor)) && (DISABLED(MachineCRX)|| ENABLED(AddonFilSensor)))
+  #define FILAMENT_RUNOUT_SENSOR
 #endif
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
 #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
