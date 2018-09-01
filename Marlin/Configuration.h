@@ -217,11 +217,11 @@
  */
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
-#if(!ENABLED(MachineEnder4) && !ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#if(DISABLED(MachineEnder4) && DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define SHOW_CUSTOM_BOOTSCREEN
 #endif
 // Enable to show the bitmap in Marlin/_Statusscreen.h on the status screen.
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(MachineEnder4))
+#if(DISABLED(MachineCR10Orig) && DISABLED(MachineEnder4))
 #define CUSTOM_STATUS_SCREEN_IMAGE
 #endif
 
@@ -547,7 +547,7 @@
     #define TEMP_SENSOR_1 5
   #endif
 #endif
-#if(!ENABLED(Dual_ChimeraDualNozzle))
+#if(DISABLED(Dual_ChimeraDualNozzle))
   #define TEMP_SENSOR_1 0
 #endif
 #define TEMP_SENSOR_2 0
@@ -620,7 +620,7 @@
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
   #define PID_AUTOTUNE_MENU // Add PID Autotune to the LCD "Temperature" menu to run M303 and apply the result.
 #endif
   //#define PID_DEBUG // Sends debug data to the serial port.
@@ -688,7 +688,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
- #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+ #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define PIDTEMPBED
 #endif
 //#define BED_LIMIT_SWITCHING
@@ -829,7 +829,7 @@
 #define Y_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 
-#if (!ENABLED(ABL_EZABL)&& !ENABLED(ABL_BLTOUCH))
+#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
 #define Z_MIN_ENDSTOP_INVERTING false  // set to true to invert the logic of the endstop.
 #define Z_MIN_PROBE_ENDSTOP_INVERTING true // set to true to invert the logic of the probe.
 #elif (ENABLED(ABL_NCSW))
@@ -1049,7 +1049,7 @@
  * Use G29 repeatedly, adjusting the Z height at each point with movement commands
  * or (with LCD_BED_LEVELING) the LCD controller.
  */
-#if (!ENABLED(ABL_EZABL)&& !ENABLED(ABL_BLTOUCH))
+#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
 #define PROBE_MANUALLY
 #define MANUAL_PROBE_START_Z 0.2
 #endif
@@ -1202,7 +1202,7 @@
 
 // Enable the M48 repeatability test to test probe accuracy
 #if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH))
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 #define Z_MIN_PROBE_REPEATABILITY_TEST
 #endif
 #endif
@@ -1295,7 +1295,7 @@
 
 // The size of the print bed
 
-#if (!ENABLED(ABL_EZABL)&& !ENABLED(ABL_BLTOUCH))
+#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
 
 #if ENABLED(MachineMini)
 #define X_BED_SIZE 300
@@ -1421,7 +1421,7 @@
   #define MAX_SOFTWARE_ENDSTOP_Y
   #define MAX_SOFTWARE_ENDSTOP_Z
 #endif
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS) || ENABLED(MAX_SOFTWARE_ENDSTOPS)
   #define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
 #endif
@@ -1434,7 +1434,7 @@
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
  * By default the firmware assumes HIGH=FILAMENT PRESENT.
  */
-#if(DISABLED(MachineCR10Orig) &&(DISABLED(MachineCR20)|| ENABLED(AddonFilSensor)) && (!ENABLED(MachineEnder4) || ENABLED(AddonFilSensor)) && (DISABLED(MachineCRX)|| ENABLED(AddonFilSensor)))
+#if(DISABLED(MachineCR10Orig) &&(DISABLED(MachineCR20)|| ENABLED(AddonFilSensor)) && (DISABLED(MachineEnder4) || ENABLED(AddonFilSensor)) && (DISABLED(MachineCRX)|| ENABLED(AddonFilSensor)))
   #define FILAMENT_RUNOUT_SENSOR
 #endif
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
@@ -1492,7 +1492,7 @@
     #if ((ENABLED(ABL_BI)))
       #define AUTO_BED_LEVELING_BILINEAR
     #endif
-#elif (!ENABLED(OrigLA))
+#elif (DISABLED(OrigLA))
   #define MESH_BED_LEVELING
 #endif
 /**
@@ -1523,7 +1523,7 @@
   /**
    * Enable the G26 Mesh Validation Pattern tool.
    */
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 #define G26_MESH_VALIDATION   // Enable G26 mesh validation
 #endif
   #if ENABLED(G26_MESH_VALIDATION)
@@ -1642,7 +1642,7 @@ GRID_MAX_POINTS_X 3
  */
 #if ENABLED(AUTO_BED_LEVELING_3POINT) || ENABLED(AUTO_BED_LEVELING_UBL)
 
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(MachineEnder4))
+#if(DISABLED(MachineCR10Orig) && DISABLED(MachineEnder4))
 #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 #endif
 #if ENABLED(MachineMini)
@@ -1726,7 +1726,7 @@ GRID_MAX_POINTS_X 3
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-#if (!ENABLED(ABL_EZABL)&& !ENABLED(ABL_BLTOUCH) &&!ENABLED(OrigLA))
+#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH) &&DISABLED(OrigLA))
 #define LCD_BED_LEVELING
 #endif
 
@@ -1735,7 +1735,7 @@ GRID_MAX_POINTS_X 3
   #define LCD_PROBE_Z_RANGE 8 // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 // Add a menu item to move between bed corners for manual bed adjustment
   #define LEVEL_BED_CORNERS
 #endif
@@ -1863,7 +1863,7 @@ GRID_MAX_POINTS_X 3
 //
 #define EEPROM_SETTINGS // Enable for M500 and M501 commands
 //#define DISABLE_M503    // Saves ~2700 bytes of PROGMEM. Disable for release!
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 #define EEPROM_CHITCHAT   // Give feedback on EEPROM commands. Disable to save PROGMEM.
 #endif
 //
@@ -2003,7 +2003,7 @@ GRID_MAX_POINTS_X 3
  *   M76 - Pause the print job timer
  *   M77 - Stop the print job timer
  */
- #if(!ENABLED(MachineCR10Orig))
+ #if(DISABLED(MachineCR10Orig))
  #define PRINTJOB_TIMER_AUTOSTART
 #endif
 /**
@@ -2018,7 +2018,7 @@ GRID_MAX_POINTS_X 3
  *
  * View the current statistics with M78.
  */
- #if(!ENABLED(MachineCR10Orig))
+ #if(DISABLED(MachineCR10Orig))
  #define PRINTCOUNTER
 #endif
 //=============================================================================
@@ -2141,7 +2141,7 @@ GRID_MAX_POINTS_X 3
 //
 // Add individual axis homing items (Home X, Home Y, and Home Z) to the LCD menu.
 //
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 #define INDIVIDUAL_AXIS_HOMING_MENU
 #endif
 //
@@ -2150,7 +2150,7 @@ GRID_MAX_POINTS_X 3
 // If you have a speaker that can produce tones, enable it here.
 // By default Marlin assumes you have a buzzer with a fixed frequency.
 //
-#if(!ENABLED(MachineCR10Orig))
+#if(DISABLED(MachineCR10Orig))
 #define SPEAKER
 #endif
 
@@ -2236,13 +2236,13 @@ GRID_MAX_POINTS_X 3
 //======================== LCD / Controller Selection =========================
 //=====================   (I2C and Shift-Register LCDs)   =====================
 //=============================================================================
-#if(ENABLED(MachineEnder4) && !ENABLED(GraphicLCD))
+#if(ENABLED(MachineEnder4) && DISABLED(GraphicLCD))
 #define REPRAP_DISCOUNT_SMART_CONTROLLER
 #elif(ENABLED(MachineEnder2) )
 #define MINIPANEL
 #elif ENABLED(MachineCR20)
   #define MKS_MINI_12864
-#elif(!ENABLED(OrigLCD))
+#elif(DISABLED(OrigLCD))
 #define REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
 #endif
 #if(ENABLED(OrigLCD))

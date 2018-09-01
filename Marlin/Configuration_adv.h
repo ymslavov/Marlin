@@ -139,7 +139,7 @@
  * Also, if the temperature is set to a value below mintemp, it will not be changed by autotemp.
  * On an Ultimaker, some initial testing worked with M109 S215 B260 F1 in the start.gcode
  */
-  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+  #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define AUTOTEMP
 #endif
 #if ENABLED(AUTOTEMP)
@@ -147,7 +147,7 @@
 #endif
 
 // Show extra position information in M114
-  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+  #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define M114_DETAIL
 #endif
 // Show Temperature ADC value
@@ -447,7 +447,7 @@
 #define DEFAULT_MINSEGMENTTIME        20000
 
 // If defined the movements slow down when the look ahead buffer is only half full
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define SLOWDOWN
 #endif
 // Frequency limit
@@ -538,7 +538,7 @@
 // @section lcd
 
 // Include a page of printer information in the LCD Main Menu
-  #if(!ENABLED(MachineCR10Orig))
+  #if(DISABLED(MachineCR10Orig))
 #define LCD_INFO_MENU
 #endif
 // Leave out seldom-used LCD menu items to recover some Program Memory
@@ -547,7 +547,7 @@
 #endif
 
 // Scroll a longer status message into view
- #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+ #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define STATUS_MESSAGE_SCROLLING
 
 // On the Info Screen, display XY with one decimal place when possible
@@ -557,11 +557,11 @@
 #define LCD_TIMEOUT_TO_STATUS 15000
 
 // Add an 'M73' G-code to set the current percentage
- #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+ #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define LCD_SET_PROGRESS_MANUALLY
 #endif
 #if ENABLED(SDSUPPORT) || ENABLED(LCD_SET_PROGRESS_MANUALLY)
-  #if((ENABLED(MachineEnder4) && !ENABLED(GraphicLCD)))
+  #if((ENABLED(MachineEnder4) && DISABLED(GraphicLCD)))
   #define LCD_PROGRESS_BAR
   #endif// Show a progress bar on HD44780 LCDs for SD printing
   #if ENABLED(LCD_PROGRESS_BAR)
@@ -604,7 +604,7 @@
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
-   #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+   #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define SDCARD_RATHERRECENTFIRST
 #endif
   // Add an option in the menu to run all auto#.g files
@@ -667,7 +667,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+  #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define SCROLL_LONG_FILENAMES
 #endif
   /**
@@ -687,7 +687,7 @@
   /**
    * Auto-report SdCard status with M27 S<seconds>
    */
-   #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+   #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define AUTO_REPORT_SD_STATUS
 #endif
 #endif // SDSUPPORT
@@ -716,7 +716,7 @@
 
   // A bigger font is available for edit items. Costs 3120 bytes of PROGMEM.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-   #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+   #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define USE_BIG_EDIT_FONT
 #endif
   // A smaller font may be used on the Info Screen. Costs 2300 bytes of PROGMEM.
@@ -743,7 +743,7 @@
      * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
      * This will prevent position updates from being displayed.
      */
-     #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+     #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
     #define LIGHTWEIGHT_UI
     #endif
     #if ENABLED(LIGHTWEIGHT_UI)
@@ -782,7 +782,7 @@
   #define BABYSTEP_MULTIPLICATOR 10   // Babysteps are very small. Increase for faster motion.
   #if(ENABLED(ABL_EZABL) || ENABLED(ABL_BLTOUCH))
     #define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
-     #if(!ENABLED(MachineEnder4) && !ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+     #if(DISABLED(MachineEnder4) && DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
     #define BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
     #endif
   #endif
@@ -809,7 +809,7 @@
  * See http://marlinfw.org/docs/features/lin_advance.html for full instructions.
  * Mention @Sebastianv650 on GitHub to alert the author of any issues.
  */
-  #if((!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard)) || ENABLED(OrigLA))
+  #if((DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard)) || ENABLED(OrigLA))
 #define LIN_ADVANCE
 #endif
 #if ENABLED(LIN_ADVANCE)
@@ -1023,7 +1023,7 @@
 #define NO_TIMEOUTS 1000 // Milliseconds
 
 // Some clients will have this feature soon. This could make the NO_TIMEOUTS unnecessary.
- #if(!ENABLED(MachineCR10Orig))
+ #if(DISABLED(MachineCR10Orig))
 #define ADVANCED_OK
 #endif
 // @section extras
@@ -1043,7 +1043,7 @@
  * Note that M207 / M208 / M209 settings are saved to EEPROM.
  *
  */
- #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+ #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define FWRETRACT  // ONLY PARTIALLY TESTED
 #endif
 #if ENABLED(FWRETRACT)
@@ -1120,7 +1120,7 @@
 
   #define PARK_HEAD_ON_PAUSE                      // Park the nozzle during pause and filament change.
   #define HOME_BEFORE_FILAMENT_CHANGE             // Ensure homing has been completed prior to parking for filament change
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define FILAMENT_LOAD_UNLOAD_GCODES           // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
   #define FILAMENT_UNLOAD_ALL_EXTRUDERS         // Allow M702 to unload all extruders above a minimum target temp (as set by M302)
   #endif
@@ -1536,19 +1536,19 @@
 /**
  * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
  */
- #if(!ENABLED(MachineCR10Orig))
+ #if(DISABLED(MachineCR10Orig))
 #define PINS_DEBUGGING
 #endif
 /**
  * Auto-report temperatures with M155 S<seconds>
  */
-  #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+  #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define AUTO_REPORT_TEMPERATURES
 #endif
 /**
  * Include capabilities in M115 output
  */
-  #if(!ENABLED(MachineCR10Orig))
+  #if(DISABLED(MachineCR10Orig))
 #define EXTENDED_CAPABILITIES_REPORT
 #endif
 /**
@@ -1588,7 +1588,7 @@
 /**
  * Spend 28 bytes of SRAM to optimize the GCode parser
  */
- #if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+ #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define FASTER_GCODE_PARSER
 #endif
 /**
