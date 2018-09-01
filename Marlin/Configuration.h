@@ -21,7 +21,8 @@
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
-#define MachineCR10Std
+//#define MachineCR10Std
+#define MachineCRX
 //#define MachineS4
 //#define MachineS5
 
@@ -198,7 +199,7 @@
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
 #define STRING_CONFIG_H_AUTHOR "TinyMachines3D" // Who made the changes.
-#if(!ENABLED(MachineCR10Orig) && !ENABLED(LowMemoryBoard))
+#if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define SHOW_BOOTSCREEN
 #endif
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
@@ -236,6 +237,8 @@
 #define CUSTOM_MACHINE_NAME "SuPeR CR-20"
 #elif(ENABLED(MachineCR10Orig))
 #define CUSTOM_MACHINE_NAME "SuPeR CR-10"
+#elif(ENABLED(MachineCRX))
+#define CUSTOM_MACHINE_NAME "CR-Xtreme"
 #elif(ENABLED(MachineCR10Std))
 #define CUSTOM_MACHINE_NAME "300 SuPeR"
 #elif(ENABLED(MachineS4))
@@ -258,6 +261,8 @@
 #define VerChar1 "O"
 #elif(ENABLED(MachineCR10Std))
 #define VerChar1 "S"
+#elif(ENABLED(MachineCRX))
+#define VerChar1 "X"
 #elif(ENABLED(MachineS4))
 #define VerChar1 "4"
 #elif(ENABLED(MachineS5))
@@ -302,7 +307,10 @@
 #endif
 
 #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D " VerChar1 VerChar2 VerChar3 VerChar4 VerChar5 VerChar6
-
+#if(ENABLED(MachineCRX))
+  #define MachineCR10Std
+  #define Dual_BowdenSplitterY
+#endif
 /**
  * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.
@@ -1606,7 +1614,11 @@ GRID_MAX_POINTS_X 3
   //=================================== Mesh ==================================
   //===========================================================================
 
+#if(ENABLED(MachineEnder3))
+  #define MESH_INSET 40          // Set Mesh bounds as an inset region of the bed
+#else
   #define MESH_INSET 20          // Set Mesh bounds as an inset region of the bed
+#endif
   //#define GRID_MAX_POINTS_X 3    // Don't use more than 7 points per axis, implementation limited.
   //#define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
@@ -1718,7 +1730,7 @@ GRID_MAX_POINTS_X 3
   #define LEVEL_BED_CORNERS
 #endif
 #if ENABLED(LEVEL_BED_CORNERS)
-  #define LEVEL_CORNERS_INSET 30    // (mm) An inset for corner leveling
+  #define LEVEL_CORNERS_INSET 40    // (mm) An inset for corner leveling
   #define LEVEL_CENTER_TOO        // Move to the center after the last corner
 #endif
 

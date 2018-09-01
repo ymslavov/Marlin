@@ -831,7 +831,11 @@
   #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 10) < X_BED_SIZE)
     #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 5)
   #else
-    #define MESH_MAX_X (X_BED_SIZE - 10)
+    #if(ENABLED(MachineEnder3))
+      #define MESH_MAX_X (X_BED_SIZE - 40)
+    #else
+      #define MESH_MAX_X (X_BED_SIZE - 10)
+    #endif
   #endif
 
   #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 25) > 10 )

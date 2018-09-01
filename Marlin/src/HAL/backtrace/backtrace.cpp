@@ -96,6 +96,6 @@ void backtrace(void) {
 
 #else // !__arm__ && !__thumb__
 
-void backtrace(void) {}
+//void backtrace(void) {}
 
 #endif
