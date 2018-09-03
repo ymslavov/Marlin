@@ -29,7 +29,7 @@
  * Use the Marlin Bitmap Converter to make your own:
  * http://marlinfw.org/tools/u8glib/converter.html
  */
-#include "MarlinConfig.h"
+
 
 //============================================
 
