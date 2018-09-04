@@ -142,7 +142,7 @@
 #define HEATER_1_PIN        7
 #define HEATER_BED_PIN     8
 
-//#define LED4_PIN            8
+#define LED4_PIN            5
 
 #define FAN_PIN             9
 
