@@ -140,9 +140,9 @@
 //
 #define HEATER_0_PIN       10
 #define HEATER_1_PIN        7
-#define HEATER_BED_PIN     58
+#define HEATER_BED_PIN     8
 
-#define LED4_PIN            8
+//#define LED4_PIN            8
 
 #define FAN_PIN             9
 
