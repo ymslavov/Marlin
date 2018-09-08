@@ -81,7 +81,7 @@
    Leave all disabled if no sensor is available
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
-//#define ABL_NCSW //Any NC Sensor
+//#define ABL_NCSW //Creality ABL or Any NC Sensor
 //#define ABL_BLTOUCH
 
 /*
@@ -1049,7 +1049,7 @@
  * Use G29 repeatedly, adjusting the Z height at each point with movement commands
  * or (with LCD_BED_LEVELING) the LCD controller.
  */
-#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
+#if (DISABLED(ABL_EZABL) &&DISABLED(ABL_NCSW) &&  DISABLED(ABL_BLTOUCH) )
 #define PROBE_MANUALLY
 #define MANUAL_PROBE_START_Z 0.2
 #endif
@@ -1058,7 +1058,7 @@
  * A Fix-Mounted Probe either doesn't deploy or needs manual deployment.
  *   (e.g., an inductive probe or a nozzle-based probe-switch.)
  */
-#if ENABLED(ABL_EZABL)
+#if ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)
 #define FIX_MOUNTED_PROBE
 #endif
 
@@ -1085,7 +1085,7 @@
  * These options are most useful for the BLTouch probe, but may also improve
  * readings with inductive probes and piezo sensors.
  */
-#if (ENABLED(ABL_EZABL) && ENABLED(BED_AC))
+#if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(BED_AC))
 #define PROBING_HEATERS_OFF       // Turn heaters off when probing
 #endif
 // Turn heaters off when probing
@@ -1140,7 +1140,7 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 #endif
 
-#if (ENABLED(ABL_EZABL) && ENABLED(HotendStock))
+#if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock))
 #define X_PROBE_OFFSET_FROM_EXTRUDER -44  // X offset: -left  +right  [of the nozzle]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER -10  // Y offset: -front +behind [the nozzle]
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
@@ -1152,7 +1152,7 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
 #endif
 
-#if (ENABLED(ABL_EZABL) && ENABLED(HotendE3D))
+#if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendE3D))
 #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
 #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
 #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
@@ -1201,7 +1201,7 @@
 #define Z_PROBE_OFFSET_RANGE_MAX 20
 
 // Enable the M48 repeatability test to test probe accuracy
-#if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH))
+#if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH) || ENABLED(ABL_NCSW))
 #if(DISABLED(MachineCR10Orig))
 #define Z_MIN_PROBE_REPEATABILITY_TEST
 #endif
@@ -1295,7 +1295,7 @@
 
 // The size of the print bed
 
-#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
+#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH) && DISABLED(ABL_NCSW))
 
 #if ENABLED(MachineMini)
 #define X_BED_SIZE 300
@@ -1485,7 +1485,7 @@
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-#if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH))
+#if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH) || ENABLED(ABL_NCSW))
   #if ((ENABLED(ABL_UBL)))
     #define AUTO_BED_LEVELING_UBL
     #endif
@@ -1726,7 +1726,7 @@ GRID_MAX_POINTS_X 3
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-#if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH) &&DISABLED(OrigLA))
+#if (DISABLED(ABL_EZABL) && DISABLED(ABL_NCSW) && DISABLED(ABL_BLTOUCH) &&DISABLED(OrigLA))
 #define LCD_BED_LEVELING
 #endif
 
