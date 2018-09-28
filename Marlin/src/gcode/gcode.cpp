@@ -292,6 +292,10 @@ void GcodeSuite::process_parsed_command(
         case 5: M5(); break;                                      // M5 - turn spindle/laser off
       #endif
 
+      #if ENABLED(EXTERNAL_CLOSED_LOOP_CONTROLLER)
+        case 12: M12(); break;                                    // M12: Synchronize and optionally force a CLC set
+      #endif
+
       case 17: M17(); break;                                      // M17: Enable all stepper motors
 
       #if ENABLED(SDSUPPORT)
@@ -487,6 +491,9 @@ void GcodeSuite::process_parsed_command(
 
       #if HAS_SERVOS
         case 280: M280(); break;                                  // M280: Set servo position absolute
+        #if ENABLED(EDITABLE_SERVO_ANGLES)
+          case 281: M281(); break;                                // M281: Set servo angles
+        #endif
       #endif
 
       #if ENABLED(BABYSTEPPING)
