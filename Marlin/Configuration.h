@@ -6,7 +6,7 @@
 // CUSTOMIZE FOR YOUR MACHINE BELOW
 
 /**
- * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
+ * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper
  * underneath the stepper driver! Plug and Play will result in Stealth Chop 2 Mode enabled
  * Stealthchop with 2208 on E will disabe inear Advance! Please enable stealthchop if
  * you require Linear Advance with a TMC2208 on the extruder!
@@ -30,6 +30,7 @@
  * Enable if you install a filament runout sensor from www.formbotusa.com
  */
 //#define RunoutSensor
+//#define ledgeFilSensor //Modify filament sensor contact type for TM3D V2 sensors
 
 /**
  * Enable if you wish to change the auto level strategy to Unified Bed Leveling. Under CUSTOM COMMANDS, run Step 1 and 2 before setting Z Offset
@@ -952,7 +953,11 @@
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
   #define FIL_RUNOUT_PIN 57
-  #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #if ENABLED(ledgeFilSensor)
+    #define FIL_RUNOUT_INVERTING false // set to true to invert the logic of the sensor.
+  #else
+    #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #endif
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   #define FILAMENT_RUNOUT_SCRIPT "M600"
 #endif
@@ -1141,7 +1146,7 @@
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
-//#define LEVEL_BED_CORNERS
+#define LEVEL_BED_CORNERS
 
 /**
  * Commands to execute at the end of G29 probing.
