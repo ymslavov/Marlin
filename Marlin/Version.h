@@ -35,7 +35,7 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "TM3D 1.1.8_R7"
+  #define SHORT_BUILD_VERSION "TM3D 1.1.9_R2"
 
   /**
    * Verbose version identifier which should contain a reference to the location
@@ -48,7 +48,7 @@
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2018-07-28"
+  #define STRING_DISTRIBUTION_DATE "2018-09-30"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -89,6 +89,6 @@
    * The WEBSITE_URL is the location where users can get more information such as
    * documentation about a specific Marlin release.
    */
-  #define WEBSITE_URL "www.formbotusa.com"
+  #define WEBSITE_URL "tinymachines3d.com"
 
 #endif // USE_AUTOMATIC_VERSIONING

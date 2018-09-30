@@ -31,6 +31,8 @@
  * Enables a filament sensor plugged into the laser pin. Disables the laser
  */
 //#define FilamentSensor
+//#define ledgeFilSensor //Modify filament sensor contact type for TM3D V2 sensors
+
 /**
  * Configuration.h
  *
@@ -900,7 +902,11 @@
 #endif
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
-  #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #if ENABLED(ledgeFilSensor)
+    #define FIL_RUNOUT_INVERTING false // set to true to invert the logic of the sensor.
+  #else
+    #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #endif
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   #define FIL_RUNOUT_PIN 4
   #define FILAMENT_RUNOUT_SCRIPT "M600"
@@ -1078,7 +1084,7 @@
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
-//#define LEVEL_BED_CORNERS
+#define LEVEL_BED_CORNERS
 
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET 30    // (mm) An inset for corner leveling
