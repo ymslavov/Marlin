@@ -1253,10 +1253,10 @@
   #define INVERT_Z_DIR false
   #if(ENABLED(E3DTitan))
     #define INVERT_E0_DIR false
-    #define INVERT_E1_DIR false
+    #define INVERT_E1_DIR true
   #else
   #define INVERT_E0_DIR true
-  #define INVERT_E1_DIR true
+  #define INVERT_E1_DIR false
 #endif
 #elif(ENABLED(MachineEnder4))
   #define INVERT_X_DIR true
@@ -1264,10 +1264,10 @@
   #define INVERT_Z_DIR true
   #if(ENABLED(E3DTitan))
     #define INVERT_E0_DIR false
-    #define INVERT_E1_DIR false
+    #define INVERT_E1_DIR true
   #else
     #define INVERT_E0_DIR true
-    #define INVERT_E1_DIR true
+    #define INVERT_E1_DIR false
   #endif
 #else
   #define INVERT_X_DIR false
@@ -1279,10 +1279,10 @@
   #define INVERT_Z_DIR true
   #if(ENABLED(E3DTitan))
     #define INVERT_E0_DIR true
-    #define INVERT_E1_DIR true
+    #define INVERT_E1_DIR false
   #else
     #define INVERT_E0_DIR false
-    #define INVERT_E1_DIR false
+    #define INVERT_E1_DIR true
   #endif
 #endif
 // @section extruder
