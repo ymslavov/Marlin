@@ -676,7 +676,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
           #if ENABLED(SINGLENOZZLE_SWAP_PARK)
             current_position[X_AXIS] = singlenozzle_change_point.x;
             current_position[Y_AXIS] = singlenozzle_change_point.y;
-            planner.buffer_line(current_position, planner.max_feedrate_mm_s[Y_AXIS], active_extruder);
+            planner.buffer_line(current_position, (planner.max_feedrate_mm_s[Y_AXIS] / 2.0), active_extruder);
           #endif
 
           if (singlenozzle_swap_length) {
@@ -711,7 +711,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
           #if ENABLED(SINGLENOZZLE_SWAP_PARK)
             current_position[X_AXIS] = destination[X_AXIS];
             current_position[Y_AXIS] = destination[Y_AXIS];
-            planner.buffer_line(current_position, planner.max_feedrate_mm_s[Y_AXIS], active_extruder);
+            planner.buffer_line(current_position, (planner.max_feedrate_mm_s[Y_AXIS] / 2.0), active_extruder);
           #endif
 
           do_blocking_move_to(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS]);
