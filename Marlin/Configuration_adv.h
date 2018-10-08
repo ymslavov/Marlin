@@ -767,8 +767,8 @@
      * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
      * This will prevent position updates from being displayed.
      */
-     #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
-    //#define LIGHTWEIGHT_UI
+     #if ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard) || ENABLED(Big_UI)
+      #define LIGHTWEIGHT_UI
     #endif
     #if ENABLED(LIGHTWEIGHT_UI)
       #define STATUS_EXPIRE_SECONDS 20

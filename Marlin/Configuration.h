@@ -26,6 +26,8 @@
 //#define MachineS4
 //#define MachineS5
 
+#define Big_UI 
+
 //#define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
 //#define GraphicLCD //Full graphics LCD for Ender 4
 //#define AddonFilSensor //Adds a filamnt runout sensor to the CR20 or Ender 4
@@ -379,6 +381,18 @@
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 #if(ENABLED(Dual_BowdenSplitterY) || ENABLED(Dual_CyclopsSingleNozzle))
   #define SINGLENOZZLE
+  #if ENABLED(SINGLENOZZLE)
+  // Length of filament to retract and prime on toolchange
+  #define SINGLENOZZLE_SWAP_LENGTH 80.0
+  #define SINGLENOZZLE_SWAP_RETRACT_SPEED 60.0 // Retracting speed in mm/s
+  #define SINGLENOZZLE_SWAP_PRIME_SPEED 60.0 // Prime speed in mm/s
+  #define SINGLENOZZLE_SWAP_PARK
+  #if ENABLED(SINGLENOZZLE_SWAP_PARK)
+    #define SINGLENOZZLE_TOOLCHANGE_POSITION { (X_MIN_POS + 10), (Y_MIN_POS + 10), 5 }
+  #else
+    #define SINGLENOZZLE_TOOLCHANGE_ZRAISE 2.0
+  #endif
+ #endif
 #endif
 
 /**
@@ -639,8 +653,8 @@
 #if ENABLED(HotendStock)
 
     #if(ENABLED(MachineCRX))
-      #define  DEFAULT_Kp 20.84
-      #define  DEFAULT_Ki 1.96
+      #define  DEFAULT_Kp 17.5
+      #define  DEFAULT_Ki 1.37
       #define  DEFAULT_Kd 55.47
     #else
       // Stock CR-10 Hotend fan 100%
@@ -929,8 +943,8 @@
 #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   300    // X, Y, Z acceleration for travel (non printing) moves
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 20.0
+#define DEFAULT_XJERK                 10.0
+#define DEFAULT_YJERK                  8.0
 #define DEFAULT_ZJERK                  0.4
 #define DEFAULT_EJERK                  5.0
 #endif
@@ -941,8 +955,8 @@
 #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   300    // X, Y, Z acceleration for travel (non printing) moves
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 20.0
+#define DEFAULT_XJERK                 10.0
+#define DEFAULT_YJERK                  8.0
 #define DEFAULT_ZJERK                  0.4
 #define DEFAULT_EJERK                  5.0
 #endif
@@ -953,8 +967,8 @@
 #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   300    // X, Y, Z acceleration for travel (non printing) moves
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 10.0
+#define DEFAULT_XJERK                 10.0
+#define DEFAULT_YJERK                  6.0
 #define DEFAULT_ZJERK                  0.4
 #define DEFAULT_EJERK                  5.0
 #endif
@@ -964,8 +978,8 @@
 #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   300    // X, Y, Z acceleration for travel (non printing) moves
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 5.0
+#define DEFAULT_XJERK                 10.0
+#define DEFAULT_YJERK                  5.0
 #define DEFAULT_ZJERK                  0.4
 #define DEFAULT_EJERK                  5.0
 #endif
