@@ -24,8 +24,8 @@
 /**
  * fwretract.h - Define firmware-based retraction interface
  */
-
-#include "../inc/MarlinConfigPre.h"
+#include "../inc/MarlinConfig.h"
+//#include "../inc/MarlinConfigPre.h";
 
 class FWRetract {
 private:
@@ -39,7 +39,7 @@ public:
   #if ENABLED(FWRETRACT_AUTORETRACT)
     static bool autoretract_enabled;               // M209 S - Autoretract switch
   #else
-    constexpr static bool autoretract_enabled = false;
+    const static bool autoretract_enabled = false;
   #endif
 
   static bool retracted[EXTRUDERS];                // Which extruders are currently retracted
