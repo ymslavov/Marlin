@@ -89,6 +89,7 @@
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
 //#define ABL_BLTOUCH
 
+//#define CREALITY_ABL_MOUNT //Using creality ABL mount 
 /*
    Choose bed leveling type here
    Requires a sensor from above
@@ -848,11 +849,8 @@
 #define Z_MAX_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
 
 #if (DISABLED(ABL_EZABL)&& DISABLED(ABL_BLTOUCH))
-#define Z_MIN_ENDSTOP_INVERTING false  // set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING true // set to true to invert the logic of the probe.
-#elif (ENABLED(ABL_NCSW))
-#define Z_MIN_ENDSTOP_INVERTING false  // set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the probe.
+  #define Z_MIN_ENDSTOP_INVERTING false  // set to true to invert the logic of the endstop.
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the probe.
 #else
 #define Z_MIN_ENDSTOP_INVERTING true  // set to true to invert the logic of the endstop.
 #define Z_MIN_PROBE_ENDSTOP_INVERTING true // set to true to invert the logic of the probe.
@@ -1157,8 +1155,8 @@
  */
  #if ENABLED(MachineCRX) && ENABLED(HotendStock)
    #if ENABLED(ABL_BLTOUCH)
-     #define X_PROBE_OFFSET_FROM_EXTRUDER 45  // X offset: -left  +right  [of the nozzle]
-     #define Y_PROBE_OFFSET_FROM_EXTRUDER -22  // Y offset: -front +behind [the nozzle]
+     #define X_PROBE_OFFSET_FROM_EXTRUDER -22  // X offset: -left  +right  [of the nozzle]
+     #define Y_PROBE_OFFSET_FROM_EXTRUDER -45  // Y offset: -front +behind [the nozzle]
      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
    #endif
 
@@ -1174,12 +1172,18 @@
      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
    #endif
 
-   #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock))
+   #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock)) && DISABLED(CREALITY_ABL_MOUNT)
      #define X_PROBE_OFFSET_FROM_EXTRUDER -44  // X offset: -left  +right  [of the nozzle]
      #define Y_PROBE_OFFSET_FROM_EXTRUDER -10  // Y offset: -front +behind [the nozzle]
      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
    #endif
 
+  #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock)) && ENABLED(CREALITY_ABL_MOUNT)
+     #define X_PROBE_OFFSET_FROM_EXTRUDER 15  // X offset: -left  +right  [of the nozzle]
+     #define Y_PROBE_OFFSET_FROM_EXTRUDER 45  // Y offset: -front +behind [the nozzle]
+     #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+   #endif
+   
    #if (ENABLED(ABL_BLTOUCH) && ENABLED(HotendE3D))
      #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]

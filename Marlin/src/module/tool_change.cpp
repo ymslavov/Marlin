@@ -661,7 +661,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
             fan_speed[0] = singlenozzle_fan_speed[tmp_extruder];
           #endif
 
-          if(!no_move) set_destination_from_current();
+          if (!no_move) set_destination_from_current();
 
           if (sn_settings.swap_length) {
             #if ENABLED(ADVANCED_PAUSE_FEATURE)
@@ -672,13 +672,13 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
             #endif
           }
 
-          if(!no_move){
+          if (!no_move) {
             current_position[Z_AXIS] += (
-            #if ENABLED(SINGLENOZZLE_SWAP_PARK)
-              singlenozzle_change_point.z
-            #else
-              SINGLENOZZLE_TOOLCHANGE_ZRAISE
-            #endif
+              #if ENABLED(SINGLENOZZLE_SWAP_PARK)
+                singlenozzle_change_point.z
+              #else
+                SINGLENOZZLE_TOOLCHANGE_ZRAISE
+              #endif
             );
 
             planner.buffer_line(current_position, planner.settings.max_feedrate_mm_s[Z_AXIS], active_extruder);
@@ -710,7 +710,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
             #endif
           }
 
-          if(!no_move){
+          if (!no_move) {
             #if ENABLED(SINGLENOZZLE_SWAP_PARK)
               current_position[X_AXIS] = destination[X_AXIS];
               current_position[Y_AXIS] = destination[Y_AXIS];
