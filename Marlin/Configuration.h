@@ -1388,41 +1388,35 @@
 #define X_BED_SIZE 300
 #define Y_BED_SIZE 220
 #define Z_MAX_POS 300
-#endif
-#if(ENABLED(MachineEnder2))
+#elif(ENABLED(MachineEnder2))
 #define X_BED_SIZE 150
 #define Y_BED_SIZE 150
 #define Z_MAX_POS 200
-#endif
-#if(ENABLED(MachineEnder3))
+#elif(ENABLED(MachineEnder3))
 #define X_BED_SIZE 230
 #define Y_BED_SIZE 230
 #define Z_MAX_POS 250
-#endif
-#if(ENABLED(MachineEnder4))
+#elif(ENABLED(MachineEnder4))
 #define X_BED_SIZE 220
 #define Y_BED_SIZE 220
 #define Z_MAX_POS 300
-#endif
-
-#if(ENABLED(MachineCR20))
+#elif(ENABLED(MachineCR20))
 #define X_BED_SIZE 240
 #define Y_BED_SIZE 240
 #define Z_MAX_POS 250
-#endif
-
-#if (ENABLED(MachineCR10Std))
+#elif (ENABLED(MachineCRX))
+#define X_BED_SIZE 315
+#define Y_BED_SIZE 330
+#define Z_MAX_POS 400
+#elif (ENABLED(MachineCR10Std))
 #define X_BED_SIZE 315
 #define Y_BED_SIZE 310
 #define Z_MAX_POS 400
-#endif
-
-#if ENABLED( MachineS4)
+#elif ENABLED( MachineS4)
 #define X_BED_SIZE 410
 #define Y_BED_SIZE 400
 #define Z_MAX_POS 400
-#endif
-#if ENABLED(MachineS5)
+#elif ENABLED(MachineS5)
 #define X_BED_SIZE 510
 #define Y_BED_SIZE 500
 #define Z_MAX_POS 500
