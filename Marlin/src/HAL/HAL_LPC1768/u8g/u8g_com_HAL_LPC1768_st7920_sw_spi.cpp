@@ -55,14 +55,15 @@
 
 #ifdef TARGET_LPC1768
 
-#include "../../inc/MarlinConfigPre.h"
+#include "../../../inc/MarlinConfigPre.h"
 
 #if ENABLED(DOGLCD)
 
 #include <U8glib.h>
 #include "SoftwareSPI.h"
-#include "../shared/Delay.h"
+#include "../../shared/Delay.h"
 
+#undef SPI_SPEED
 #define SPI_SPEED 3  // About 1 MHz
 
 static pin_t SCK_pin_ST7920_HAL, MOSI_pin_ST7920_HAL_HAL;

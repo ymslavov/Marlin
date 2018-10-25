@@ -7,7 +7,7 @@
    Choose this for CR10 Original Melzi Board
    You still need to select a machine size below!
 */
-//#define MachineCR10Orig
+#define MachineCR10Orig
 
 /*
    Enabled this for linear advance instead of mesh leveling on a melzi board
@@ -87,15 +87,15 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
-//#define ABL_BLTOUCH
+#define ABL_BLTOUCH
 
-//#define CREALITY_ABL_MOUNT //Using creality ABL mount 
+//#define CREALITY_ABL_MOUNT //Using creality ABL mount
 /*
    Choose bed leveling type here
    Requires a sensor from above
    Melzi board users may only select ABL_BI for bilinear leveling
 */
-//#define ABL_BI
+#define ABL_BI
 //#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
@@ -116,7 +116,7 @@
    Intended to resolve issues with certain newer boards experiencing motion errors under load.
    Enables Slim Menus
 */
-//#define LowMemoryBoard
+#define LowMemoryBoard
 
 
 /*
@@ -389,13 +389,13 @@
   #define SINGLENOZZLE_SWAP_PRIME_SPEED 3600 // Prime speed in mm/m
   #define SINGLENOZZLE_SWAP_PARK
   #if ENABLED(SINGLENOZZLE_SWAP_PARK)
-    #define SINGLENOZZLE_TOOLCHANGE_POSITION { (X_MIN_POS + 10), (Y_MIN_POS + 10), 5 }
-    #define SINGLENOZZLE_PARK_XY_FEEDRATE 6000 // mm/m
-  #else
-    #define SINGLENOZZLE_TOOLCHANGE_ZRAISE 2.0
+  #define SINGLENOZZLE_TOOLCHANGE_XY    { X_MIN_POS + 10, Y_MIN_POS + 10 }
+    #define SINGLENOZZLE_PARK_XY_FEEDRATE 6000  // (mm/m)
   #endif
  #endif
 #endif
+// Z raise distance for tool-change, as needed for some extruders
+#define TOOLCHANGE_ZRAISE     2  // (mm)
 
 /**
  * Průša MK2 Single Nozzle Multi-Material Multiplexer, and variants.
@@ -1183,7 +1183,7 @@
      #define Y_PROBE_OFFSET_FROM_EXTRUDER -15  // Y offset: -front +behind [the nozzle]
      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
    #endif
-   
+
    #if (ENABLED(ABL_BLTOUCH) && ENABLED(HotendE3D))
      #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]

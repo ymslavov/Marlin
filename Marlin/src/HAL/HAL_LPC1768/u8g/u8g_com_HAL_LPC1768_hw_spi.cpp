@@ -55,7 +55,7 @@
 
 #ifdef TARGET_LPC1768
 
-#include "../../inc/MarlinConfigPre.h"
+#include "../../../inc/MarlinConfigPre.h"
 
 #if ENABLED(DOGLCD)
 

@@ -55,13 +55,14 @@
 
 #ifdef TARGET_LPC1768
 
-#include "../../inc/MarlinConfigPre.h"
+#include "../../../inc/MarlinConfigPre.h"
 
 #if ENABLED(DOGLCD)
 
 #include <U8glib.h>
 #include "SoftwareSPI.h"
 
+#undef SPI_SPEED
 #define SPI_SPEED 2  // About 2 MHz
 
 static uint8_t SPI_speed = 0;

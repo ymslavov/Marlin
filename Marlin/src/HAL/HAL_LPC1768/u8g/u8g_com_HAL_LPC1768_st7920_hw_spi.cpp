@@ -55,13 +55,13 @@
 
 #ifdef TARGET_LPC1768
 
-#include "../../inc/MarlinConfigPre.h"
+#include "../../../inc/MarlinConfigPre.h"
 
 #if ENABLED(DOGLCD)
 
 //#include <inttypes.h>
 #include <U8glib.h>
-#include "../shared/Delay.h"
+#include "../../shared/Delay.h"
 
 #define SPI_FULL_SPEED 0
 #define SPI_HALF_SPEED 1
