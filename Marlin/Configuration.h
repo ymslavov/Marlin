@@ -7,7 +7,7 @@
    Choose this for CR10 Original Melzi Board
    You still need to select a machine size below!
 */
-#define MachineCR10Orig
+//#define MachineCR10Orig
 
 /*
    Enabled this for linear advance instead of mesh leveling on a melzi board
@@ -87,7 +87,7 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
-#define ABL_BLTOUCH
+//#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
 /*
@@ -95,7 +95,7 @@
    Requires a sensor from above
    Melzi board users may only select ABL_BI for bilinear leveling
 */
-#define ABL_BI
+//#define ABL_BI
 //#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
@@ -116,7 +116,7 @@
    Intended to resolve issues with certain newer boards experiencing motion errors under load.
    Enables Slim Menus
 */
-#define LowMemoryBoard
+//#define LowMemoryBoard
 
 
 /*
