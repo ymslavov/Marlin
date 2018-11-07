@@ -73,8 +73,8 @@
 #ifndef X_MAX_PIN
   #define X_MAX_PIN         2
 #endif
-#define Y_MIN_PIN          15
-#define Y_MAX_PIN          14
+#define Y_MIN_PIN          14
+#define Y_MAX_PIN          15
 #define Z_MIN_PIN          18
 #define Z_MAX_PIN          19
 
@@ -138,7 +138,7 @@
   #endif
 #endif
 
-#if ENABLED(HAVE_TMC2208)
+#if HAS_DRIVER(TMC2208)
   /**
    * TMC2208 stepper drivers
    *
@@ -223,46 +223,48 @@
 // Heaters / Fans
 //
 #ifndef MOSFET_D_PIN
-  #define MOSFET_D_PIN  -1
+  #define MOSFET_D_PIN     -1
 #endif
 #ifndef RAMPS_D8_PIN
-  #define RAMPS_D8_PIN   8
+  #define RAMPS_D8_PIN      8
 #endif
 #ifndef RAMPS_D9_PIN
-  #define RAMPS_D9_PIN   9
+  #define RAMPS_D9_PIN      9
 #endif
 #ifndef RAMPS_D10_PIN
-  #define RAMPS_D10_PIN 10
+  #define RAMPS_D10_PIN    10
 #endif
 
-#define HEATER_0_PIN     RAMPS_D10_PIN
+#define HEATER_0_PIN       RAMPS_D10_PIN
 
 #if ENABLED(IS_RAMPS_EFB)                      // Hotend, Fan, Bed
-  #define FAN_PIN        RAMPS_D9_PIN
-  #define HEATER_BED_PIN RAMPS_D8_PIN
+  #define HEATER_BED_PIN   RAMPS_D8_PIN
 #elif ENABLED(IS_RAMPS_EEF)                    // Hotend, Hotend, Fan
-  #define HEATER_1_PIN   RAMPS_D9_PIN
-  #define FAN_PIN        RAMPS_D8_PIN
+  #define HEATER_1_PIN     RAMPS_D9_PIN
 #elif ENABLED(IS_RAMPS_EEB)                    // Hotend, Hotend, Bed
-  #define HEATER_1_PIN   RAMPS_D9_PIN
-  #define HEATER_BED_PIN RAMPS_D8_PIN
+  #define HEATER_1_PIN     RAMPS_D9_PIN
+  #define HEATER_BED_PIN   RAMPS_D8_PIN
 #elif ENABLED(IS_RAMPS_EFF)                    // Hotend, Fan, Fan
-  #define FAN_PIN        RAMPS_D9_PIN
-  #define FAN1_PIN       RAMPS_D8_PIN
-#elif ENABLED(IS_RAMPS_SF)                     // Spindle, Fan
-  #define FAN_PIN        RAMPS_D8_PIN
-#else                                          // Non-specific are "EFB" (i.e., "EFBF" or "EFBE")
-  #define FAN_PIN        RAMPS_D9_PIN
-  #define HEATER_BED_PIN RAMPS_D8_PIN
+  #define FAN1_PIN         RAMPS_D8_PIN
+#elif DISABLED(IS_RAMPS_SF)                    // Not Spindle, Fan (i.e., "EFBF" or "EFBE")
+  #define HEATER_BED_PIN   RAMPS_D8_PIN
   #if HOTENDS == 1
-    #define FAN1_PIN     MOSFET_D_PIN
+    #define FAN1_PIN       MOSFET_D_PIN
   #else
-    #define HEATER_1_PIN MOSFET_D_PIN
+    #define HEATER_1_PIN   MOSFET_D_PIN
   #endif
 #endif
 
 #ifndef FAN_PIN
-  #define FAN_PIN           4   // IO pin. Buffer needed
+  #if ENABLED(IS_RAMPS_EFB) || ENABLED(IS_RAMPS_EFF)  // Hotend, Fan, Bed or Hotend, Fan, Fan
+    #define FAN_PIN        RAMPS_D9_PIN
+  #elif ENABLED(IS_RAMPS_EEF) || ENABLED(IS_RAMPS_SF) // Hotend, Hotend, Fan or Spindle, Fan
+    #define FAN_PIN        RAMPS_D8_PIN
+  #elif ENABLED(IS_RAMPS_EEB)                         // Hotend, Hotend, Bed
+    #define FAN_PIN         4   // IO pin. Buffer needed
+  #else                                               // Non-specific are "EFB" (i.e., "EFBF" or "EFBE")
+    #define FAN_PIN        RAMPS_D9_PIN
+  #endif
 #endif
 
 //
@@ -277,7 +279,7 @@
 
 // define digital pin 4 for the filament runout sensor. Use the RAMPS 1.4 digital input 4 on the servos connector
 #ifndef FIL_RUNOUT_PIN
-  #define FIL_RUNOUT_PIN    2
+  #define FIL_RUNOUT_PIN    4
 #endif
 
 #ifndef PS_ON_PIN
