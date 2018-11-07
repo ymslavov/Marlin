@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Galician language (ISO "gl")
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_GL_H
-#define LANGUAGE_GL_H
 
 #define DISPLAY_CHARSET_ISO10646_1
 #define NOT_EXTENDED_ISO10646_1_5X7
@@ -164,7 +163,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Retraccion auto.")
 #define MSG_FILAMENTCHANGE                  _UxGT("Cambiar filamen.")
 #define MSG_INIT_SDCARD                     _UxGT("Iniciando SD")
-#define MSG_CNG_SDCARD                      _UxGT("Cambiar SD")
+#define MSG_CHANGE_SDCARD                   _UxGT("Cambiar SD")
 #define MSG_ZPROBE_OUT                      _UxGT("Sonda-Z sen cama")
 #define MSG_HOME                            _UxGT("Home")  // Used as MSG_HOME " " MSG_X MSG_Y MSG_Z " " MSG_FIRST
 #define MSG_BLTOUCH_SELFTEST                _UxGT("Comprobar BLTouch")
@@ -251,5 +250,3 @@
   #define MSG_FILAMENT_CHANGE_LOAD_1          _UxGT("Cargando...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Seguindo...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_GL_H

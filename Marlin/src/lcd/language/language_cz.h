@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Czech
@@ -32,8 +33,6 @@
  * http://www.zahradniksebavi.cz
  *
  */
-#ifndef LANGUAGE_CZ_UTF_H
-#define LANGUAGE_CZ_UTF_H
 
 #define DISPLAY_CHARSET_ISO10646_CZ
 #define CHARSIZE 2
@@ -128,7 +127,7 @@
 #define MSG_UBL_OUTPUT_MAP_CSV              _UxGT("Exportovat do CSV")
 #define MSG_UBL_OUTPUT_MAP_BACKUP           _UxGT("Záloha do PC")
 #define MSG_UBL_INFO_UBL                    _UxGT("Info o UBL do PC")
-#define MSG_UBL_EDIT_MESH_MENU              _UxGT("Upravit síť bodů")
+#define MSG_EDIT_MESH                       _UxGT("Upravit síť bodů")
 #define MSG_UBL_FILLIN_AMOUNT               _UxGT("Hustota mřížky")
 #define MSG_UBL_MANUAL_FILLIN               _UxGT("Ruční hustota")
 #define MSG_UBL_SMART_FILLIN                _UxGT("Chytrá hustota")
@@ -280,7 +279,7 @@
 #define MSG_FILAMENTUNLOAD_ALL              _UxGT("Vysunout vše")
 
 #define MSG_INIT_SDCARD                     _UxGT("Načíst SD kartu")
-#define MSG_CNG_SDCARD                      _UxGT("Vyměnit SD kartu")
+#define MSG_CHANGE_SDCARD                   _UxGT("Vyměnit SD kartu")
 #define MSG_ZPROBE_OUT                      _UxGT("Sonda Z mimo podl")
 #define MSG_SKEW_FACTOR                     _UxGT("Faktor zkosení")
 #define MSG_BLTOUCH                         _UxGT("BLTouch")
@@ -406,5 +405,3 @@
   #define MSG_FILAMENT_CHANGE_PURGE_1         _UxGT("Vytlačování...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Pokračování...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_CZ_UTF_H

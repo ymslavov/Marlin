@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * stepper_indirection.h - stepper motor driver indirection macros
@@ -41,9 +42,6 @@
  * along with Marlin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STEPPER_INDIRECTION_H
-#define STEPPER_INDIRECTION_H
-
 #include "../inc/MarlinConfig.h"
 
 // TMC26X drivers have STEP/DIR on normal pins, but ENABLE via SPI
@@ -60,8 +58,8 @@
 #if HAS_TRINAMIC
   #include <TMCStepper.h>
   #include "../feature/tmc_util.h"
-  #if TMCSTEPPER_VERSION < 0x000001
-    #error "Update TMCStepper library to 0.0.1 or newer."
+  #if TMCSTEPPER_VERSION < 0x000202
+    #error "Update TMCStepper library to 0.2.2 or newer."
   #endif
 
   #define __TMC_CLASS(MODEL, A, I) TMCMarlin<TMC##MODEL##Stepper, A, I>
@@ -615,5 +613,3 @@ void reset_stepper_drivers();    // Called by settings.load / settings.reset
   #define   NORM_E_DIR(E)   E0_DIR_WRITE(!INVERT_E0_DIR)
   #define    REV_E_DIR(E)   E0_DIR_WRITE( INVERT_E0_DIR)
 #endif
-
-#endif // STEPPER_INDIRECTION_H

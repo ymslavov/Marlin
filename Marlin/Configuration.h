@@ -21,8 +21,8 @@
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
-#define MachineCR10Std
-//#define MachineCRX
+//#define MachineCR10Std
+#define MachineCRX
 //#define MachineS4
 //#define MachineS5
 
@@ -382,20 +382,7 @@
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
 #if(ENABLED(Dual_BowdenSplitterY) || ENABLED(Dual_CyclopsSingleNozzle))
   #define SINGLENOZZLE
-  #if ENABLED(SINGLENOZZLE)
-  // Length of filament to retract and prime on toolchange
-  #define SINGLENOZZLE_SWAP_LENGTH 80.0
-  #define SINGLENOZZLE_SWAP_RETRACT_SPEED 3600 // Retracting speed in mm/m
-  #define SINGLENOZZLE_SWAP_PRIME_SPEED 3600 // Prime speed in mm/m
-  #define SINGLENOZZLE_SWAP_PARK
-  #if ENABLED(SINGLENOZZLE_SWAP_PARK)
-  #define SINGLENOZZLE_TOOLCHANGE_XY    { X_MIN_POS + 10, Y_MIN_POS + 10 }
-    #define SINGLENOZZLE_PARK_XY_FEEDRATE 6000  // (mm/m)
-  #endif
- #endif
 #endif
-// Z raise distance for tool-change, as needed for some extruders
-#define TOOLCHANGE_ZRAISE     2  // (mm)
 
 /**
  * Průša MK2 Single Nozzle Multi-Material Multiplexer, and variants.
@@ -1775,7 +1762,7 @@ GRID_MAX_POINTS_X 3
 #endif
 
 #if ENABLED(LCD_BED_LEVELING)
-  #define MBL_Z_STEP 0.025    // Step size while manually probing Z axis.
+  #define MESH_EDIT_Z_STEP 0.025    // Step size while manually probing Z axis.
   #define LCD_PROBE_Z_RANGE 8 // Z Range centered on Z_MIN_POS for LCD Z adjustment
 #endif
 

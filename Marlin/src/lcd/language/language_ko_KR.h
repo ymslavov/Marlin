@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Korean
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_KO_KR_H
-#define LANGUAGE_KO_KR_H
 
 #define CHARSIZE 1
 
@@ -134,7 +133,7 @@
 #define MSG_UBL_OUTPUT_MAP_CSV              _UxGT("Output for CSV")
 #define MSG_UBL_OUTPUT_MAP_BACKUP           _UxGT("Off Printer Backup")
 #define MSG_UBL_INFO_UBL                    _UxGT("Output UBL Info")
-#define MSG_UBL_EDIT_MESH_MENU              _UxGT("Edit Mesh")
+#define MSG_EDIT_MESH                       _UxGT("Edit Mesh")
 #define MSG_UBL_FILLIN_AMOUNT               _UxGT("Fill-in Amount")
 #define MSG_UBL_MANUAL_FILLIN               _UxGT("Manual Fill-in")
 #define MSG_UBL_SMART_FILLIN                _UxGT("Smart Fill-in")
@@ -285,7 +284,7 @@
 #define MSG_FILAMENTUNLOAD                  _UxGT("Unload filament")
 #define MSG_FILAMENTUNLOAD_ALL              _UxGT("Unload All")
 #define MSG_INIT_SDCARD                     _UxGT("Init. SD card")
-#define MSG_CNG_SDCARD                      _UxGT("Change SD card")
+#define MSG_CHANGE_SDCARD                   _UxGT("Change SD card")
 #define MSG_ZPROBE_OUT                      _UxGT("Z Probe past bed")
 #define MSG_SKEW_FACTOR                     _UxGT("Skew Factor")
 #define MSG_BLTOUCH                         _UxGT("BLTouch")
@@ -412,5 +411,3 @@
   #define MSG_FILAMENT_CHANGE_PURGE_1         _UxGT("Purging...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Resuming...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_KO_KR_H

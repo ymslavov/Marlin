@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Turkish
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_TR_H
-#define LANGUAGE_TR_H
 
 #define DISPLAY_CHARSET_ISO10646_TR
 #define CHARSIZE 2
@@ -173,7 +172,7 @@
 #define MSG_AUTORETRACT                     _UxGT("AutoRetr.")                                          // AutoRetr.
 #define MSG_FILAMENTCHANGE                  _UxGT("Filaman Değiştir")                                   // Filaman Değiştir
 #define MSG_INIT_SDCARD                     _UxGT("Init. SD")                                           // Init. SD
-#define MSG_CNG_SDCARD                      _UxGT("SD Değiştir")                                        // SD Değiştir
+#define MSG_CHANGE_SDCARD                   _UxGT("SD Değiştir")                                        // SD Değiştir
 #define MSG_ZPROBE_OUT                      _UxGT("Z Prob Açık. Tabla")                                 // Z Prob Açık. Tabla
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Self-Test")                                  // BLTouch Self-Test
 #define MSG_BLTOUCH_RESET                   _UxGT("Sıfırla BLTouch")                                    // Sıfırla BLTouch
@@ -266,5 +265,3 @@
   #define MSG_FILAMENT_CHANGE_LOAD_1          _UxGT("Yüklüyor...")                                      // Yüklüyor...
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Sürdürülüyor...")                                  // Sürdürülüyor...
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_TR_H

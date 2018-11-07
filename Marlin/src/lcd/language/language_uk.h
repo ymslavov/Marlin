@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Ukrainian
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_UK_H
-#define LANGUAGE_UK_H
 
 #define DISPLAY_CHARSET_ISO10646_5
 #define CHARSIZE 2
@@ -156,7 +155,7 @@
 #define MSG_STOPPED                         _UxGT("ЗУПИНЕНО. ")
 #define MSG_FILAMENTCHANGE                  _UxGT("Зміна волокна")
 #define MSG_INIT_SDCARD                     _UxGT("Старт SD картки")
-#define MSG_CNG_SDCARD                      _UxGT("Заміна SD карти")
+#define MSG_CHANGE_SDCARD                   _UxGT("Заміна SD карти")
 #define MSG_ZPROBE_OUT                      _UxGT("Z дет. не в межах")
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Само-Тест")
 #define MSG_BLTOUCH_RESET                   _UxGT("Скинути BLTouch")
@@ -240,5 +239,3 @@
   #define MSG_FILAMENT_CHANGE_LOAD_1          _UxGT("Ввід...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Відновлення...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_UK_H

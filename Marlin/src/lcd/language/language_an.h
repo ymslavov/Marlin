@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Aragonese
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_AN_H
-#define LANGUAGE_AN_H
 
 #define DISPLAY_CHARSET_ISO10646_1
 #define NOT_EXTENDED_ISO10646_1_5X7
@@ -165,7 +164,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Retraccion auto.")
 #define MSG_FILAMENTCHANGE                  _UxGT("Cambear filamento")
 #define MSG_INIT_SDCARD                     _UxGT("Encetan. tarcheta")
-#define MSG_CNG_SDCARD                      _UxGT("Cambiar tarcheta")
+#define MSG_CHANGE_SDCARD                   _UxGT("Cambiar tarcheta")
 #define MSG_ZPROBE_OUT                      _UxGT("Sonda Z fuera")
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Auto-Test")
 #define MSG_BLTOUCH_RESET                   _UxGT("Reset BLTouch")
@@ -256,5 +255,3 @@
 #define MSG_FILAMENT_CHANGE_LOAD_2          _UxGT("cargar filamento")
 #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Aguardando impre.")
 #define MSG_FILAMENT_CHANGE_RESUME_2        _UxGT("pa continar")
-
-#endif // LANGUAGE_AN_H

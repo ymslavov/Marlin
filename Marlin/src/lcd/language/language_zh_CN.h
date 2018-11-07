@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Simplified Chinese
@@ -27,10 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_ZH_CN_H
-#define LANGUAGE_ZH_CN_H
-
-//#define TALL_FONT_CORRECTION (1)
 
 #define CHARSIZE 3
 
@@ -122,7 +119,7 @@
 #define MSG_UBL_OUTPUT_MAP_CSV              _UxGT("输出到CSV") // "Output for CSV"
 #define MSG_UBL_OUTPUT_MAP_BACKUP           _UxGT("输出到备份") // "Off Printer Backup"
 #define MSG_UBL_INFO_UBL                    _UxGT("输出UBL信息") // "Output UBL Info"
-#define MSG_UBL_EDIT_MESH_MENU              _UxGT("编辑网格") // "Edit Mesh"
+#define MSG_EDIT_MESH                       _UxGT("编辑网格") // "Edit Mesh"
 #define MSG_UBL_FILLIN_AMOUNT               _UxGT("填充合计") // "Fill-in Amount"
 #define MSG_UBL_MANUAL_FILLIN               _UxGT("手工填充") // "Manual Fill-in"
 #define MSG_UBL_SMART_FILLIN                _UxGT("聪明填充") // "Smart Fill-in"
@@ -229,7 +226,7 @@
 #define MSG_E6STEPS                         _UxGT("挤出机6步数/mm") //"E6steps/mm"
 #define MSG_TEMPERATURE                     _UxGT("温度")  //"Temperature"
 #define MSG_MOTION                          _UxGT("运动")  //"Motion"
-#define MSG_FILAMENT                        _UxGT("丝料测容")  //"Filament" lcd_control_volumetric_menu
+#define MSG_FILAMENT                        _UxGT("丝料测容")  //"Filament" menu_advanced_filament
 #define MSG_VOLUMETRIC_ENABLED              _UxGT("测容积mm³")  //"E in mm3" volumetric_enabled
 #define MSG_FILAMENT_DIAM                   _UxGT("丝料直径")  //"Fil. Dia."
 #define MSG_FILAMENT_UNLOAD                 _UxGT("卸载 mm") // "Unload mm"
@@ -270,7 +267,7 @@
 #define MSG_FILAMENTUNLOAD                  _UxGT("卸载丝料") // "Unload filament"
 #define MSG_FILAMENTUNLOAD_ALL              _UxGT("卸载全部") // "Unload All"
 #define MSG_INIT_SDCARD                     _UxGT("初始化存储卡")  //"Init. SD card"
-#define MSG_CNG_SDCARD                      _UxGT("更换存储卡")  //"Change SD card"
+#define MSG_CHANGE_SDCARD                   _UxGT("更换存储卡")  //"Change SD card"
 #define MSG_ZPROBE_OUT                      _UxGT("Z探针在热床之外")  //"Z probe out. bed" Z probe is not within the physical limits
 #define MSG_SKEW_FACTOR                     _UxGT("偏斜因数") // "Skew Factor"
 #define MSG_BLTOUCH                         _UxGT("BLTouch")     // "BLTouch"
@@ -386,5 +383,3 @@
   #define MSG_FILAMENT_CHANGE_PURGE_1       _UxGT("清除中 ...") // "Purging..."
   #define MSG_FILAMENT_CHANGE_RESUME_1      _UxGT("恢复中 ...")  //"Resuming..."
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_ZH_CN_H

@@ -19,9 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-#ifndef BOARDS_H
-#define BOARDS_H
+#pragma once
 
 #define BOARD_UNKNOWN -1
 
@@ -83,6 +81,7 @@
 #define BOARD_TRIGORILLA_13     343   // TriGorilla Anycubic version 1.3 based on RAMPS EFB
 #define BOARD_TRIGORILLA_14     443   // TriGorilla Anycubic version 1.4 based on RAMPS EFB
 #define BOARD_RAMPS_ENDER_4     243   // Creality: Ender-4, CR-8
+#define BOARD_RAMPS_CREALITY    244   // Creality: CR10S, CR20, CR-X
 #define BOARD_FYSETC_F6_13      541   // Fysetc F6
 
 //
@@ -246,5 +245,3 @@
 #define BOARD_ESP32            1900
 
 #define MB(board) (defined(BOARD_##board) && MOTHERBOARD==BOARD_##board)
-
-#endif // __BOARDS_H

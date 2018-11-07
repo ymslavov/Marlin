@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Spanish
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_ES_UTF_H
-#define LANGUAGE_ES_UTF_H
 
 #define DISPLAY_CHARSET_ISO10646_1
 #define CHARSIZE 2
@@ -162,7 +161,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Retracción Auto.")
 #define MSG_FILAMENTCHANGE                  _UxGT("Cambiar filamento")
 #define MSG_INIT_SDCARD                     _UxGT("Iniciando tarjeta")
-#define MSG_CNG_SDCARD                      _UxGT("Cambiar tarjeta")
+#define MSG_CHANGE_SDCARD                   _UxGT("Cambiar tarjeta")
 #define MSG_ZPROBE_OUT                      _UxGT("Sonda Z fuera")
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Auto-Prueba")
 #define MSG_BLTOUCH_RESET                   _UxGT("Reiniciar BLTouch")
@@ -262,5 +261,3 @@
 #define MSG_FILAMENT_CHANGE_HEAT_2          _UxGT("Calentar la boquilla")
 #define MSG_FILAMENT_CHANGE_HEATING_1       _UxGT("Calentando boquilla")
 #define MSG_FILAMENT_CHANGE_HEATING_2       _UxGT("Espere por favor")
-
-#endif // LANGUAGE_ES_UTF_H

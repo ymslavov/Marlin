@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Japanese (Kana)
@@ -28,9 +29,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-
-#ifndef LANGUAGE_KANA_UTF_H
-#define LANGUAGE_KANA_UTF_H
 
 #define DISPLAY_CHARSET_ISO10646_KANA
 #define CHARSIZE 3
@@ -159,7 +157,7 @@
 #define MSG_AUTORETRACT                     _UxGT("ジドウヒキコミ")                 // "AutoRetr."
 #define MSG_FILAMENTCHANGE                  _UxGT("フィラメントコウカン")              // "Change filament"
 #define MSG_INIT_SDCARD                     _UxGT("SDカードサイヨミコミ")             // "Init. SD card"
-#define MSG_CNG_SDCARD                      _UxGT("SDカードコウカン")               // "Change SD card"
+#define MSG_CHANGE_SDCARD                   _UxGT("SDカードコウカン")               // "Change SD card"
 #define MSG_ZPROBE_OUT                      _UxGT("Zプローブ ベッドガイ")            // "Z probe out. bed"
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch ジコシンダン")          // "BLTouch Self-Test"
 #define MSG_BLTOUCH_RESET                   _UxGT("BLTouch リセット")             // "Reset BLTouch"
@@ -221,5 +219,3 @@
 #define MSG_FILAMENT_CHANGE_LOAD_2          _UxGT("シバラクオマチクダサイ")            // "filament load"
 #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("プリントヲサイカイシマス")           // "Wait for print"
 #define MSG_FILAMENT_CHANGE_RESUME_2        _UxGT("シバラクオマチクダサイ")            // "to resume"
-
-#endif // LANGUAGE_KANA_UTF_H

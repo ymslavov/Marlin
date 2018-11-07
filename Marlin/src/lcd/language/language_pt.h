@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Portuguese
@@ -28,8 +29,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_PT_UTF_H
-#define LANGUAGE_PT_UTF_H
 
 #define DISPLAY_CHARSET_ISO10646_1
 #define CHARSIZE 2
@@ -161,7 +160,7 @@
 #define MSG_AUTORETRACT                     _UxGT(" AutoRetr.")
 #define MSG_FILAMENTCHANGE                  _UxGT("Trocar filamento")
 #define MSG_INIT_SDCARD                     _UxGT("Inici. cartão SD")
-#define MSG_CNG_SDCARD                      _UxGT("Trocar cartão SD")
+#define MSG_CHANGE_SDCARD                   _UxGT("Trocar cartão SD")
 #define MSG_ZPROBE_OUT                      _UxGT("Sensor fora/base")
 #define MSG_HOME                            _UxGT("Home")  // Used as MSG_HOME " " MSG_X MSG_Y MSG_Z " " MSG_FIRST
 #define MSG_FIRST                           _UxGT("first")
@@ -186,5 +185,3 @@
 #define MSG_DELTA_CALIBRATE_CENTER          _UxGT("Calibrar Centro")
 
 #define MSG_LCD_ENDSTOPS                    _UxGT("Fim de curso")
-
-#endif // LANGUAGE_PT_UTF_H

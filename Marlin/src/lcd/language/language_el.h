@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Greek
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_EL_H
-#define LANGUAGE_EL_H
 
 #define DISPLAY_CHARSET_ISO10646_GREEK
 #define CHARSIZE 2
@@ -163,7 +162,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Αυτόματη ανάσυρση")
 #define MSG_FILAMENTCHANGE                  _UxGT("Αλλαγή νήματος")
 #define MSG_INIT_SDCARD                     _UxGT("Προετοιμασία κάρτας SD")  //SHORTEN
-#define MSG_CNG_SDCARD                      _UxGT("Αλλαγή κάρτας SD")
+#define MSG_CHANGE_SDCARD                   _UxGT("Αλλαγή κάρτας SD")
 #define MSG_ZPROBE_OUT                      _UxGT("Διερεύνηση Z εκτός Επ.Εκτύπωσης") //SHORTEN
 #define MSG_YX_UNHOMED                      _UxGT("Επαναφορά Χ/Υ πριν από Ζ") //SHORTEN
 #define MSG_XYZ_UNHOMED                     _UxGT("Επαναφορά ΧΥΖ πρώτα")
@@ -187,5 +186,3 @@
 #define MSG_DELTA_CALIBRATE_Y               _UxGT("Βαθμονόμηση Y")
 #define MSG_DELTA_CALIBRATE_Z               _UxGT("Βαθμονόμηση Z")
 #define MSG_DELTA_CALIBRATE_CENTER          _UxGT("Βαθμονόμηση κέντρου")
-
-#endif // LANGUAGE_EL_H

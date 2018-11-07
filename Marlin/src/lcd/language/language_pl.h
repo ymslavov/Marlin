@@ -19,13 +19,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Polish for DOGM display - includes accented characters
  */
-
-#ifndef LANGUAGE_PL_DOGM_H
-#define LANGUAGE_PL_DOGM_H
 
 #define DISPLAY_CHARSET_ISO10646_PL
 
@@ -164,7 +162,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Auto. wycofanie")
 #define MSG_FILAMENTCHANGE                  _UxGT("Zmień filament")
 #define MSG_INIT_SDCARD                     _UxGT("Inicjal. karty SD")
-#define MSG_CNG_SDCARD                      _UxGT("Zmiana karty SD")
+#define MSG_CHANGE_SDCARD                   _UxGT("Zmiana karty SD")
 #define MSG_ZPROBE_OUT                      _UxGT("Sonda Z za stołem")
 #define MSG_BLTOUCH_SELFTEST                _UxGT("BLTouch Self-Test")
 #define MSG_BLTOUCH_RESET                   _UxGT("Reset BLTouch")
@@ -253,5 +251,3 @@
   #define MSG_FILAMENT_CHANGE_LOAD_1          _UxGT("Ładowanie...")
   #define MSG_FILAMENT_CHANGE_RESUME_1        _UxGT("Wznowienie...")
 #endif // LCD_HEIGHT < 4
-
-#endif  // LANGUAGE_PL_DOGM_H

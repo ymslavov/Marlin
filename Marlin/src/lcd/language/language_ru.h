@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Russian
@@ -27,8 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_RU_H
-#define LANGUAGE_RU_H
 
 #define DISPLAY_CHARSET_ISO10646_5
 #define CHARSIZE 2
@@ -124,7 +123,7 @@
 #define MSG_UBL_OUTPUT_MAP_CSV              _UxGT("Вывести в CSV")
 #define MSG_UBL_OUTPUT_MAP_BACKUP           _UxGT("Забекапить сетку")
 #define MSG_UBL_INFO_UBL                    _UxGT("Вывод информации UBL")
-#define MSG_UBL_EDIT_MESH_MENU              _UxGT("Редактировать сетку")
+#define MSG_EDIT_MESH                       _UxGT("Редактировать сетку")
 #define MSG_UBL_FILLIN_AMOUNT               _UxGT("Кол-во заполнителя")
 #define MSG_UBL_MANUAL_FILLIN               _UxGT("Ручное заполнение")
 #define MSG_UBL_SMART_FILLIN                _UxGT("Умное заполнение")
@@ -272,7 +271,7 @@
 #define MSG_FILAMENTUNLOAD                  _UxGT("Выгрузка филамента")
 #define MSG_FILAMENTUNLOAD_ALL              _UxGT("Выгрузить всё")
 #define MSG_INIT_SDCARD                     _UxGT("Иниц. SD карту")
-#define MSG_CNG_SDCARD                      _UxGT("Сменить SD карту")
+#define MSG_CHANGE_SDCARD                   _UxGT("Сменить SD карту")
 #define MSG_ZPROBE_OUT                      _UxGT("Z датчик вне стола")
 #define MSG_SKEW_FACTOR                     _UxGT("Фактор наклона")
 #define MSG_BLTOUCH                         _UxGT("BLTouch")
@@ -399,5 +398,3 @@
   #define MSG_FILAMENT_CHANGE_PURGE_1       _UxGT("Выдавливание...")
   #define MSG_FILAMENT_CHANGE_RESUME_1      _UxGT("Возобновление...")
 #endif // LCD_HEIGHT < 4
-
-#endif // LANGUAGE_RU_H

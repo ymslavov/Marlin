@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Bulgarian
@@ -27,9 +28,6 @@
  * See also http://marlinfw.org/docs/development/lcd_language.html
  *
  */
-#ifndef LANGUAGE_BG_H
-#define LANGUAGE_BG_H
-
 #define DISPLAY_CHARSET_ISO10646_5
 #define CHARSIZE 2
 
@@ -134,7 +132,7 @@
 #define MSG_AUTORETRACT                     _UxGT("Автоoткат")
 #define MSG_FILAMENTCHANGE                  _UxGT("Смяна нишка")
 #define MSG_INIT_SDCARD                     _UxGT("Иниц. SD-Карта")
-#define MSG_CNG_SDCARD                      _UxGT("Смяна SD-Карта")
+#define MSG_CHANGE_SDCARD                   _UxGT("Смяна SD-Карта")
 #define MSG_ZPROBE_OUT                      _UxGT("Z-сондата е извадена")
 #define MSG_ZPROBE_ZOFFSET                  _UxGT("Z Отстояние")
 #define MSG_BABYSTEP_X                      _UxGT("Министъпка X")
@@ -146,5 +144,3 @@
 #define MSG_DELTA_CALIBRATE_Y               _UxGT("Калибровка Y")
 #define MSG_DELTA_CALIBRATE_Z               _UxGT("Калибровка Z")
 #define MSG_DELTA_CALIBRATE_CENTER          _UxGT("Калибровка Център")
-
-#endif // LANGUAGE_BG_H
