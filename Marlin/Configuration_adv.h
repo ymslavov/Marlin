@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+#pragma once
 
 /**
  * Configuration_adv.h
@@ -30,8 +31,6 @@
  * Basic settings can be found in Configuration.h
  *
  */
-#ifndef CONFIGURATION_ADV_H
-#define CONFIGURATION_ADV_H
 #define CONFIGURATION_ADV_H_VERSION 020000
 
 // @section temperature
@@ -190,8 +189,8 @@
 #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
   #define EXTRUDER_RUNOUT_MINTEMP 190
   #define EXTRUDER_RUNOUT_SECONDS 30
-  #define EXTRUDER_RUNOUT_SPEED 1500  // mm/m
-  #define EXTRUDER_RUNOUT_EXTRUDE 5   // mm
+  #define EXTRUDER_RUNOUT_SPEED 1500  // (mm/m)
+  #define EXTRUDER_RUNOUT_EXTRUDE 5   // (mm)
 #endif
 
 // @section temperature
@@ -259,7 +258,7 @@
 #define E5_AUTO_FAN_PIN -1
 #define CHAMBER_AUTO_FAN_PIN -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED   255  // == full speed
+#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
 
 /**
  * Part-Cooling Fan Multiplexer
@@ -401,10 +400,6 @@
   // This is the default power-up mode which can be later using M605.
   #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_FULL_CONTROL_MODE
 
-  // Default settings in "Auto-park Mode"
-  #define TOOLCHANGE_PARK_ZLIFT   0.2      // the distance to raise Z axis when parking an extruder
-  #define TOOLCHANGE_UNPARK_ZLIFT 1        // the distance to raise Z axis when unparking an extruder
-
   // Default x offset in duplication mode (typically set to half print bed width)
   #define DEFAULT_DUPLICATION_X_OFFSET 100
 
@@ -428,6 +423,27 @@
 
 // Enable this if X or Y can't home without homing the other axis first.
 //#define CODEPENDENT_XY_HOMING
+
+/**
+ * Z Steppers Auto-Alignment
+ * Add the G34 command to align multiple Z steppers using a bed probe.
+ */
+//#define Z_STEPPER_AUTO_ALIGN
+#if ENABLED(Z_STEPPER_AUTO_ALIGN)
+  // Define probe X and Y positions for Z1, Z2 [, Z3]
+  #define Z_STEPPER_ALIGN_X { 10, 150, 290 }
+  #define Z_STEPPER_ALIGN_Y { 290, 10, 290 }
+  // Set number of iterations to align
+  #define Z_STEPPER_ALIGN_ITERATIONS 3
+  // Enable to restore leveling setup after operation
+  #define RESTORE_LEVELING_AFTER_G34
+  // Use the amplification factor to de-/increase correction step.
+  // In case the stepper (spindle) position is further out than the test point
+  // Use a value > 1. NOTE: This may cause instability
+  #define Z_STEPPER_ALIGN_AMP 1.0
+  // Stop criterion. If the accuracy is better than this stop iterating early
+  #define Z_STEPPER_ALIGN_ACC 0.02
+#endif
 
 // @section machine
 
@@ -499,6 +515,17 @@
  */
 //#define ADAPTIVE_STEP_SMOOTHING
 
+/**
+ * Custom Microstepping
+ * Override as-needed for your setup. Up to 3 MS pins are supported.
+ */
+//#define MICROSTEP1 LOW,LOW,LOW
+//#define MICROSTEP2 HIGH,LOW,LOW
+//#define MICROSTEP4 LOW,HIGH,LOW
+//#define MICROSTEP8 HIGH,HIGH,LOW
+//#define MICROSTEP16 LOW,LOW,HIGH
+//#define MICROSTEP32 HIGH,LOW,HIGH
+
 // Microstep setting (Only functional when stepper driver microstep pins are connected to MCU.
 #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 } // [1,2,4,8,16]
 
@@ -552,18 +579,18 @@
 //=============================Additional Features===========================
 //===========================================================================
 
-#define ENCODER_RATE_MULTIPLIER         // If defined, certain menu edit operations automatically multiply the steps when the encoder is moved quickly
-#define ENCODER_10X_STEPS_PER_SEC 75    // If the encoder steps per sec exceeds this value, multiply steps moved x10 to quickly advance the value
-#define ENCODER_100X_STEPS_PER_SEC 160  // If the encoder steps per sec exceeds this value, multiply steps moved x100 to really quickly advance the value
-
-//#define CHDK 4        //Pin for triggering CHDK to take a picture see how to use it here http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
-#define CHDK_DELAY 50 //How long in ms the pin should stay HIGH before going LOW again
-
 // @section lcd
 
+// Change values more rapidly when the encoder is rotated faster
+#define ENCODER_RATE_MULTIPLIER
+#if ENABLED(ENCODER_RATE_MULTIPLIER)
+  #define ENCODER_10X_STEPS_PER_SEC   30  // (steps/s) Encoder rate for 10x speed
+  #define ENCODER_100X_STEPS_PER_SEC  80  // (steps/s) Encoder rate for 100x speed
+#endif
+
 // Include a page of printer information in the LCD Main Menu
-  #if(DISABLED(MachineCR10Orig))
-#define LCD_INFO_MENU
+#if(DISABLED(MachineCR10Orig))
+  #define LCD_INFO_MENU
 #endif
 // Leave out seldom-used LCD menu items to recover some Program Memory
  #if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
@@ -624,7 +651,7 @@
   #define SD_DETECT_INVERTED
 
   #define SD_FINISHED_STEPPERRELEASE true          // Disable steppers when SD Print is finished
-  #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the z enabled so your bed stays in place.
+  #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the Z enabled so your bed stays in place.
 
   // Reverse SD sort to show "more recent" files first, according to the card's FAT.
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
@@ -671,7 +698,6 @@
    *  - SDSORT_CACHE_NAMES will retain the sorted file listing in RAM. (Expensive!)
    *  - SDSORT_DYNAMIC_RAM only uses RAM when the SD menu is visible. (Use with caution!)
    */
-
   //#define SDCARD_SORT_ALPHA
 
   // SD Card Sorting options
@@ -711,9 +737,45 @@
   /**
    * Auto-report SdCard status with M27 S<seconds>
    */
-   #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
   #define AUTO_REPORT_SD_STATUS
-#endif
+
+  /**
+   * Support for USB thumb drives using an Arduino USB Host Shield or
+   * equivalent MAX3421E breakout board. The USB thumb drive will appear
+   * to Marlin as an SD card.
+   *
+   * The MAX3421E must be assigned the same pins as the SD card reader, with
+   * the following pin mapping:
+   *
+   *    SCLK, MOSI, MISO --> SCLK, MOSI, MISO
+   *    INT              --> SD_DETECT_PIN
+   *    SS               --> SDSS
+   */
+  //#define USB_FLASH_DRIVE_SUPPORT
+  #if ENABLED(USB_FLASH_DRIVE_SUPPORT)
+    #define USB_CS_PIN         SDSS
+    #define USB_INTR_PIN       SD_DETECT_PIN
+  #endif
+
+  /**
+   * When using a bootloader that supports SD-Firmware-Flashing,
+   * add a menu item to activate SD-FW-Update on the next reboot.
+   *
+   * Requires ATMEGA2560 (Arduino Mega)
+   *
+   * Tested with this bootloader:
+   *   https://github.com/FleetProbe/MicroBridge-Arduino-ATMega2560
+   */
+  //#define SD_FIRMWARE_UPDATE
+  #if ENABLED(SD_FIRMWARE_UPDATE)
+    #define SD_FIRMWARE_UPDATE_EEPROM_ADDR    0x1FF
+    #define SD_FIRMWARE_UPDATE_ACTIVE_VALUE   0xF0
+    #define SD_FIRMWARE_UPDATE_INACTIVE_VALUE 0xFF
+  #endif
+
+  // Add an optimized binary file transfer mode, initiated with 'M28 B1'
+  //#define FAST_FILE_TRANSFER
+
 #endif // SDSUPPORT
 
 /**
@@ -728,7 +790,7 @@
  * controller events, as there is a trade-off between reliable
  * printing performance versus fast display updates.
  */
-#if ENABLED(DOGLCD)
+#if HAS_GRAPHICAL_LCD
   // Show SD percentage next to the progress bar
   //#define DOGM_SD_PERCENT
 
@@ -767,7 +829,7 @@
      * Set STATUS_EXPIRE_SECONDS to zero to never clear the status.
      * This will prevent position updates from being displayed.
      */
-     #if ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard) || ENABLED(Big_UI)
+     #if ENABLED(Big_UI)
       #define LIGHTWEIGHT_UI
     #endif
     #if ENABLED(LIGHTWEIGHT_UI)
@@ -806,9 +868,12 @@
   #define BABYSTEP_MULTIPLICATOR 10   // Babysteps are very small. Increase for faster motion.
   #if ENABLED(ABL_EZABL) || ENABLED(ABL_BLTOUCH) || ENABLED(ABL_NCSW)
     #define BABYSTEP_ZPROBE_OFFSET   // Enable to combine M851 and Babystepping
-     
     #define BABYSTEP_ZPROBE_GFX_OVERLAY // Enable graphical overlay on Z-offset editor
+  #endif
 
+  //#define MOVE_Z_WHEN_IDLE                // Jump to the move Z menu on doubleclick when printer is idle.
+  #if ENABLED(MOVE_Z_WHEN_IDLE)
+    #define MOVE_Z_IDLE_MULTIPLICATOR 1     // Multiply 1mm by this factor for the move step size.
   #endif
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING // Double-click on the Status Screen for Z Babystepping.
   #define DOUBLECLICK_MAX_INTERVAL 1250 // Maximum interval between clicks, in milliseconds.
@@ -1053,6 +1118,15 @@
 // @section extras
 
 /**
+ * Extra Fan Speed
+ * Adds a secondary fan speed for each print-cooling fan.
+ *   'M106 P<fan> T3-255' : Set a secondary speed for <fan>
+ *   'M106 P<fan> T2'     : Use the set secondary speed
+ *   'M106 P<fan> T1'     : Restore the previous fan speed
+ */
+//#define EXTRA_FAN_SPEED
+
+/**
  * Firmware-based and LCD-controlled retract
  *
  * Add G10 / G11 commands for automatic firmware-based retract / recover.
@@ -1081,16 +1155,10 @@
   #define RETRACT_RECOVER_LENGTH_SWAP 0   // Default additional swap recover length (mm, added to retract length when recovering from extruder change)
   #define RETRACT_RECOVER_FEEDRATE 8      // Default feedrate for recovering from retraction (mm/s)
   #define RETRACT_RECOVER_FEEDRATE_SWAP 8 // Default feedrate for recovering from swap retraction (mm/s)
+  #if ENABLED(MIXING_EXTRUDER)
+    //#define RETRACT_SYNC_MIXING         // Retract and restore all mixing steppers simultaneously
+  #endif
 #endif
-
-/**
- * Extra Fan Speed
- * Adds a secondary fan speed for each print-cooling fan.
- *   'M106 P<fan> T3-255' : Set a secondary speed for <fan>
- *   'M106 P<fan> T2'     : Use the set secondary speed
- *   'M106 P<fan> T1'     : Restore the previous fan speed
- */
-//#define EXTRA_FAN_SPEED
 
 /**
  * Universal tool change settings.
@@ -1211,6 +1279,10 @@
   #define Z2_SENSE_RESISTOR   91
   #define Z2_MICROSTEPS       16
 
+  #define Z3_MAX_CURRENT    1000
+  #define Z3_SENSE_RESISTOR   91
+  #define Z3_MICROSTEPS       16
+
   #define E0_MAX_CURRENT    1000
   #define E0_SENSE_RESISTOR   91
   #define E0_MICROSTEPS       16
@@ -1230,6 +1302,10 @@
   #define E4_MAX_CURRENT    1000
   #define E4_SENSE_RESISTOR   91
   #define E4_MICROSTEPS       16
+
+  #define E5_MAX_CURRENT    1000
+  #define E5_SENSE_RESISTOR   91
+  #define E5_MICROSTEPS       16
 
 #endif // TMC26X
 
@@ -1277,6 +1353,9 @@
   #define Z2_CURRENT         800
   #define Z2_MICROSTEPS       16
 
+  #define Z3_CURRENT         800
+  #define Z3_MICROSTEPS       16
+
   #define E0_CURRENT         800
   #define E0_MICROSTEPS       16
 
@@ -1291,6 +1370,9 @@
 
   #define E4_CURRENT         800
   #define E4_MICROSTEPS       16
+
+  #define E5_CURRENT         800
+  #define E5_MICROSTEPS       16
 
   /**
    * Use software SPI for TMC2130.
@@ -1341,18 +1423,20 @@
   #define Y2_HYBRID_THRESHOLD    100
   #define Z_HYBRID_THRESHOLD       3
   #define Z2_HYBRID_THRESHOLD      3
+  #define Z3_HYBRID_THRESHOLD      3
   #define E0_HYBRID_THRESHOLD     30
   #define E1_HYBRID_THRESHOLD     30
   #define E2_HYBRID_THRESHOLD     30
   #define E3_HYBRID_THRESHOLD     30
   #define E4_HYBRID_THRESHOLD     30
+  #define E5_HYBRID_THRESHOLD     30
 
   /**
-   * Use stallGuard2 to sense an obstacle and trigger an endstop.
-   * You need to place a wire from the driver's DIAG1 pin to the X/Y endstop pin.
+   * Use StallGuard2 to sense an obstacle and trigger an endstop.
+   * Connect the stepper driver's DIAG1 pin to the X/Y endstop pin.
    * X, Y, and Z homing will always be done in spreadCycle mode.
    *
-   * X/Y/Z_HOMING_SENSITIVITY is used for tuning the trigger sensitivity.
+   * X/Y/Z_STALL_SENSITIVITY is used for tuning the trigger sensitivity.
    * Higher values make the system LESS sensitive.
    * Lower value make the system MORE sensitive.
    * Too low values can lead to false positives, while too high values will collide the axis without triggering.
@@ -1361,10 +1445,18 @@
    */
   //#define SENSORLESS_HOMING // TMC2130 only
 
-  #if ENABLED(SENSORLESS_HOMING)
-    #define X_HOMING_SENSITIVITY  8
-    #define Y_HOMING_SENSITIVITY  8
-    #define Z_HOMING_SENSITIVITY  8
+  /**
+   * Use StallGuard2 to probe the bed with the nozzle.
+   *
+   * CAUTION: This could cause damage to machines that use a lead screw or threaded rod
+   *          to move the Z axis. Take extreme care when attempting to enable this feature.
+   */
+  //#define SENSORLESS_PROBING // TMC2130 only
+
+  #if ENABLED(SENSORLESS_HOMING) || ENABLED(SENSORLESS_PROBING)
+    #define X_STALL_SENSITIVITY  8
+    #define Y_STALL_SENSITIVITY  8
+    //#define Z_STALL_SENSITIVITY  8
   #endif
 
   /**
@@ -1403,7 +1495,7 @@
    */
   #define TMC_ADV() {  }
 
-#endif // TMC2130 || TMC2208
+#endif // HAS_TRINAMIC
 
 // @section L6470
 
@@ -1415,49 +1507,57 @@
  */
 #if HAS_DRIVER(L6470)
 
-  #define X_MICROSTEPS      16 // number of microsteps
-  #define X_OVERCURRENT   2000 // maxc current in mA. If the current goes over this value, the driver will switch off
-  #define X_STALLCURRENT  1500 // current in mA where the driver will detect a stall
+  #define X_MICROSTEPS        16 // number of microsteps
+  #define X_OVERCURRENT     2000 // maxc current in mA. If the current goes over this value, the driver will switch off
+  #define X_STALLCURRENT    1500 // current in mA where the driver will detect a stall
 
-  #define X2_MICROSTEPS     16
-  #define X2_OVERCURRENT  2000
-  #define X2_STALLCURRENT 1500
+  #define X2_MICROSTEPS       16
+  #define X2_OVERCURRENT    2000
+  #define X2_STALLCURRENT   1500
 
-  #define Y_MICROSTEPS      16
-  #define Y_OVERCURRENT   2000
-  #define Y_STALLCURRENT  1500
+  #define Y_MICROSTEPS        16
+  #define Y_OVERCURRENT     2000
+  #define Y_STALLCURRENT    1500
 
-  #define Y2_MICROSTEPS     16
-  #define Y2_OVERCURRENT  2000
-  #define Y2_STALLCURRENT 1500
+  #define Y2_MICROSTEPS       16
+  #define Y2_OVERCURRENT    2000
+  #define Y2_STALLCURRENT   1500
 
-  #define Z_MICROSTEPS      16
-  #define Z_OVERCURRENT   2000
-  #define Z_STALLCURRENT  1500
+  #define Z_MICROSTEPS        16
+  #define Z_OVERCURRENT     2000
+  #define Z_STALLCURRENT    1500
 
-  #define Z2_MICROSTEPS     16
-  #define Z2_OVERCURRENT  2000
-  #define Z2_STALLCURRENT 1500
+  #define Z2_MICROSTEPS       16
+  #define Z2_OVERCURRENT    2000
+  #define Z2_STALLCURRENT   1500
 
-  #define E0_MICROSTEPS     16
-  #define E0_OVERCURRENT  2000
-  #define E0_STALLCURRENT 1500
+  #define Z3_MICROSTEPS       16
+  #define Z3_OVERCURRENT    2000
+  #define Z3_STALLCURRENT   1500
 
-  #define E1_MICROSTEPS     16
-  #define E1_OVERCURRENT  2000
-  #define E1_STALLCURRENT 1500
+  #define E0_MICROSTEPS       16
+  #define E0_OVERCURRENT    2000
+  #define E0_STALLCURRENT   1500
 
-  #define E2_MICROSTEPS     16
-  #define E2_OVERCURRENT  2000
-  #define E2_STALLCURRENT 1500
+  #define E1_MICROSTEPS       16
+  #define E1_OVERCURRENT    2000
+  #define E1_STALLCURRENT   1500
 
-  #define E3_MICROSTEPS     16
-  #define E3_OVERCURRENT  2000
-  #define E3_STALLCURRENT 1500
+  #define E2_MICROSTEPS       16
+  #define E2_OVERCURRENT    2000
+  #define E2_STALLCURRENT   1500
 
-  #define E4_MICROSTEPS     16
-  #define E4_OVERCURRENT  2000
-  #define E4_STALLCURRENT 1500
+  #define E3_MICROSTEPS       16
+  #define E3_OVERCURRENT    2000
+  #define E3_STALLCURRENT   1500
+
+  #define E4_MICROSTEPS       16
+  #define E4_OVERCURRENT    2000
+  #define E4_STALLCURRENT   1500
+
+  #define E5_MICROSTEPS       16
+  #define E5_OVERCURRENT    2000
+  #define E5_STALLCURRENT   1500
 
 #endif // L6470
 
@@ -1495,6 +1595,15 @@
 #define I2C_SLAVE_ADDRESS  0 // Set a value from 8 to 127 to act as a slave
 
 // @section extras
+
+/**
+ * Canon Hack Development Kit
+ * http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+ */
+//#define CHDK_PIN    4   // Set and enable a pin for triggering CHDK to take a picture
+#if PIN_EXISTS(CHDK)
+  #define CHDK_DELAY 50   // (ms) How long the pin should remain HIGH
+#endif
 
 /**
  * Spindle & Laser control
@@ -1642,6 +1751,33 @@
  #if(DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define FASTER_GCODE_PARSER
 #endif
+
+/**
+ * CNC G-code options
+ * Support CNC-style G-code dialects used by laser cutters, drawing machine cams, etc.
+ * Note that G0 feedrates should be used with care for 3D printing (if used at all).
+ * High feedrates may cause ringing and harm print quality.
+ */
+//#define PAREN_COMMENTS      // Support for parentheses-delimited comments
+//#define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
+
+// Enable and set a (default) feedrate for all G0 moves
+//#define G0_FEEDRATE 3000 // (mm/m)
+#ifdef G0_FEEDRATE
+  //#define VARIABLE_G0_FEEDRATE // The G0 feedrate is set by F in G0 motion mode
+#endif
+/**
+ * G-code Macros
+ *
+ * Add G-codes M810-M819 to define and run G-code macros.
+ * Macros are not saved to EEPROM.
+ */
+//#define GCODE_MACROS
+#if ENABLED(GCODE_MACROS)
+  #define GCODE_MACROS_SLOTS       5  // Up to 10 may be used
+  #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
+#endif
+
 /**
  * User-defined menu items that execute custom GCode
  */
@@ -1799,6 +1935,7 @@
   #define MAX7219_NUMBER_UNITS 1   // Number of Max7219 units in chain.
   #define MAX7219_ROTATE       0   // Rotate the display clockwise (in multiples of +/- 90°)
                                    // connector at:  right=0   bottom=-90  top=90  left=180
+  //#define MAX7219_REVERSE_ORDER  // The individual LED matrix units may be in reversed order
 
   /**
    * Sample debug features
@@ -1837,5 +1974,3 @@
 
 // Enable Marlin dev mode which adds some special commands
 //#define MARLIN_DEV_MODE
-
-#endif // CONFIGURATION_ADV_H

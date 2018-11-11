@@ -655,7 +655,7 @@ static_assert(X_MAX_LENGTH >= X_BED_SIZE && Y_MAX_LENGTH >= Y_BED_SIZE,
       #error "TOOLCHANGE_PARK requires TOOLCHANGE_PARK_XY_FEEDRATE. Please update your Configuration."
     #endif
   #endif
-  
+
   #ifndef TOOLCHANGE_ZRAISE
     #error "TOOLCHANGE_ZRAISE required for EXTRUDERS > 1. Please update your Configuration."
   #endif
@@ -1961,4 +1961,8 @@ static_assert(COUNT(sanity_arr_3) <= XYZE_N, "DEFAULT_MAX_ACCELERATION has too m
 
 #if ENABLED(SD_FIRMWARE_UPDATE) && !defined(__AVR_ATmega2560__)
   #error "SD_FIRMWARE_UPDATE requires an ATmega2560-based (Arduino Mega) board."
+#endif
+
+#if ENABLED(GCODE_MACROS) && !WITHIN(GCODE_MACROS_SLOTS, 1, 10)
+  #error "GCODE_MACROS_SLOTS must be a number from 1 to 10."
 #endif

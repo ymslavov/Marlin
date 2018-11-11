@@ -498,11 +498,7 @@ inline void invalid_extruder_error(const uint8_t e) {
  * previous tool out of the way and the new tool into place.
  */
 void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool no_move/*=false*/) {
-  #if EXTRUDERS < 2
-
-    return invalid_extruder_error(tmp_extruder);
-
-  #elif ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
+  #if ENABLED(MIXING_EXTRUDER) && MIXING_VIRTUAL_TOOLS > 1
 
       if (tmp_extruder >= MIXING_VIRTUAL_TOOLS)
         return invalid_extruder_error(tmp_extruder);
@@ -510,6 +506,11 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       mixer.T(uint_fast8_t(tmp_extruder));
       UNUSED(fr_mm_s);
       UNUSED(no_move);
+
+  #elif EXTRUDERS < 2
+
+    if (tmp_extruder) invalid_extruder_error(tmp_extruder);
+    return;
 
   #else
 
@@ -538,7 +539,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       #endif
     }
 
-    #if ENABLED(ULTIPANEL)
+    #if HAS_LCD_MENU
       lcd_return_to_status();
     #endif
 
@@ -553,8 +554,6 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
         if (too_cold) {
           SERIAL_ERROR_START();
           SERIAL_ERRORLNPGM(MSG_ERR_HOTEND_TOO_COLD);
-          SERIAL_ECHOPAIR("too cold active ", thermalManager.targetTooColdToExtrude(active_extruder));
-          SERIAL_ECHOPAIR("too cold tmp ", thermalManager.targetTooColdToExtrude(tmp_extruder));
           #if ENABLED(SINGLENOZZLE)
             active_extruder = tmp_extruder;
             return;
@@ -612,11 +611,15 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       }
 
       #if HOTENDS > 1
-        const float xdiff = hotend_offset[X_AXIS][tmp_extruder] - hotend_offset[X_AXIS][active_extruder],
-                    ydiff = hotend_offset[Y_AXIS][tmp_extruder] - hotend_offset[Y_AXIS][active_extruder],
+        #if ENABLED(DUAL_X_CARRIAGE)
+          constexpr float xdiff = 0;
+        #else
+          const float xdiff = hotend_offset[X_AXIS][tmp_extruder] - hotend_offset[X_AXIS][active_extruder];
+        #endif
+        const float ydiff = hotend_offset[Y_AXIS][tmp_extruder] - hotend_offset[Y_AXIS][active_extruder],
                     zdiff = hotend_offset[Z_AXIS][tmp_extruder] - hotend_offset[Z_AXIS][active_extruder];
       #else
-        const float xdiff = 0, ydiff = 0, zdiff = 0;
+        constexpr float xdiff = 0, ydiff = 0, zdiff = 0;
       #endif
 
       #if ENABLED(DUAL_X_CARRIAGE)
@@ -645,9 +648,7 @@ void tool_change(const uint8_t tmp_extruder, const float fr_mm_s/*=0.0*/, bool n
       #endif
 
       // The newly-selected extruder XY is actually at...
-      #if DISABLED(DUAL_X_CARRIAGE)
-        current_position[X_AXIS] += xdiff;
-      #endif
+      current_position[X_AXIS] += xdiff;
       current_position[Y_AXIS] += ydiff;
       current_position[Z_AXIS] += zdiff;
 
