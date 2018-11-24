@@ -4,6 +4,10 @@
 // CUSTOMIZE FOR YOUR MACHINE BELOW
 // CUSTOMIZE FOR YOUR MACHINE BELOW
 
+// Enable this is you have a raptor 2. 
+// Selects pin file, runout sensor and stock TMC Drivers automatically
+//#define RAPTOR2 
+
 /**
  * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
  * underneath the stepper driver! Plug and Play will result in Stealth Chop 2 Mode enabled
@@ -14,7 +18,9 @@
 //#define X_2208
 //#define X_SpreadCycle
 //#define Y_2208
-//#define Y_SpreadCyclebed
+//#define Y_SpreadCycle
+//#define Z_2208
+//#define Z_SpreadCycle
 //#define E_2208
 //#define E_SpreadCycle
 
@@ -41,7 +47,13 @@
 //ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
 //ONLY MAKE CHANGES ABOVE FOR RELIABLE FUNCTION
 
-
+#if ENABLED(RAPTOR2)
+  #define X_2208
+  #define Y_2208
+  #define Z_2208
+  #define E_2208
+  #define RunoutSensor
+#endif
 /**
  * Marlin 3D Printer Firmware
  * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
@@ -177,7 +189,11 @@
 // The following define selects which electronics board you have.
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_FORMBOT_RAPTOR
+  #if ENABLED(RAPTOR2)
+    #define MOTHERBOARD BOARD_FORMBOT_RAPTOR2
+  #else
+    #define MOTHERBOARD BOARD_FORMBOT_RAPTOR
+  #endif
 #endif
 
 // Optional custom name for your RepStrap or other custom machine
@@ -490,9 +506,15 @@
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  #define  DEFAULT_bedKp 100.0
-  #define  DEFAULT_bedKi 15.0
-  #define  DEFAULT_bedKd 200.0
+  #if(ENABLED(BED_AC))
+    #define  DEFAULT_bedKp 100.0
+    #define  DEFAULT_bedKi 15.0
+    #define  DEFAULT_bedKd 200.0
+  #else
+    #define DEFAULT_bedKp 10.00
+    #define DEFAULT_bedKi .023
+    #define DEFAULT_bedKd 305.4
+  #endif
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from pidautotune
@@ -681,16 +703,25 @@
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
  #if(ENABLED(Y_2208))
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 96 }
+  #define Y_STEPSMM 80
 #else
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 160, 1600, 96 }
+  #define Y_STEPSMM 160
 #endif
+
+ #if(ENABLED(Z_2208))
+  #define Z_STEPSMM 800
+#else
+  #define Z_STEPSMM 1600
+#endif
+
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80,Y_STEPSMM , Z_STEPSMM, 96 }
+
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 250, 150, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 250, 120, 5, 25 }
 
 /**
  * Default Max Acceleration (change/s) change = mm/s
@@ -950,27 +981,31 @@
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
  #if(ENABLED(X_2208))
-#define INVERT_X_DIR true
+  #define INVERT_X_DIR true
 #else
-#define INVERT_X_DIR false
+  #define INVERT_X_DIR false
 #endif
- #if(ENABLED(Y_2208))
-#define INVERT_Y_DIR true
+#if(ENABLED(Y_2208))
+  #define INVERT_Y_DIR true
 #else
-#define INVERT_Y_DIR false
+  #define INVERT_Y_DIR false
 #endif
-#define INVERT_Z_DIR true
+#if(ENABLED(Z_2208))
+  #define INVERT_Z_DIR false
+#else
+  #define INVERT_Z_DIR true
+#endif
 
 
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 #if(ENABLED(E_2208))
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
+  #define INVERT_E0_DIR false
+  #define INVERT_E1_DIR true
 #else
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
+  #define INVERT_E0_DIR true
+  #define INVERT_E1_DIR false
 #endif
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -1047,8 +1082,12 @@
 #endif
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
-  #define FIL_RUNOUT_PIN 57
-  #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #if DISABLED(RAPTOR2)
+    #define FIL_RUNOUT_PIN 57
+    #define FIL_RUNOUT_INVERTING true // set to true to invert the logic of the sensor.
+  #else
+    #define FIL_RUNOUT_INVERTING false // set to true to invert the logic of the sensor.
+  #endif
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   //#define FIL_RUNOUT_PULLDOWN      // Use internal pulldown for filament runout pins.
   #define FILAMENT_RUNOUT_SCRIPT "M600"
@@ -1188,13 +1227,6 @@
   #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define PROBE_PT_1_X 50       // Probing points for 3-Point leveling of the mesh
-  #define PROBE_PT_1_Y 350
-  #define PROBE_PT_2_X 50
-  #define PROBE_PT_2_Y 50
-  #define PROBE_PT_3_X 350
-  #define PROBE_PT_3_Y 50
-
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
   #define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500
 
@@ -1220,12 +1252,12 @@
  * Override if the automatically selected points are inadequate.
  */
 #if ENABLED(AUTO_BED_LEVELING_3POINT) || ENABLED(AUTO_BED_LEVELING_UBL)
-  //#define PROBE_PT_1_X 15
-  //#define PROBE_PT_1_Y 180
-  //#define PROBE_PT_2_X 15
-  //#define PROBE_PT_2_Y 20
-  //#define PROBE_PT_3_X 170
-  //#define PROBE_PT_3_Y 20
+  #define PROBE_PT_1_X 50       // Probing points for 3-Point leveling of the mesh
+  #define PROBE_PT_1_Y 350
+  #define PROBE_PT_2_X 50
+  #define PROBE_PT_2_Y 50
+  #define PROBE_PT_3_X 350
+  #define PROBE_PT_3_Y 50
 #endif
 
 /**
@@ -1273,6 +1305,7 @@
 // - If stepper drivers time out, it will need X and Y homing again before Z homing.
 // - Move the Z probe (or nozzle) to a defined XY point before Z Homing when homing all axes (G28).
 // - Prevent Z homing when the Z probe is outside bed area.
+//
 #define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
@@ -1506,7 +1539,7 @@
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+#define PRINTCOUNTER
 
 //=============================================================================
 //============================= LCD and SD support ============================
@@ -2056,7 +2089,7 @@
  * Set this manually if there are extra servos needing manual control.
  * Leave undefined or set to 0 to entirely disable the servo subsystem.
  */
-//#define NUM_SERVOS 3 // Servo index starts with 0 for M280 command
+#define NUM_SERVOS 1 // Servo index starts with 0 for M280 command
 
 // Delay (in milliseconds) before the next move will start, to give the servo time to reach its target angle.
 // 300ms is a good value but you can try less delay.

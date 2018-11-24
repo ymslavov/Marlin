@@ -237,7 +237,11 @@
  * Multiple extruders can be assigned to the same pin in which case
  * the fan will turn on when any selected extruder is above the threshold.
  */
-#define E0_AUTO_FAN_PIN -1
+#if ENABLED(RAPTOR2)
+  #define E0_AUTO_FAN_PIN 9
+#else
+  #define E0_AUTO_FAN_PIN -1
+#endif
 #define E1_AUTO_FAN_PIN -1
 #define E2_AUTO_FAN_PIN -1
 #define E3_AUTO_FAN_PIN -1
@@ -776,7 +780,7 @@
  * Mention @Sebastianv650 on GitHub to alert the author of any issues.
  */
 #if(DISABLED(E_2208))
-#define LIN_ADVANCE
+  #define LIN_ADVANCE
 #endif
 #if ENABLED(LIN_ADVANCE)
   #define LIN_ADVANCE_K 0.22  // Unit: mm compression per 1mm/s extruder speed
@@ -787,10 +791,29 @@
 
 #if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_UBL)
   // Override the mesh area if the automatic (max) area is too large
-  //#define MESH_MIN_X MESH_INSET
-  //#define MESH_MIN_Y MESH_INSET
-  //#define MESH_MAX_X X_BED_SIZE - (MESH_INSET)
-  //#define MESH_MAX_Y Y_BED_SIZE - (MESH_INSET)
+  #if( (X_PROBE_OFFSET_FROM_EXTRUDER + 15) > 0 )
+   #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + 5)
+  #else
+   #define MESH_MIN_X 5
+  #endif
+
+  #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 10) < X_BED_SIZE)
+    #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 5)
+  #else
+    #define MESH_MAX_X (X_BED_SIZE - 10)
+  #endif
+
+  #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 10) > 10 )
+   #define MESH_MIN_Y (Y_PROBE_OFFSET_FROM_EXTRUDER + 10)
+  #else
+    #define MESH_MIN_Y 20
+  #endif
+
+  #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10) < Y_BED_SIZE)
+    #define MESH_MAX_Y (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10)
+  #else
+    #define MESH_MAX_Y (Y_BED_SIZE - 25)
+  #endif
 #endif
 
 /**
@@ -979,7 +1002,7 @@
   #define RETRACT_LENGTH 3                // Default retract length (positive mm)
   #define RETRACT_LENGTH_SWAP 13          // Default swap retract length (positive mm), for extruder change
   #define RETRACT_FEEDRATE 45             // Default feedrate for retracting (mm/s)
-  #define RETRACT_ZLIFT 0                 // Default retract Z-lift
+  #define RETRACT_ZRAISE 0                 // Default retract Z-lift
   #define RETRACT_RECOVER_LENGTH 0        // Default additional recover length (mm, added to retract length when recovering)
   #define RETRACT_RECOVER_LENGTH_SWAP 0   // Default additional swap recover length (mm, added to retract length when recovering from extruder change)
   #define RETRACT_RECOVER_FEEDRATE 8      // Default feedrate for recovering from retraction (mm/s)
@@ -1021,7 +1044,7 @@
                                                   // 0 to disable start loading and skip to fast load only
   #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   6  // (mm/s) Load filament feedrate. This can be pretty fast.
   #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
-  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     5  // (mm) Load length of filament, from extruder gear to nozzle.
+  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     2  // (mm) Load length of filament, from extruder gear to nozzle.
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
   //#define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
@@ -1381,17 +1404,19 @@
  *
  * See http://marlinfw.org/docs/configuration/laser_spindle.html for more config details.
  */
-//#define SPINDLE_LASER_ENABLE
+#if ENABLED(RAPTOR2)
+  #define SPINDLE_LASER_ENABLE
+#endif
 #if ENABLED(SPINDLE_LASER_ENABLE)
 
-  #define SPINDLE_LASER_ENABLE_INVERT   false  // set to "true" if the on/off function is reversed
-  #define SPINDLE_LASER_PWM             true   // set to true if your controller supports setting the speed/power
+  #define SPINDLE_LASER_ENABLE_INVERT   true  // set to "true" if the on/off function is reversed
+  #define SPINDLE_LASER_PWM             false   // set to true if your controller supports setting the speed/power
   #define SPINDLE_LASER_PWM_INVERT      true   // set to "true" if the speed/power goes up when you want it to go slower
-  #define SPINDLE_LASER_POWERUP_DELAY   5000   // delay in milliseconds to allow the spindle/laser to come up to speed/power
-  #define SPINDLE_LASER_POWERDOWN_DELAY 5000   // delay in milliseconds to allow the spindle to stop
-  #define SPINDLE_DIR_CHANGE            true   // set to true if your spindle controller supports changing spindle direction
+  #define SPINDLE_LASER_POWERUP_DELAY   1      // delay in milliseconds to allow the spindle/laser to come up to speed/power
+  #define SPINDLE_LASER_POWERDOWN_DELAY 1      // delay in milliseconds to allow the spindle to stop
+  #define SPINDLE_DIR_CHANGE            false   // set to true if your spindle controller supports changing spindle direction
   #define SPINDLE_INVERT_DIR            false
-  #define SPINDLE_STOP_ON_DIR_CHANGE    true   // set to true if Marlin should stop the spindle before changing rotation direction
+  #define SPINDLE_STOP_ON_DIR_CHANGE    false  // set to true if Marlin should stop the spindle before changing rotation direction
 
   /**
    *  The M3 & M4 commands use the following equation to convert PWM duty cycle to speed/power
