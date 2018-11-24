@@ -32,9 +32,12 @@
   #error "RUMBA supports up to 3 hotends / E-steppers. Comment out this line to continue."
 #endif
 
-#define DEFAULT_MACHINE_NAME "Rumba"
-#define BOARD_NAME           "Rumba"
-
+#ifndef DEFAULT_MACHINE_NAME
+  #define DEFAULT_MACHINE_NAME "Rumba"
+#endif
+#ifndef BOARD_NAME
+  #define BOARD_NAME           "Rumba"
+#endif
 //
 // Servos
 //
@@ -87,16 +90,20 @@
 //
 // Temperature Sensors
 //
-#if TEMP_SENSOR_0 == -1
-  #define TEMP_0_PIN        6   // Analog Input (connector *K1* on RUMBA thermocouple ADD ON is used)
-#else
-  #define TEMP_0_PIN       15   // Analog Input (default connector for thermistor *T0* on rumba board is used)
+#ifndef TEMP_0_PIN
+  #if TEMP_SENSOR_0 == -1
+    #define TEMP_0_PIN        6   // Analog Input (connector *K1* on RUMBA thermocouple ADD ON is used)
+  #else
+    #define TEMP_0_PIN       15   // Analog Input (default connector for thermistor *T0* on rumba board is used)
+  #endif
 #endif
 
-#if TEMP_SENSOR_1 == -1
-  #define TEMP_1_PIN        5   // Analog Input (connector *K2* on RUMBA thermocouple ADD ON is used)
-#else
-  #define TEMP_1_PIN       14   // Analog Input (default connector for thermistor *T1* on rumba board is used)
+#ifndef TEMP_1_PIN
+  #if TEMP_SENSOR_1 == -1
+    #define TEMP_1_PIN        5   // Analog Input (connector *K2* on RUMBA thermocouple ADD ON is used)
+  #else
+    #define TEMP_1_PIN       14   // Analog Input (default connector for thermistor *T1* on rumba board is used)
+  #endif
 #endif
 
 #if TEMP_SENSOR_2 == -1

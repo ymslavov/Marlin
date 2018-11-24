@@ -136,6 +136,8 @@
   #include "pins_FORMBOT_TREX2PLUS.h" // ATmega2560                                 env:megaatmega2560
 #elif MB(FORMBOT_TREX3)
   #include "pins_FORMBOT_TREX3.h"     // ATmega2560                                 env:megaatmega2560
+#elif MB(RAISE3D_RUMBA)
+  #include "pins_RUMBA_RAISE3D.h"     // ATmega2560                                 env:megaatmega2560
 #elif MB(RUMBA)
   #include "pins_RUMBA.h"             // ATmega2560                                 env:megaatmega2560
 #elif MB(BQ_ZUM_MEGA_3D)
