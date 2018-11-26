@@ -26,6 +26,8 @@
 //#define MachineS4
 //#define MachineS5
 
+//#define PLUS // Adds bltouch, allmetal, bilinear (standard), lerdge, 93 e steps/mm
+
 //#define Big_UI
 
 //#define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
@@ -312,6 +314,17 @@
 #endif
 
 #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D " VerChar1 VerChar2 VerChar3 VerChar4 VerChar5 VerChar6
+
+#if ENABLED(PLUS)
+  #define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock)
+  #define HotendAllMetal
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+  #endif
+  #define ABL_BLTOUCH
+  #define HotendAllMetal
+#endif
+
 #if(ENABLED(MachineCRX))
   #define MachineCR10Std
   #define Dual_BowdenSplitterY
@@ -930,11 +943,17 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
+
 #if(ENABLED(Bondtech) || ENABLED(E3DTitan))
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415 }
+  #define EStepsmm 415
+#elif ENABLED(PLUS)
+  #define EStepsmm 93
 #else
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
+  #define EStepsmm 95
 #endif
+
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, EStepsmm }
+
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
