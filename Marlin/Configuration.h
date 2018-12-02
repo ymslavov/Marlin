@@ -15,7 +15,7 @@
 //#define X_2208
 //#define X_SpreadCycle
 //#define Y_2208
-//#define Y_SpreadCyclebed
+//#define Y_SpreadCycle
 //#define E_2208
 //#define E_SpreadCycle
 
