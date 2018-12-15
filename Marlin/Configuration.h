@@ -245,7 +245,7 @@
 #elif(ENABLED(MachineCR10Orig))
 #define CUSTOM_MACHINE_NAME "SuPeR CR-10"
 #elif(ENABLED(MachineCRX))
-#define CUSTOM_MACHINE_NAME "CR-Xtreme"
+#define CUSTOM_MACHINE_NAME "TM3D CR-X"
 #elif(ENABLED(MachineCR10Std))
 #define CUSTOM_MACHINE_NAME "300 SuPeR"
 #elif(ENABLED(MachineS4))
@@ -1516,7 +1516,7 @@
   #endif
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   //#define FIL_RUNOUT_PULLDOWN      // Use internal pulldown for filament runout pins.
-  #define FILAMENT_RUNOUT_SCRIPT "M600"
+  #define FILAMENT_RUNOUT_SCRIPT "M600 \n M117 \n"
   #define FIL_RUNOUT_PIN 2
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of
