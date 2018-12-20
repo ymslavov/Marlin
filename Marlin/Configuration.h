@@ -20,8 +20,8 @@
 //#define MachineEnder3 // Must Select MachineCR10Orig above!
 //#define MachineEnder4
 //#define MachineMini
-//#define MachineCR20 //Buzzer doesnt work, need to map pin
-#define MachineCR10Std
+#define MachineCR20 //Buzzer doesnt work, need to map pin
+//#define MachineCR10Std
 //#define MachineCRX
 //#define MachineS4
 //#define MachineS5
@@ -30,10 +30,10 @@
 
 //#define Big_UI
 
-//#define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
+#define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
 //#define GraphicLCD //Full graphics LCD for Ender 4
-//#define AddonFilSensor //Adds a filamnt runout sensor to the CR20 or Ender 4
-//#define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock
+#define AddonFilSensor //Adds a filamnt runout sensor to the CR20 or Ender 4
+#define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock
 //#define DualFilSensors //Using dual filament sensors on XMax and YMAX
 
 /*
@@ -89,7 +89,7 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
-//#define ABL_BLTOUCH
+#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
 /*
@@ -98,7 +98,7 @@
    Melzi board users may only select ABL_BI for bilinear leveling
 */
 //#define ABL_BI
-//#define ABL_UBL
+#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
 /*
@@ -1626,15 +1626,15 @@
 #if ENABLED(MeshFast)
 #define GRID_MAX_POINTS_X 3
 #elif (ENABLED(MeshStd) )
-#define GRID_MAX_POINTS_X 5
+  #define GRID_MAX_POINTS_X 5
 #elif ENABLED( MeshFine)
-#define GRID_MAX_POINTS_X 8
+  #define GRID_MAX_POINTS_X 8
 #elif ENABLED(MeshExtreme)
-#define GRID_MAX_POINTS_X 15
+  #define GRID_MAX_POINTS_X 15
 #else
-GRID_MAX_POINTS_X 3
+  GRID_MAX_POINTS_X 3
 #endif
-#define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
 
@@ -1695,11 +1695,6 @@ GRID_MAX_POINTS_X 3
   //===========================================================================
 
   #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
-
-  #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
-  #define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
-  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
-
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
   #define UBL_SAVE_ACTIVE_ON_M500   // Save the currently active mesh in the current slot on M500
 
