@@ -1799,7 +1799,7 @@
   #define CommBedTmp 75
 #endif
 
-#if(ENABLED(ABL_UBL)
+#if(ENABLED(ABL_UBL))
   #define USER_DESC_1 "UBL Commission 1"
   #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 SCommBedTmp \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
 
