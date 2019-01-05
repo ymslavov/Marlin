@@ -31,7 +31,14 @@
 #if ENABLED(USE_WATCHDOG)
 
 #include <libmaple/iwdg.h>
-#include "watchdog_Stm32f1.h"
+#include "watchdog_STM32F1.h"
+
+void watchdog_reset() {
+  #if PIN_EXISTS(LED)
+    TOGGLE(LED_PIN);  // heartbeat indicator
+  #endif
+  iwdg_feed();
+}
 
 void watchdogSetup(void) {
   // do whatever. don't remove this function.

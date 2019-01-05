@@ -219,8 +219,8 @@
  *
  * Define one or both of these to override the default 0-255 range.
  */
-#define FAN_MIN_PWM 64
-//#define FAN_MAX_PWM 255
+#define FAN_MIN_PWM 0
+#define FAN_MAX_PWM 255
 
 // @section extruder
 
@@ -895,20 +895,20 @@
 
 #if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_UBL)
   // Override the mesh area if the automatic (max) area is too large
-  #if( (X_PROBE_OFFSET_FROM_EXTRUDER + 10) > 0 )
-    #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + 5)
+  #if( (X_PROBE_OFFSET_FROM_EXTRUDER + (MIN_PROBE_EDGE + MESH_INSET)) > 0 )
+    #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
    #define MESH_MIN_X 10
   #endif
 
   #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 10) < X_BED_SIZE)
-    #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 5)
+    #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))
   #else
       #define MESH_MAX_X (X_BED_SIZE - 10)
   #endif
 
   #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 10) > 5 )
-    #define MESH_MIN_Y (Y_PROBE_OFFSET_FROM_EXTRUDER + 10)
+    #define MESH_MIN_Y (Y_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
     #define MESH_MIN_Y 25
   #endif
@@ -916,7 +916,7 @@
   #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10) < Y_BED_SIZE)
     #define MESH_MAX_Y (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10)
   #else
-   #define MESH_MAX_Y (Y_BED_SIZE - 10)
+   #define MESH_MAX_Y (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))
   #endif
 #endif
 
@@ -1757,16 +1757,19 @@
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "UBL Commission 1"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
-
+  #if ENABLED(TREX3)
+    #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+  #else
+    #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+  #endif
   #define USER_DESC_2 "UBL Commission 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n T0 \n M106 S128 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_3 "Prep for Z Adjust"
-  #define USER_GCODE_3 "M190 75 \n T0 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n"
+  #define USER_GCODE_3 "M190 75 \n T0 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
 
    #define USER_DESC_4 "Fill Mesh Points"
-  #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n"
+  #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n M117 3 Points Filled \n"
 
    #define USER_DESC_5 "Run Mesh Validation"
   #define USER_GCODE_5 "G26 \n"

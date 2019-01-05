@@ -22,7 +22,7 @@
 #pragma once
 
  // If you have a trex 3, stock is this option plus 2208 on all axis. None in spreadcycle.
-//#define TREX3
+#define TREX3
 
 //#define X_2208
 //#define X_Spreadcycle
@@ -35,9 +35,9 @@
 //#define E_2208 // Not Recommended! Stealthchop mode faults with linear advance
 //#define E_Spreadcycle
 
-//#define BedAC
+#define BedAC
 
-//#define tallVersion
+#define tallVersion
 
 /*
  * Enables a filament sensor plugged into the laser pin. Disables the laser
@@ -110,7 +110,7 @@
 // User-specified version info of this build to display in [Pronterface, etc] terminal window during
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
-#define STRING_CONFIG_H_AUTHOR "TinyMachines3D" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "Vivedino" // Who made the changes.
 #define SHOW_BOOTSCREEN
 #define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION // will be shown during bootup in line 1
 #define STRING_SPLASH_LINE2 WEBSITE_URL         // will be shown during bootup in line 2
@@ -179,9 +179,9 @@
 // Optional custom name for your RepStrap or other custom machine
 // Displayed in the LCD "Ready" message
 #if ENABLED(TREX3)
-  #define CUSTOM_MACHINE_NAME "TM3D T-REX 3"
+  #define CUSTOM_MACHINE_NAME "T-REX 3"
 #else
-  #define CUSTOM_MACHINE_NAME "TM3D T-REX 2+"
+  #define CUSTOM_MACHINE_NAME "T-REX 2+"
 #endif
 
 // Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
@@ -429,8 +429,13 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 410
-#define HEATER_1_MAXTEMP 275
+#if ENABLED(TREX3)
+  #define HEATER_0_MAXTEMP 350
+  #define HEATER_1_MAXTEMP 350
+#else
+  #define HEATER_0_MAXTEMP 410
+  #define HEATER_1_MAXTEMP 295
+#endif
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
@@ -911,7 +916,7 @@
   #define Z_PROBE_OFFSET_FROM_EXTRUDER -1.5   // Z offset: -below +above  [the nozzle]
 #endif
 // Certain types of probes need to stay away from edges
-#define MIN_PROBE_EDGE 3
+#define MIN_PROBE_EDGE 1
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 8000
@@ -2037,8 +2042,9 @@
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
 // is too low, you should also increment SOFT_PWM_SCALE.
-//#define FAN_SOFT_PWM
-
+#if ENABLED(TREX3)
+  #define FAN_SOFT_PWM
+#endif
 // Incrementing this by 1 will double the software PWM frequency,
 // affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
 // However, control resolution will be halved for each increment;
