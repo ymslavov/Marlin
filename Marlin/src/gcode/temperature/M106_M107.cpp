@@ -83,6 +83,9 @@ void GcodeSuite::M106() {
     #endif // EXTRA_FAN_SPEED
 
     fan_speed[np] = s;
+    #if ENABLED(ADAPTIVE_FAN_SLOWING)
+      fan_setpoint[np] = fan_speed[np];
+    #endif
   }
 }
 
@@ -100,6 +103,9 @@ void GcodeSuite::M107() {
   #endif
 
   if (p < MIN(EXTRUDERS, FAN_COUNT)) fan_speed[p] = 0;
+  #if ENABLED(ADAPTIVE_FAN_SLOWING)
+      fan_setpoint[p] = fan_speed[p];
+  #endif
 }
 
 #endif // FAN_COUNT > 0

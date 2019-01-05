@@ -1794,29 +1794,29 @@
   #define CUSTOM_USER_MENU_TITLE "Commissioning"
 
 #if ENABLED(BedDC)
-  #define CommBedTmp 55
+  #define CommBedTmp "55"
 #else
-  #define CommBedTmp 75
+  #define CommBedTmp "75"
 #endif
 
-#if(ENABLED(ABL_UBL)
+#if (ENABLED(ABL_UBL))
   #define USER_DESC_1 "UBL Commission 1"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 SCommBedTmp \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S" CommBedTmp"  \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
 
   #define USER_DESC_2 "UBL Commission 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_3 "Prep for Z Adjust"
-  #define USER_GCODE_3 "M190 CommBedTmp \n M104 235 \n G28 \n G29 L1 \n G1 X100 Y 100 \n G1 Z0"
+  #define USER_GCODE_3 "M190 " CommBedTmp" \n M104 235 \n G28 \n G29 L1 \n G1 X100 Y 100 \n G1 Z0"
 
   #define USER_DESC_4 "Fill Mesh Points"
   #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n"
 #elif ENABLED(ABL_BI)
   #define USER_DESC_1 "BIL Commission"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 SCommBedTmp \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 " SCommBedTmp"  \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_2 "Prep for Z Adjust"
-  #define USER_GCODE_2 "M190 CommBedTmp \n M104 235 \n G28 \n  M420 S \n G1 X100 Y 100 \n G1 Z0"
+  #define USER_GCODE_2 "M190 " CommBedTmp" \n M104 235 \n G28 \n  M420 S \n G1 X100 Y 100 \n G1 Z0"
 #endif
    #define USER_DESC_5 "Run Mesh Validation"
   #define USER_GCODE_5 "G26 \n"
