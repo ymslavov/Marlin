@@ -18,11 +18,16 @@
 //#define X_2208
 //#define X_SpreadCycle
 //#define Y_2208
-//#define Y_SpreadCycle
-//#define Z_2208
+//#define Y_SpreadCycle // Highly recommended as large prints with high mass can cause layer shifts with stealthchop at high speed
+//#define Y_4988  // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
+//#define Z_2208 // NOT Recommended! Dual stepper current draw is above the recommended limit for this driver
 //#define Z_SpreadCycle
-//#define E_2208
+//#define Z_4988  // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
+//#define E_2208 // Not Recommended! Stealthchop mode faults with linear advance
 //#define E_SpreadCycle
+
+
+
 
 
 /**
@@ -644,17 +649,41 @@
  *          TMC5130, TMC5130_STANDALONE
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE']
  */
-//#define X_DRIVER_TYPE  A4988
-//#define Y_DRIVER_TYPE  A4988
-//#define Z_DRIVER_TYPE  A4988
-//#define X2_DRIVER_TYPE A4988
+#if ENABLED(X_2208)
+  #define X_DRIVER_TYPE  TMC2208_STANDALONE
+  #define X2_DRIVER_TYPE TMC2208_STANDALONE
+#else
+  #define X_DRIVER_TYPE  A4988
+  #define X2_DRIVER_TYPE A4988
+#endif
+#if ENABLED(Y_2208)
+  #define Y_DRIVER_TYPE  TMC2208_STANDALONE
+#elif ENABLED(Y_4988)
+  #define Y_DRIVER_TYPE  A4988
+#else
+  #define Y_DRIVER_TYPE  DRV8825
+#endif
+#if ENABLED(Z_2208)
+  #define Z_DRIVER_TYPE  TMC2208_STANDALONE
+#elif ENABLED(Z_4988)
+  #define Z_DRIVER_TYPE  A4988
+#else
+  #define Z_DRIVER_TYPE  DRV8825
+#endif
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
-//#define E0_DRIVER_TYPE A4988
-//#define E1_DRIVER_TYPE A4988
+//#define Z3_DRIVER_TYPE A4988
+#if ENABLED(E_2208)
+  #define E0_DRIVER_TYPE  TMC2208_STANDALONE
+  #define E1_DRIVER_TYPE TMC2208_STANDALONE
+#else
+  #define E0_DRIVER_TYPE  DRV8825
+  #define E1_DRIVER_TYPE DRV8825
+#endif
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
 //#define E4_DRIVER_TYPE A4988
+//#define E5_DRIVER_TYPE A4988
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
@@ -702,19 +731,20 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
- #if(ENABLED(Y_2208))
+
+#if(ENABLED(Y_2208) || ENABLED(Y_4988))
   #define Y_STEPSMM 80
 #else
   #define Y_STEPSMM 160
 #endif
 
- #if(ENABLED(Z_2208))
+#if(ENABLED(Z_2208) || ENABLED(Z_4988))
   #define Z_STEPSMM 800
 #else
   #define Z_STEPSMM 1600
 #endif
 
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80,Y_STEPSMM , Z_STEPSMM, 96 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80,Y_STEPSMM , Z_STEPSMM, 96 }
 
 /**
  * Default Max Feed Rate (mm/s)
