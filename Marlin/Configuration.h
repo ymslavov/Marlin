@@ -21,8 +21,8 @@
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
-//#define MachineCR20Pro
-#define MachineCR10Std
+#define MachineCR20Pro
+//#define MachineCR10Std
 //#define MachineCRX
 //#define MachineS4
 //#define MachineS5
@@ -227,6 +227,35 @@
  */
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
+
+#if ENABLED(PLUS)
+  #define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock)
+  #define HotendAllMetal
+  #define EZRstruder
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+  #endif
+  #define ABL_BLTOUCH
+  #define HotendAllMetal
+#endif
+
+#if(ENABLED(MachineCRX))
+  #define MachineCR10Std
+  #define Dual_BowdenSplitterY
+#endif
+
+#if ENABLED(MachineCR20Pro)
+  #define MachineCR20
+  #define ABL_BLTOUCH
+  #define HotendAllMetal
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+    #define POWER_LOSS_RECOVERY
+  #endif
+  #define SolidBedMounts
+#endif
+
+
 #if(DISABLED(MachineEnder4) && DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
 #define SHOW_CUSTOM_BOOTSCREEN
 #endif
@@ -318,32 +347,7 @@
 
 #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D " VerChar1 VerChar2 VerChar3 VerChar4 VerChar5 VerChar6
 
-#if ENABLED(PLUS)
-  #define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock)
-  #define HotendAllMetal
-  #define EZRstruder
-  #if DISABLED(ABL_UBL)
-    #define ABL_BI
-  #endif
-  #define ABL_BLTOUCH
-  #define HotendAllMetal
-#endif
 
-#if(ENABLED(MachineCRX))
-  #define MachineCR10Std
-  #define Dual_BowdenSplitterY
-#endif
-
-#if ENABLED(MachineCR20Pro)
-  #define MachineCR20
-  #define ABL_BLTOUCH
-  #define HotendAllMetal
-  #if DISABLED(ABL_UBL)
-    #define ABL_BI
-    #define POWER_LOSS_RECOVERY
-  #endif
-  #define SolidBedMounts
-#endif
 /**
  * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.

@@ -1813,7 +1813,7 @@
   #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n"
 #elif ENABLED(ABL_BI)
   #define USER_DESC_1 "BIL Commission"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 " SCommBedTmp"  \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 " CommBedTmp"  \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_2 "Prep for Z Adjust"
   #define USER_GCODE_2 "M190 " CommBedTmp" \n M104 235 \n G28 \n  M420 S \n G1 X100 Y 100 \n G1 Z0"
