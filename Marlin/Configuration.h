@@ -15,8 +15,12 @@
 //#define X_2208
 //#define X_SpreadCycle
 //#define Y_2208
-//#define Y_SpreadCycle
-//#define E_2208
+//#define Y_SpreadCycle // Highly recommended as large prints with high mass can cause layer shifts with stealthchop at high speed
+//#define Y_4988  // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
+//#define Z_2208 // NOT Recommended! Dual stepper current draw is above the recommended limit for this driver
+//#define Z_SpreadCycle
+#define Z_4988  // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
+//#define E_2208 // Not Recommended! Stealthchop mode faults with linear advance
 //#define E_SpreadCycle
 
 
@@ -611,17 +615,41 @@
  *          TMC5130, TMC5130_STANDALONE
  * :['A4988', 'DRV8825', 'LV8729', 'L6470', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE']
  */
-//#define X_DRIVER_TYPE  A4988
-//#define Y_DRIVER_TYPE  A4988
-//#define Z_DRIVER_TYPE  A4988
-//#define X2_DRIVER_TYPE A4988
+#if ENABLED(X_2208)
+  #define X_DRIVER_TYPE  TMC2208_STANDALONE
+  #define X2_DRIVER_TYPE TMC2208_STANDALONE
+#else
+  #define X_DRIVER_TYPE  A4988
+  #define X2_DRIVER_TYPE A4988
+#endif
+#if ENABLED(Y_2208)
+  #define Y_DRIVER_TYPE  TMC2208_STANDALONE
+#elif ENABLED(Y_4988)
+  #define Y_DRIVER_TYPE  A4988
+#else
+  #define Y_DRIVER_TYPE  DRV8825
+#endif
+#if ENABLED(Z_2208)
+  #define Z_DRIVER_TYPE  TMC2208_STANDALONE
+#elif ENABLED(Z_4988)
+  #define Z_DRIVER_TYPE  A4988
+#else
+  #define Z_DRIVER_TYPE  DRV8825
+#endif
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
-//#define E0_DRIVER_TYPE A4988
-//#define E1_DRIVER_TYPE A4988
+//#define Z3_DRIVER_TYPE A4988
+#if ENABLED(E_2208)
+  #define E0_DRIVER_TYPE  TMC2208_STANDALONE
+  #define E1_DRIVER_TYPE TMC2208_STANDALONE
+#else
+  #define E0_DRIVER_TYPE  DRV8825
+  #define E1_DRIVER_TYPE DRV8825
+#endif
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
 //#define E4_DRIVER_TYPE A4988
+//#define E5_DRIVER_TYPE A4988
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
@@ -669,11 +697,20 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
- #if(ENABLED(Y_2208))
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 96 }
+#if(ENABLED(Y_2208) || ENABLED(Y_4988))
+  #define Y_STEPSMM 80
 #else
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 160, 1600, 96 }
+  #define Y_STEPSMM 160
 #endif
+
+#if(ENABLED(Z_2208) || ENABLED(Z_4988))
+  #define Z_STEPSMM 800
+#else
+  #define Z_STEPSMM 1600
+#endif
+
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80,Y_STEPSMM , Z_STEPSMM, 96 }
+
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
@@ -939,26 +976,30 @@
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
  #if(ENABLED(X_2208))
-#define INVERT_X_DIR true
+  #define INVERT_X_DIR true
 #else
-#define INVERT_X_DIR false
+  #define INVERT_X_DIR false
 #endif
- #if(ENABLED(Y_2208))
-#define INVERT_Y_DIR true
+#if(ENABLED(Y_2208))
+  #define INVERT_Y_DIR true
 #else
-#define INVERT_Y_DIR false
+  #define INVERT_Y_DIR false
 #endif
-#define INVERT_Z_DIR true
+#if(ENABLED(Z_2208))
+  #define INVERT_Z_DIR false
+#else
+  #define INVERT_Z_DIR true
+#endif
 
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 #if(ENABLED(E_2208))
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
+  #define INVERT_E0_DIR false
+  #define INVERT_E1_DIR false
 #else
-#define INVERT_E0_DIR true
-#define INVERT_E1_DIR true
+  #define INVERT_E0_DIR true
+  #define INVERT_E1_DIR true
 #endif
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
