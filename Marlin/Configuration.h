@@ -6,7 +6,7 @@
 
 // Enable this is you have a raptor 2. 
 // Selects pin file, runout sensor and stock TMC Drivers automatically
-//#define RAPTOR2 
+#define RAPTOR2 
 
 /**
  * Enable if you replace the stepper drivers with TMC 2208. Be sure to remove MS3 jumper 
