@@ -22,7 +22,7 @@
 #pragma once
 
  // If you have a trex 3, stock is this option plus 2208 on all axis. None in spreadcycle.
-#define TREX3
+//#define TREX3
 
 //#define X_2208
 //#define X_Spreadcycle
@@ -35,9 +35,9 @@
 //#define E_2208 // Not Recommended! Stealthchop mode faults with linear advance
 //#define E_Spreadcycle
 
-#define BedAC
+//#define BedAC
 
-#define tallVersion
+//#define tallVersion
 
 /*
  * Enables a filament sensor plugged into the laser pin. Disables the laser
