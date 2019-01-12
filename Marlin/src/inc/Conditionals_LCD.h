@@ -209,15 +209,6 @@
    #define NEWPANEL
  #endif
 
- /**
-  * FSMC/SPI TFT PANELS
-  */
- #if ENABLED(MKS_ROBIN_TFT)
-   #define ULTRA_LCD
-   #define DOGLCD
-   #define ULTIPANEL
- #endif
-
 /**
  * I2C PANELS
  */

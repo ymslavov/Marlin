@@ -31,10 +31,6 @@
 
 #include "Sd2Card_FlashDrive.h"
 
-#if ENABLED(ULTRA_LCD) || ENABLED(EXTENSIBLE_UI)
-  #include "../../lcd/ultralcd.h"
-#endif
-
 USB usb;
 BulkOnly bulk(&usb);
 
@@ -50,27 +46,25 @@ void Sd2Card::idle() {
 
   switch (state) {
     case USB_HOST_DELAY_INIT:
-      next_retry = millis() + 2000;
+      next_retry = millis() + 10000;
       state = USB_HOST_WAITING;
       break;
     case USB_HOST_WAITING:
       if (ELAPSED(millis(), next_retry)) {
-        next_retry = millis() + 2000;
+        next_retry = millis() + 10000;
         state = USB_HOST_UNINITIALIZED;
       }
       break;
     case USB_HOST_UNINITIALIZED:
-      SERIAL_ECHOPGM("Starting USB host...");
+      SERIAL_ECHOLNPGM("Starting USB host");
       if (!usb.start()) {
-        SERIAL_ECHOPGM(" Failed. Retrying in 2s.");
-        #if ENABLED(ULTRA_LCD) || ENABLED(EXTENSIBLE_UI)
-          LCD_MESSAGEPGM("USB start failed");
-        #endif
+        SERIAL_ECHOLNPGM("USB host failed to start. Will retry in 10 seconds.");
         state = USB_HOST_DELAY_INIT;
       }
-      else
+      else {
+        SERIAL_ECHOLNPGM("USB host initialized");
         state = USB_HOST_INITIALIZED;
-      SERIAL_EOL();
+      }
       break;
     case USB_HOST_INITIALIZED:
       const uint8_t lastUsbTaskState = usb.getUsbTaskState();
@@ -97,10 +91,10 @@ void Sd2Card::idle() {
 // This is equivalent to polling the SD_DETECT when using SD cards.
 bool Sd2Card::isInserted() {
   return usb.getUsbTaskState() == USB_STATE_RUNNING;
-}
+};
 
 // Marlin calls this to initialize an SD card once it is inserted.
-bool Sd2Card::init(const uint8_t sckRateID/*=0*/, const pin_t chipSelectPin/*=SD_CHIP_SELECT_PIN*/) {
+bool Sd2Card::init(uint8_t sckRateID, uint8_t chipSelectPin) {
   if (!ready()) return false;
 
   if (!bulk.LUNIsGood(0)) {
@@ -127,7 +121,7 @@ uint32_t Sd2Card::cardSize() {
   #ifndef USB_DEBUG
     const uint32_t
   #endif
-      lun0_capacity = bulk.GetCapacity(0);
+  lun0_capacity = bulk.GetCapacity(0);
   return lun0_capacity;
 }
 

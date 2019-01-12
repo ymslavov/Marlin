@@ -544,20 +544,16 @@ namespace ExtUI {
   }
 
   void setTargetTemp_celsius(float value, const heater_t heater) {
-    constexpr int16_t heater_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP);
-    const int16_t e = heater - H0;
     #if HAS_HEATED_BED
       if (heater == BED)
-        thermalManager.setTargetBed(clamp(value, 0, BED_MAXTEMP - 15));
+        thermalManager.setTargetBed(clamp(value,0,200));
       else
     #endif
-        thermalManager.setTargetHotend(clamp(value, 0, heater_maxtemp[e] - 15), e);
+        thermalManager.setTargetHotend(clamp(value,0,500), heater - H0);
   }
 
   void setTargetTemp_celsius(float value, const extruder_t extruder) {
-    constexpr int16_t heater_maxtemp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_MAXTEMP, HEATER_1_MAXTEMP, HEATER_2_MAXTEMP, HEATER_3_MAXTEMP, HEATER_4_MAXTEMP);
-    const int16_t e = extruder - E0;
-    thermalManager.setTargetHotend(clamp(value, 0, heater_maxtemp[e] - 15), e);
+    thermalManager.setTargetHotend(clamp(value,0,500), extruder - E0);
   }
 
   void setFan_percent(float value, const fan_t fan) {
@@ -635,14 +631,14 @@ namespace ExtUI {
       pos;
 
       card.getfilename_sorted(nr);
-      return card.filename[0] != '\0';
+      return card.filename && card.filename[0] != '\0';
     #else
       return false;
     #endif
   }
 
   const char* FileList::filename() {
-    return IFSD(card.longFilename[0] ? card.longFilename : card.filename, "");
+    return IFSD(card.longFilename && card.longFilename[0] ? card.longFilename : card.filename, "");
   }
 
   const char* FileList::shortFilename() {

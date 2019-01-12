@@ -407,7 +407,7 @@ class Temperature {
       #if ENABLED(AUTO_POWER_CONTROL)
         powerManager.power_on();
       #endif
-      target_temperature[HOTEND_INDEX] = MIN(celsius, maxttemp[HOTEND_INDEX] - 15);
+      target_temperature[HOTEND_INDEX] = celsius;
       #if WATCH_HOTENDS
         start_watching_heater(HOTEND_INDEX);
       #endif
@@ -451,7 +451,7 @@ class Temperature {
         #endif
         target_temperature_bed =
           #ifdef BED_MAXTEMP
-            MIN(celsius, BED_MAXTEMP - 15)
+            MIN(celsius, BED_MAXTEMP)
           #else
             celsius
           #endif
@@ -618,7 +618,7 @@ class Temperature {
       #endif
     #endif
 
-    #if ENABLED(ULTRA_LCD) || ENABLED(EXTENSIBLE_UI)
+    #if ENABLED(ULTRA_LCD)
       static void set_heating_message(const uint8_t e);
     #endif
 

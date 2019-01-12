@@ -21,16 +21,14 @@
  */
 
 /**
- * MegaTronics v3.0 / v3.1 / v3.2 pin assignments
+ * MegaTronics v3.0 / v3.1 pin assignments
  */
 
 #ifndef __AVR_ATmega2560__
   #error "Oops! Select 'Arduino/Genuino Mega or Mega 2560' in 'Tools > Board.'"
 #endif
 
-#if MB(MEGATRONICS_32)
-  #define BOARD_NAME "Megatronics v3.2"
-#elif MB(MEGATRONICS_31)
+#if MB(MEGATRONICS_31)
   #define BOARD_NAME "Megatronics v3.1"
 #else
   #define BOARD_NAME "Megatronics v3.0"
@@ -163,7 +161,7 @@
   #define SHIFT_OUT        34
   #define SHIFT_EN         44
 
-  #if MB(MEGATRONICS_31) || MB(MEGATRONICS_32)
+  #if MB(MEGATRONICS_31)
     #define SD_DETECT_PIN  56
   #endif
 

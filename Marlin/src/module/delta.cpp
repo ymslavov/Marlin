@@ -39,7 +39,6 @@
 
 #if ENABLED(SENSORLESS_HOMING)
   #include "../feature/tmc_util.h"
-  #include "../module/stepper_indirection.h"
 #endif
 
 // Initialized by settings.load()

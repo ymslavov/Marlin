@@ -112,7 +112,7 @@ uint8_t const SD_CARD_TYPE_SD1  = 1,                    // Standard capacity V1 
  * \brief Raw access to SD and SDHC flash memory cards.
  */
 class Sd2Card {
-public:
+  public:
 
   Sd2Card() : errorCode_(SD_CARD_ERROR_INIT_NOT_CALLED), type_(0) {}
 
@@ -124,15 +124,15 @@ public:
    *  Set SD error code.
    *  \param[in] code value for error code.
    */
-  inline void error(const uint8_t code) { errorCode_ = code; }
+  void error(uint8_t code) {errorCode_ = code;}
 
   /**
    * \return error code for last error. See Sd2Card.h for a list of error codes.
    */
-  inline int errorCode() const { return errorCode_; }
+  int errorCode() const {return errorCode_;}
 
   /** \return error data for last error. */
-  inline int errorData() const { return status_; }
+  int errorData() const {return status_;}
 
   /**
    * Initialize an SD flash memory card with default clock rate and chip
@@ -140,8 +140,8 @@ public:
    *
    * \return true for success or false for failure.
    */
-  bool init(const uint8_t sckRateID=SPI_FULL_SPEED, const pin_t chipSelectPin=SD_CHIP_SELECT_PIN);
-
+  bool init(uint8_t sckRateID = SPI_FULL_SPEED,
+            pin_t chipSelectPin = SD_CHIP_SELECT_PIN);
   bool readBlock(uint32_t block, uint8_t* dst);
 
   /**
@@ -163,13 +163,12 @@ public:
    *
    * \return true for success or false for failure.
    */
-  inline bool readCSD(csd_t* csd) { return readRegister(CMD9, csd); }
+  bool readCSD(csd_t* csd) { return readRegister(CMD9, csd); }
 
   bool readData(uint8_t* dst);
   bool readStart(uint32_t blockNumber);
   bool readStop();
-  bool setSckRate(const uint8_t sckRateID);
-
+  bool setSckRate(uint8_t sckRateID);
   /**
    * Return the card type: SD V1, SD V2 or SDHC
    * \return 0 - SD V1, 1 - SD V2, or 3 - SDHC.
@@ -177,10 +176,10 @@ public:
   int type() const {return type_;}
   bool writeBlock(uint32_t blockNumber, const uint8_t* src);
   bool writeData(const uint8_t* src);
-  bool writeStart(uint32_t blockNumber, const uint32_t eraseCount);
+  bool writeStart(uint32_t blockNumber, uint32_t eraseCount);
   bool writeStop();
 
-private:
+  private:
   uint8_t chipSelectPin_,
           errorCode_,
           spiRate_,
@@ -188,17 +187,17 @@ private:
           type_;
 
   // private functions
-  inline uint8_t cardAcmd(const uint8_t cmd, const uint32_t arg) {
+  uint8_t cardAcmd(uint8_t cmd, uint32_t arg) {
     cardCommand(CMD55, 0);
     return cardCommand(cmd, arg);
   }
-  uint8_t cardCommand(const uint8_t cmd, const uint32_t arg);
+  uint8_t cardCommand(uint8_t cmd, uint32_t arg);
 
-  bool readData(uint8_t* dst, const uint16_t count);
-  bool readRegister(const uint8_t cmd, void* buf);
+  bool readData(uint8_t* dst, uint16_t count);
+  bool readRegister(uint8_t cmd, void* buf);
   void chipDeselect();
   void chipSelect();
-  inline void type(const uint8_t value) { type_ = value; }
+  void type(uint8_t value) { type_ = value; }
   bool waitNotBusy(const millis_t timeout_ms);
-  bool writeData(const uint8_t token, const uint8_t* src);
+  bool writeData(uint8_t token, const uint8_t* src);
 };

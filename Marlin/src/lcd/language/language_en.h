@@ -236,7 +236,7 @@
   #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Duplication")
 #endif
 #ifndef MSG_IDEX_MODE_SCALED_COPY
-  #define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Scaled copy")
+  #define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Symetric copy")
 #endif
 #ifndef MSG_IDEX_MODE_FULL_CTRL
   #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("Full control")
@@ -1100,6 +1100,15 @@
 #endif
 #ifndef MSG_M600_TOO_COLD
   #define MSG_M600_TOO_COLD                   _UxGT("M600: Too cold")
+#endif
+#ifndef MSG_LASER_MENU
+  #define MSG_LASER_MENU                      _UxGT("Laser")
+#endif
+#ifndef MSG_LASER_ON
+  #define MSG_LASER_ON                        _UxGT("Laser On")
+#endif
+#ifndef MSG_LASER_OFF
+  #define MSG_LASER_OFF                       _UxGT("Laser Off")
 #endif
 
 //

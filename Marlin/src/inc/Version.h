@@ -39,20 +39,20 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "2.0.x_TR8"
+  #define SHORT_BUILD_VERSION "Trex_2.0.x_1.2"
 
   /**
    * Verbose version identifier which should contain a reference to the location
    * from where the binary was downloaded or the source code was compiled.
    */
-  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " Vivedino"
 
   /**
    * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2019-01-05"
+  #define STRING_DISTRIBUTION_DATE "2018-12-16"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -74,7 +74,7 @@
   /**
    * Defines a generic printer name to be output to the LCD after booting Marlin.
    */
-  #define MACHINE_NAME "TM3D Trex"
+  #define MACHINE_NAME "Vivedino Trex"
 
   /**
    * The SOURCE_CODE_URL is the location where users will find the Marlin Source
@@ -82,7 +82,7 @@
    * has a distinct Github fork— the Source Code URL should just be the main
    * Marlin repository.
    */
-  #define SOURCE_CODE_URL "https://github.com/InsanityAutomation/Marlin/tree/TM_Trex2+_2.0.x"
+  #define SOURCE_CODE_URL "https://github.com/MarlinFirmware/Marlin"
 
   /**
    * Default generic printer UUID.
@@ -93,6 +93,6 @@
    * The WEBSITE_URL is the location where users can get more information such as
    * documentation about a specific Marlin release.
    */
-  #define WEBSITE_URL "tinymachines3d.com"
+  #define WEBSITE_URL "Vivedino.com"
 
 #endif // USE_AUTOMATIC_VERSIONING

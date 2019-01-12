@@ -146,6 +146,7 @@ void MarlinUI::set_font(const MarlinFont font_nr) {
   void MarlinUI::show_bootscreen() {
     #if ENABLED(SHOW_CUSTOM_BOOTSCREEN)
       lcd_custom_bootscreen();
+      return;
     #endif
 
     constexpr uint8_t offy =
