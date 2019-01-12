@@ -82,7 +82,6 @@ void lcd_resume() {
 #if ENABLED(DUAL_X_CARRIAGE)
 
   #include "../../module/motion.h"
-  #include "../../gcode/queue.h"
 
   void _recalc_IDEX_settings() {
     if (active_extruder) {                      // For the 2nd extruder re-home so the next tool-change gets the new offsets.
@@ -139,33 +138,8 @@ void menu_main() {
   START_MENU();
   MENU_BACK(MSG_WATCH);
 
-  #if ENABLED(SDSUPPORT)
-    if (card.flag.cardOK) {
-      if (card.isFileOpen()) {
-        if (IS_SD_PRINTING())
-          MENU_ITEM(function, MSG_PAUSE_PRINT, lcd_sdcard_pause);
-        else
-          MENU_ITEM(function, MSG_RESUME_PRINT, lcd_sdcard_resume);
-
-        MENU_ITEM(submenu, MSG_STOP_PRINT, menu_sdcard_abort_confirm);
-      }
-      else {
-        MENU_ITEM(submenu, MSG_CARD_MENU, menu_sdcard);
-        #if !PIN_EXISTS(SD_DETECT)
-          MENU_ITEM(gcode, MSG_CHANGE_SDCARD, PSTR("M21"));  // SD-card changed by user
-        #endif
-      }
-    }
-    else {
-      MENU_ITEM(function, MSG_NO_CARD, NULL);
-      #if !PIN_EXISTS(SD_DETECT)
-        MENU_ITEM(gcode, MSG_INIT_SDCARD, PSTR("M21")); // Manually initialize the SD-card via user interface
-      #endif
-    }
-  #endif // SDSUPPORT
-
   const bool busy = printer_busy();
-  if (busy)
+
   if (busy) {
     MENU_ITEM(function, MSG_PAUSE_PRINT, lcd_pause);
     MENU_ITEM(submenu, MSG_TUNE, menu_tune);
