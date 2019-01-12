@@ -77,6 +77,8 @@
   #define THERMAL_PROTECTION_PERIOD 40        // Seconds
   #define THERMAL_PROTECTION_HYSTERESIS 4     // Degrees Celsius
 
+  //#define ADAPTIVE_FAN_SLOWING              // Slow part cooling fan if temperature drops
+
   /**
    * Whenever an M104, M109, or M303 increases the target temperature, the
    * firmware will wait for the WATCH_TEMP_PERIOD to expire. If the temperature
@@ -1707,11 +1709,6 @@
 //#define CNC_COORDINATE_SYSTEMS
 
 /**
- * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
- */
-//#define PINS_DEBUGGING
-
-/**
  * Auto-report temperatures with M155 S<seconds>
  */
 #define AUTO_REPORT_TEMPERATURES
@@ -1965,6 +1962,13 @@
   #define WIFI_SSID "Wifi SSID"
   #define WIFI_PWD  "Wifi Password"
 #endif
+
+// @section develop
+
+/**
+ * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
+ */
+//#define PINS_DEBUGGING
 
 // Enable Marlin dev mode which adds some special commands
 //#define MARLIN_DEV_MODE

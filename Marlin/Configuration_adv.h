@@ -75,7 +75,9 @@
  */
 #if ENABLED(THERMAL_PROTECTION_HOTENDS)
   #define THERMAL_PROTECTION_PERIOD 60        // Seconds
-  #define THERMAL_PROTECTION_HYSTERESIS 5     // Degrees Celsius
+  #define THERMAL_PROTECTION_HYSTERESIS 10     // Degrees Celsius
+
+  #define ADAPTIVE_FAN_SLOWING              // Slow part cooling fan if temperature drops
 
   /**
    * Whenever an M104, M109, or M303 increases the target temperature, the
@@ -368,14 +370,17 @@
  */
 #define DUAL_X_CARRIAGE
 #if ENABLED(DUAL_X_CARRIAGE)
-  #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X1_MAX_POS X_BED_SIZE    // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
-  // set maximum to the distance between toolheads when both heads are homed
   #if ENABLED(TREX3)
-    #define X2_MAX_POS 446 
+    #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X1_MAX_POS X_BED_SIZE + 10   // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+    #define X2_MAX_POS 446            // set maximum to the distance between toolheads when both heads are homed
   #else
-    #define X2_MAX_POS 442 
+    
+    #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X1_MAX_POS X_BED_SIZE    // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+    #define X2_MAX_POS 442            // set maximum to the distance between toolheads when both heads are homed
   #endif
   #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
   #define X2_HOME_POS X2_MAX_POS // default home position is the maximum carriage position
@@ -898,22 +903,22 @@
   #if( (X_PROBE_OFFSET_FROM_EXTRUDER + (MIN_PROBE_EDGE + MESH_INSET)) > 0 )
     #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
-   #define MESH_MIN_X 10
+   #define MESH_MIN_X MESH_INSET
   #endif
 
-  #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 10) < X_BED_SIZE)
+  #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET) < X_BED_SIZE)
     #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))
   #else
-      #define MESH_MAX_X (X_BED_SIZE - 10)
+      #define MESH_MAX_X (X_BED_SIZE - MESH_INSET)
   #endif
 
-  #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 10) > 5 )
+  #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET) > 5 )
     #define MESH_MIN_Y (Y_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
-    #define MESH_MIN_Y 25
+    #define MESH_MIN_Y MESH_INSET
   #endif
 
-  #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10) < Y_BED_SIZE)
+  #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET) < Y_BED_SIZE)
     #define MESH_MAX_Y (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10)
   #else
    #define MESH_MAX_Y (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))

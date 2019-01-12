@@ -149,7 +149,7 @@ void GcodeSuite::M702() {
   #if EXTRUDERS > 1 && ENABLED(FILAMENT_UNLOAD_ALL_EXTRUDERS)
     if (!parser.seenval('T')) {
       HOTEND_LOOP() {
-        if (e != active_extruder) tool_change(e, 0, true);
+        if (e != active_extruder) tool_change(e, 0, false);
         unload_filament(-fc_settings[e].unload_length, true, ADVANCED_PAUSE_MODE_UNLOAD_FILAMENT);
       }
     }
