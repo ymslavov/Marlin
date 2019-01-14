@@ -236,7 +236,7 @@
   #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Duplication")
 #endif
 #ifndef MSG_IDEX_MODE_SCALED_COPY
-  #define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Symetric copy")
+  #define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Mirror")
 #endif
 #ifndef MSG_IDEX_MODE_FULL_CTRL
   #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("Full control")
