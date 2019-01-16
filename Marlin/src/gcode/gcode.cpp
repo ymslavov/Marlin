@@ -336,7 +336,7 @@ void GcodeSuite::process_parsed_command(
         case 49: M49(); break;                                    // M49: Turn on or off G26 debug flag for verbose output
       #endif
 
-      #if ENABLED(LCD_SET_PROGRESS_MANUALLY) && (ENABLED(ULTRA_LCD) || ENABLED(EXTENSIBLE_UI))
+      #if ENABLED(LCD_SET_PROGRESS_MANUALLY)
         case 73: M73(); break;                                    // M73: Set progress percentage (for display on LCD)
       #endif
 
@@ -662,9 +662,6 @@ void GcodeSuite::process_parsed_command(
         #if USE_SENSORLESS
           case 914: M914(); break;                                // M914: Set StallGuard sensitivity.
         #endif
-        #if ENABLED(TMC_Z_CALIBRATION)
-          case 915: M915(); break;                                // M915: TMC Z axis calibration.
-        #endif
       #endif
 
       #if HAS_MICROSTEPS
@@ -672,7 +669,9 @@ void GcodeSuite::process_parsed_command(
         case 351: M351(); break;                                  // M351: Toggle MS1 MS2 pins directly, S# determines MS1 or MS2, X# sets the pin high/low.
       #endif
 
-      case 355: M355(); break;                                    // M355: Set case light brightness
+      #if HAS_CASE_LIGHT
+        case 355: M355(); break;                                  // M355: Set case light brightness
+      #endif
 
       #if ENABLED(DEBUG_GCODE_PARSER)
         case 800: parser.debug(); break;                          // M800: GCode Parser Test for M
