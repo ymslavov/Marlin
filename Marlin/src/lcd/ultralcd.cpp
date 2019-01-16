@@ -26,9 +26,7 @@
 #if HAS_SPI_LCD || ENABLED(MALYAN_LCD) || ENABLED(EXTENSIBLE_UI)
   #include "ultralcd.h"
   MarlinUI ui;
-  #if ENABLED(SDSUPPORT)
-    #include "../sd/cardreader.h"
-  #endif
+  #include "../sd/cardreader.h"
   #if ENABLED(EXTENSIBLE_UI)
     #define START_OF_UTF8_CHAR(C) (((C) & 0xC0u) != 0x80u)
   #endif
@@ -52,6 +50,10 @@
 #ifdef MAX_MESSAGE_LENGTH
   uint8_t MarlinUI::status_message_level; // = 0
   char MarlinUI::status_message[MAX_MESSAGE_LENGTH + 1];
+#endif
+
+#if ENABLED(LCD_SET_PROGRESS_MANUALLY)
+  uint8_t MarlinUI::progress_bar_percent; // = 0
 #endif
 
 #if HAS_SPI_LCD
@@ -102,10 +104,6 @@ uint8_t MarlinUI::lcd_status_update_delay = 1; // First update one loop delayed
 
 #if ENABLED(FILAMENT_LCD_DISPLAY) && ENABLED(SDSUPPORT)
   millis_t MarlinUI::next_filament_display; // = 0
-#endif
-
-#if ENABLED(LCD_SET_PROGRESS_MANUALLY)
-  uint8_t MarlinUI::progress_bar_percent; // = 0
 #endif
 
 millis_t next_button_update_ms;
@@ -421,7 +419,8 @@ void MarlinUI::status_screen() {
     //
 
     #if DISABLED(PROGRESS_MSG_ONCE) || (PROGRESS_MSG_EXPIRE > 0)
-      millis_t ms = millis();
+      #define GOT_MS
+      const millis_t ms = millis();
     #endif
 
     // If the message will blink rather than expire...
@@ -466,30 +465,39 @@ void MarlinUI::status_screen() {
 
   #endif // HAS_LCD_MENU
 
-  #if ENABLED(ULTIPANEL_FEEDMULTIPLY) && HAS_ENCODER_ACTION
+  #if ENABLED(ULTIPANEL_FEEDMULTIPLY)
 
-    const int16_t new_frm = feedrate_percentage + (int32_t)encoderPosition;
+    const int16_t old_frm = feedrate_percentage;
+          int16_t new_frm = old_frm + (int32_t)encoderPosition;
+
     // Dead zone at 100% feedrate
-    if ((feedrate_percentage < 100 && new_frm > 100) || (feedrate_percentage > 100 && new_frm < 100)) {
-      feedrate_percentage = 100;
-      encoderPosition = 0;
+    if (old_frm == 100) {
+      if ((int32_t)encoderPosition > ENCODER_FEEDRATE_DEADZONE)
+        new_frm -= ENCODER_FEEDRATE_DEADZONE;
+      else if ((int32_t)encoderPosition < -(ENCODER_FEEDRATE_DEADZONE))
+        new_frm += ENCODER_FEEDRATE_DEADZONE;
+      else
+        new_frm = old_frm;
     }
-    else if (feedrate_percentage == 100) {
-      if ((int32_t)encoderPosition > ENCODER_FEEDRATE_DEADZONE) {
-        feedrate_percentage += (int32_t)encoderPosition - (ENCODER_FEEDRATE_DEADZONE);
-        encoderPosition = 0;
-      }
-      else if ((int32_t)encoderPosition < -(ENCODER_FEEDRATE_DEADZONE)) {
-        feedrate_percentage += (int32_t)encoderPosition + ENCODER_FEEDRATE_DEADZONE;
-        encoderPosition = 0;
-      }
-    }
-    else {
+    else if ((old_frm < 100 && new_frm > 100) || (old_frm > 100 && new_frm < 100))
+      new_frm = 100;
+
+    new_frm = constrain(new_frm, 10, 999);
+
+    if (old_frm != new_frm) {
       feedrate_percentage = new_frm;
       encoderPosition = 0;
+      #if ENABLED(BEEP_ON_FEEDRATE_CHANGE)
+        static millis_t next_beep;
+        #ifndef GOT_MS
+          const millis_t ms = millis();
+        #endif
+        if (ELAPSED(ms, next_beep)) {
+          BUZZ(FEEDRATE_CHANGE_BEEP_DURATION, FEEDRATE_CHANGE_BEEP_FREQUENCY);
+          next_beep = ms + 500UL;
+        }
+      #endif
     }
-
-    feedrate_percentage = constrain(feedrate_percentage, 10, 999);
 
   #endif // ULTIPANEL_FEEDMULTIPLY
 
@@ -701,7 +709,10 @@ void MarlinUI::update() {
       }
       else {
         card.release();
-        if (old_sd_status != 2) set_status_P(PSTR(MSG_SD_REMOVED));
+        if (old_sd_status != 2) {
+          set_status_P(PSTR(MSG_SD_REMOVED));
+          if (!on_status_screen()) return_to_status();
+        }
       }
 
       refresh();
@@ -1237,7 +1248,7 @@ void MarlinUI::update() {
     static const char printing[] PROGMEM = MSG_PRINTING;
     static const char welcome[] PROGMEM = WELCOME_MSG;
     PGM_P msg;
-    if (print_job_timer.isPaused())
+    if (!IS_SD_PRINTING() && print_job_timer.isPaused())
       msg = paused;
     #if ENABLED(SDSUPPORT)
       else if (IS_SD_PRINTING())
@@ -1251,4 +1262,4 @@ void MarlinUI::update() {
     set_status_P(msg, -1);
   }
 
-#endif
+#endif // HAS_SPI_LCD || EXTENSIBLE_UI

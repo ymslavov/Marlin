@@ -50,13 +50,13 @@ void GcodeSuite::M20() {
     const int16_t port = command_queue_port[cmd_queue_index_r];
   #endif
 
-  SERIAL_PROTOCOLLNPGM_P(port, MSG_BEGIN_FILE_LIST);
+  SERIAL_ECHOLNPGM_P(port, MSG_BEGIN_FILE_LIST);
   card.ls(
     #if NUM_SERIAL > 1
       port
     #endif
   );
-  SERIAL_PROTOCOLLNPGM_P(port, MSG_END_FILE_LIST);
+  SERIAL_ECHOLNPGM_P(port, MSG_END_FILE_LIST);
 }
 
 /**
@@ -85,35 +85,50 @@ void GcodeSuite::M23() {
  * M24: Start or Resume SD Print
  */
 void GcodeSuite::M24() {
-  #if ENABLED(PARK_HEAD_ON_PAUSE)
-    resume_print();
-  #endif
 
   #if ENABLED(POWER_LOSS_RECOVERY)
     if (parser.seenval('S')) card.setIndex(parser.value_long());
+    if (parser.seenval('T')) print_job_timer.resume(parser.value_long());
   #endif
 
-  card.startFileprint();
-
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    if (parser.seenval('T'))
-      print_job_timer.resume(parser.value_long());
-    else
+  #if ENABLED(PARK_HEAD_ON_PAUSE)
+    if (did_pause_print) {
+      resume_print();
+      return;
+    }
   #endif
-      print_job_timer.start();
+
+  if (card.isFileOpen()) {
+    card.startFileprint();
+    print_job_timer.start();
+  }
 
   ui.reset_status();
+
+  #ifdef ACTION_ON_RESUME
+    SERIAL_ECHOLNPGM("//action:" ACTION_ON_RESUME);
+  #endif
 }
 
 /**
  * M25: Pause SD Print
  */
 void GcodeSuite::M25() {
-  card.pauseSDPrint();
-  print_job_timer.pause();
+  
+  // Set initial pause flag to prevent more commands from landing in the queue while we try to pause
+  #if ENABLED(SDSUPPORT)
+    if (IS_SD_PRINTING()) { card.pauseSDPrint(); }
+  #endif
 
   #if ENABLED(PARK_HEAD_ON_PAUSE)
-    enqueue_and_echo_commands_P(PSTR("M125")); // Must be enqueued with pauseSDPrint set to be last in the buffer
+    M125();
+  #else
+    print_job_timer.pause();
+    ui.reset_status();
+
+    #ifdef ACTION_ON_PAUSE
+      SERIAL_ECHOLNPGM("//action:" ACTION_ON_PAUSE);
+    #endif
   #endif
 }
 
@@ -121,7 +136,7 @@ void GcodeSuite::M25() {
  * M26: Set SD Card file index
  */
 void GcodeSuite::M26() {
-  if (card.flag.cardOK && parser.seenval('S'))
+  if (card.isDetected() && parser.seenval('S'))
     card.setIndex(parser.value_long());
 }
 
@@ -150,7 +165,7 @@ void GcodeSuite::M27() {
   #endif
 
   else
-    card.getStatus(
+    card.report_status(
       #if NUM_SERIAL > 1
         port
       #endif
@@ -212,7 +227,7 @@ void GcodeSuite::M29() {
  * M30 <filename>: Delete SD Card file
  */
 void GcodeSuite::M30() {
-  if (card.flag.cardOK) {
+  if (card.isDetected()) {
     card.closefile();
     card.removeFile(parser.string_arg);
   }
@@ -231,7 +246,7 @@ void GcodeSuite::M30() {
 void GcodeSuite::M32() {
   if (IS_SD_PRINTING()) planner.synchronize();
 
-  if (card.flag.cardOK) {
+  if (card.isDetected()) {
     const bool call_procedure = parser.boolval('P');
 
     card.openFile(parser.string_arg, true, call_procedure);
