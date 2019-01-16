@@ -74,8 +74,10 @@
  * THERMAL_PROTECTION_HYSTERESIS and/or THERMAL_PROTECTION_PERIOD
  */
 #if ENABLED(THERMAL_PROTECTION_HOTENDS)
-  #define THERMAL_PROTECTION_PERIOD 40        // Seconds
-  #define THERMAL_PROTECTION_HYSTERESIS 4     // Degrees Celsius
+  #define THERMAL_PROTECTION_PERIOD 60        // Seconds
+  #define THERMAL_PROTECTION_HYSTERESIS 10     // Degrees Celsius
+
+  #define ADAPTIVE_FAN_SLOWING              // Slow part cooling fan if temperature drops
 
   /**
    * Whenever an M104, M109, or M303 increases the target temperature, the
@@ -89,8 +91,8 @@
    * and/or decrease WATCH_TEMP_INCREASE. WATCH_TEMP_INCREASE should not be set
    * below 2.
    */
-  #define WATCH_TEMP_PERIOD 40                // Seconds
-  #define WATCH_TEMP_INCREASE 4               // Degrees Celsius
+  #define WATCH_TEMP_PERIOD 60                // Seconds
+  #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
 #endif
 
 /**
@@ -368,14 +370,17 @@
  */
 #define DUAL_X_CARRIAGE
 #if ENABLED(DUAL_X_CARRIAGE)
-  #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X1_MAX_POS X_BED_SIZE    // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
-  // set maximum to the distance between toolheads when both heads are homed
   #if ENABLED(TREX3)
-    #define X2_MAX_POS 446 
+    #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X1_MAX_POS X_BED_SIZE + 10   // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+    #define X2_MAX_POS 446            // set maximum to the distance between toolheads when both heads are homed
   #else
-    #define X2_MAX_POS 442 
+    
+    #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X1_MAX_POS X_BED_SIZE    // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
+    #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
+    #define X2_MAX_POS 442            // set maximum to the distance between toolheads when both heads are homed
   #endif
   #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
   #define X2_HOME_POS X2_MAX_POS // default home position is the maximum carriage position
@@ -898,22 +903,22 @@
   #if( (X_PROBE_OFFSET_FROM_EXTRUDER + (MIN_PROBE_EDGE + MESH_INSET)) > 0 )
     #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
-   #define MESH_MIN_X 10
+   #define MESH_MIN_X MESH_INSET
   #endif
 
-  #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 10) < X_BED_SIZE)
+  #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET) < X_BED_SIZE)
     #define MESH_MAX_X (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))
   #else
-      #define MESH_MAX_X (X_BED_SIZE - 10)
+      #define MESH_MAX_X (X_BED_SIZE - MESH_INSET)
   #endif
 
-  #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 10) > 5 )
+  #if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET) > 5 )
     #define MESH_MIN_Y (Y_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
   #else
-    #define MESH_MIN_Y 25
+    #define MESH_MIN_Y MESH_INSET
   #endif
 
-  #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10) < Y_BED_SIZE)
+  #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET) < Y_BED_SIZE)
     #define MESH_MAX_Y (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 10)
   #else
    #define MESH_MAX_Y (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - (MIN_PROBE_EDGE + MESH_INSET))
@@ -1172,7 +1177,7 @@
                                                   // This short retract is done immediately, before parking the nozzle.
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     41  // (mm/s) Unload filament feedrate. This can be pretty fast.
   #define FILAMENT_CHANGE_UNLOAD_ACCEL        25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
-  #define FILAMENT_CHANGE_UNLOAD_LENGTH      50  // (mm) The length of filament for a complete unload.
+  #define FILAMENT_CHANGE_UNLOAD_LENGTH      70  // (mm) The length of filament for a complete unload.
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
                                                   //   Set to 0 for manual unloading.
@@ -1757,19 +1762,16 @@
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
   #define USER_DESC_1 "UBL Commission 1"
-  #if ENABLED(TREX3)
-    #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
-  #else
-    #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
-  #endif
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n T0 \n M190 S75 \n M106 S128 \n M104 S225 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2 \n"
+
   #define USER_DESC_2 "UBL Commission 2"
   #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n T0 \n M106 S128 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_3 "Prep for Z Adjust"
-  #define USER_GCODE_3 "M190 75 \n T0 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset \n"
+  #define USER_GCODE_3 "M190 75 \n T0 \n M106 S128 \n M104 225 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0 \n"
 
    #define USER_DESC_4 "Fill Mesh Points"
-  #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n M117 3 Points Filled \n"
+  #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T \n"
 
    #define USER_DESC_5 "Run Mesh Validation"
   #define USER_GCODE_5 "G26 \n"
