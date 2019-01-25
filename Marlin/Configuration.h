@@ -22,10 +22,10 @@
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
 //#define MachineCR20Pro
-//#define MachineCR10Std
+#define MachineCR10Std
 //#define MachineCRX
 //#define MachineS4
-#define MachineS5
+//#define MachineS5
 
 //#define PLUS // Adds bltouch, allmetal, bilinear (standard), lerdge, 93 e steps/mm
 
@@ -45,21 +45,21 @@
 
    Configured with 5015 left wing, right wing ABL sensor (BLTouch or M18) only
 */
-//#define HotendStock
-#define HotendE3D
+#define HotendStock
+//#define HotendE3D
 
 /*
    Enable this if you have an all metal hotend capable of 300c
 
 */
-#define HotendAllMetal
+//#define HotendAllMetal
 
 /*
  * Select these if you have changed to a high performance extruder
  */
 
  //#define EZRstruder
- #define Bondtech
+ //#define Bondtech
  //#define E3DTitan
 
  /*
@@ -76,10 +76,11 @@
    Choose bed type below. If you have an extenrally controlled
    ac bed, leave both disabled
 */
-#define BedAC
-//#define BedDC
+//#define BedAC
+#define BedDC
 
 //#define SolidBedMounts //Removed a few LCD options to save some memory since not needed with solid mounts
+
 /*
    If you have upgraded to an S board but kept the original display
    then enable this line
@@ -92,7 +93,7 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
-#define ABL_BLTOUCH
+//#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
 /*
@@ -101,7 +102,7 @@
    Melzi board users may only select ABL_BI for bilinear leveling
 */
 //#define ABL_BI
-#define ABL_UBL
+//#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
 /*
@@ -112,9 +113,9 @@
    Standard is recommended in most other scenarios.
 */
 //#define MeshFast
-//#define MeshStd
+#define MeshStd
 //#define MeshFine
-#define MeshExtreme
+//#define MeshExtreme
 
 /*
    Disables SD Sort, Autotemp, Arc support, Linear Advance (Unless overridden with OrigLA above), Big edit fonts, and a few other little things
@@ -1877,16 +1878,19 @@
 #define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-#if ENABLED(MachineS4)
-  #define Z_SAFE_HOMING_X_POINT 60    // X point for Z homing when homing all axis (G28).
-  #define Z_SAFE_HOMING_Y_POINT 60    // Y point for Z homing when homing all axis (G28).
-#elif ENABLED(MachineS5)
-  #define Z_SAFE_HOMING_X_POINT 80    // X point for Z homing when homing all axis (G28).
-  #define Z_SAFE_HOMING_Y_POINT 80    // Y point for Z homing when homing all axis (G28).
-#else
-  #define Z_SAFE_HOMING_X_POINT 50    // X point for Z homing when homing all axis (G28).
-  #define Z_SAFE_HOMING_Y_POINT 50    // Y point for Z homing when homing all axis (G28).
-#endif
+  #if ENABLED(MachineS4)
+    #define Z_SAFE_HOMING_X_POINT 60    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 60    // Y point for Z homing when homing all axis (G28).
+  #elif ENABLED(MachineS5)
+    #define Z_SAFE_HOMING_X_POINT 80    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 80    // Y point for Z homing when homing all axis (G28).
+  #elif ENABLED(MachineCRX) 
+    #define Z_SAFE_HOMING_X_POINT 50    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 70    // Y point for Z homing when homing all axis (G28).
+  #else
+    #define Z_SAFE_HOMING_X_POINT 50    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 50    // Y point for Z homing when homing all axis (G28).
+  #endif
 #endif
 
 // Homing speeds (mm/m)
