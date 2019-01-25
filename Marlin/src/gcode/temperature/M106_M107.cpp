@@ -43,10 +43,21 @@
  *           3-255 = Set the speed for use with T2
  */
 void GcodeSuite::M106() {
-  const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
+  #if ENABLED(SINGLENOZZLE)
+  uint8_t p;
+    if (parser.seenval('p'))
+      p = parser.byteval('P');
+    else
+      p = active_extruder;
+  #else
+    const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
+  #endif
 
+  #if ENABLED(SINGLENOZZLE)
+    if (p < EXTRUDERS) {
+  #else
   if (p < MIN(EXTRUDERS, FAN_COUNT)) {
-
+  #endif
     #if ENABLED(EXTRA_FAN_SPEED)
       const uint16_t t = parser.intval('T');
       if (t > 0) return thermalManager.set_temp_fan_speed(p, t);
@@ -63,7 +74,15 @@ void GcodeSuite::M106() {
  * M107: Fan Off
  */
 void GcodeSuite::M107() {
-  const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
+  #if ENABLED(SINGLENOZZLE)
+  uint8_t p;
+    if (parser.seenval('p'))
+      p = parser.byteval('P');
+    else
+      p = active_extruder;
+  #else
+    const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
+  #endif
   thermalManager.set_fan_speed(p, 0);
 }
 
