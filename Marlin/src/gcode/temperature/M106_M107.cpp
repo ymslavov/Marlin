@@ -44,11 +44,7 @@
  */
 void GcodeSuite::M106() {
   #if ENABLED(SINGLENOZZLE)
-  uint8_t p;
-    if (parser.seenval('p'))
-      p = parser.byteval('P');
-    else
-      p = active_extruder;
+    const uint8_t p = parser.byteval('P', MIN(active_extruder, EXTRUDERS - 1));
   #else
     const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
   #endif
@@ -75,11 +71,7 @@ void GcodeSuite::M106() {
  */
 void GcodeSuite::M107() {
   #if ENABLED(SINGLENOZZLE)
-  uint8_t p;
-    if (parser.seenval('p'))
-      p = parser.byteval('P');
-    else
-      p = active_extruder;
+    const uint8_t p = parser.byteval('P', MIN(active_extruder, EXTRUDERS - 1));
   #else
     const uint8_t p = parser.byteval('P', MIN(active_extruder, FAN_COUNT - 1));
   #endif
