@@ -22,8 +22,8 @@
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work, need to map pin
 //#define MachineCR20Pro
-//#define MachineCR10Std
-#define MachineCRX
+#define MachineCR10Std
+//#define MachineCRX
 //#define MachineS4
 //#define MachineS5
 
@@ -34,8 +34,8 @@
 #define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
 //#define GraphicLCD //Full graphics LCD for Ender 4
 //#define AddonFilSensor //Adds a filamnt runout sensor to the CR20 or Ender 4
-#define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock
-#define DualFilSensors //Using dual filament sensors on XMax and YMAX
+//#define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock
+//#define DualFilSensors //Using dual filament sensors on XMax and YMAX
 
 /*
    Hotend Type
@@ -79,7 +79,7 @@
 //#define BedAC
 #define BedDC
 
-#define SolidBedMounts //Removed a few LCD options to save some memory since not needed with solid mounts
+//#define SolidBedMounts //Removed a few LCD options to save some memory since not needed with solid mounts
 
 /*
    If you have upgraded to an S board but kept the original display
@@ -93,7 +93,7 @@
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
-#define ABL_BLTOUCH
+//#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
 /*
