@@ -882,7 +882,7 @@
 #if ENABLED(BABYSTEPPING)
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
-  #define BABYSTEP_MULTIPLICATOR  7         // Babysteps are very small. Increase for faster motion.
+  #define BABYSTEP_MULTIPLICATOR  20         // Babysteps are very small. Increase for faster motion.
 
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
@@ -1923,14 +1923,14 @@
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
   #define CUSTOM_USER_MENU_TITLE "Commissioning"
 
-  #define USER_DESC_1 "BIL Commission"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S55  \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
+#define USER_DESC_1 "Setup"
+  #define USER_GCODE_1 "M117 \n M502 \n M500 \n M501 \n M190 S55  \n M117 Probing... \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n  M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M117 Set Z Offset \n"
 
   #define USER_DESC_2 "Prep for Z Adjust"
-  #define USER_GCODE_2 "M190 S55 \n M104 235 \n G28 \n  M420 S \n G1 X100 Y 100 \n G1 Z0"
+  #define USER_GCODE_2 "M117 Store Settings\n M190 S55 \n M104 235 \n G28 \n  M420 S \n M117 Store Settings \n G1 X100 Y 100 \n G1 Z0"
 
-   #define USER_DESC_3 "Run Mesh Validation"
-  #define USER_GCODE_3 "G26 \n"
+   #define USER_DESC_5 "Run Mesh Validation"
+  #define USER_GCODE_5 "G26 \n"
 #endif
 
 /**
