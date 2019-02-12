@@ -346,7 +346,7 @@ class Temperature {
 
       #if ENABLED(EXTRA_FAN_SPEED)
         static uint8_t old_fan_speed[FAN_COUNT], new_fan_speed[FAN_COUNT];
-        static void set_temp_fan_speed(const uint8_t fan, const int16_t tmp_temp);
+        static void set_temp_fan_speed(const uint8_t fan, const uint16_t tmp_temp);
       #endif
 
       #if HAS_LCD_MENU
@@ -564,6 +564,12 @@ class Temperature {
      */
     #if HAS_PID_HEATING
       static void PID_autotune(const float &target, const int8_t hotend, const int8_t ncycles, const bool set_result=false);
+
+      #if ENABLED(NO_FAN_SLOWING_IN_PID_TUNING)
+        static bool adaptive_fan_slowing;
+      #elif ENABLED(ADAPTIVE_FAN_SLOWING)
+        constexpr static bool adaptive_fan_slowing = true;
+      #endif
 
       /**
        * Update the temp manager when PID values change

@@ -75,6 +75,7 @@
 #define BOARD_ULTIMAIN_2        72    // Ultimainboard 2.x (Uses TEMP_SENSOR 20)
 #define BOARD_RUMBA             80    // Rumba
 #define BOARD_RUMBA_RAISE3D     333   // Raise3D N series Rumba derivative
+#define BOARD_RL200             801   // Rapide Lite 200 (v1, low-cost RUMBA clone with drv)
 #define BOARD_FORMBOT_TREX2PLUS 95    // Formbot T-Rex 2 Plus
 #define BOARD_FORMBOT_TREX3     96    // Formbot T-Rex 3
 #define BOARD_FORMBOT_RAPTOR    97    // Formbot Raptor
@@ -116,6 +117,7 @@
 #define BOARD_GT2560_REV_A_PLUS 75    // Geeetech GT2560 Rev. A+ (with auto level probe)
 #define BOARD_GT2560_V3         76    // Geeetech GT2560 Rev B for A10(M/D)
 #define BOARD_GT2560_V3_MC2     73    // Geeetech GT2560 Rev B for Mecreator2
+#define BOARD_GT2560_V3_A20     86    // Geeetech GT2560 Rev B for A20(M/D)
 #define BOARD_EINSTART_S        666   // Einstart retrofit
 
 //
@@ -220,6 +222,7 @@
 #define BOARD_ARCHIM1          1591   // UltiMachine Archim1 (with DRV8825 drivers)
 #define BOARD_ARCHIM2          1592   // UltiMachine Archim2 (with TMC2130 drivers)
 #define BOARD_ALLIGATOR        1602   // Alligator Board R2
+#define BOARD_ADSK             1610   // Arduino DUE Shield Kit (ADSK)
 
 //
 // STM32 ARM Cortex-M3
