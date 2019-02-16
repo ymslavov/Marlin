@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -31,7 +31,7 @@
 #include "../inc/MarlinConfig.h"
 
 #if IS_SCARA
-  #include "../module/scara.h"
+  #include "scara.h"
 #endif
 
 // Axis homed and known-position states
@@ -71,7 +71,7 @@ extern float cartes[XYZ];
  * Feed rates are often configured with mm/m
  * but the planner and stepper like mm/s units.
  */
-extern const float homing_feedrate_mm_s[4];
+extern const float homing_feedrate_mm_s[XYZ];
 FORCE_INLINE float homing_feedrate(const AxisEnum a) { return pgm_read_float(&homing_feedrate_mm_s[a]); }
 
 extern float feedrate_mm_s;
@@ -326,7 +326,7 @@ void homeaxis(const AxisEnum axis);
  */
 #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
   extern bool extruder_duplication_enabled,       // Used in Dual X mode 2
-              scaled_duplication_mode;            // Used in Dual X mode 3
+              mirrored_duplication_mode;            // Used in Dual X mode 3
 #endif
 
 /**
@@ -338,7 +338,7 @@ void homeaxis(const AxisEnum axis);
     DXC_FULL_CONTROL_MODE,
     DXC_AUTO_PARK_MODE,
     DXC_DUPLICATION_MODE,
-    DXC_SCALED_DUPLICATION_MODE
+    DXC_MIRRORED_MODE
   };
 
   extern DualXMode dual_x_carriage_mode;

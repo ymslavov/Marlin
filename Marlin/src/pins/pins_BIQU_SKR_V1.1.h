@@ -1,7 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- * Copyright (C) 2017 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -78,7 +77,7 @@
   #define FAN1_PIN         P2_04
 #else
   #define HEATER_1_PIN     P2_04
-#endif 
+#endif
 #define FAN_PIN            P2_03
 #define HEATER_BED_PIN     P2_05
 
