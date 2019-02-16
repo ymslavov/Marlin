@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -368,4 +368,13 @@ void protected_pin_err();
 
 #if HAS_SUICIDE
   inline void suicide() { OUT_WRITE(SUICIDE_PIN, LOW); }
+#endif
+
+#if HAS_FILAMENT_SENSOR
+  void event_filament_runout();
+#endif
+
+#if ENABLED(G29_RETRY_AND_RECOVER)
+  void event_probe_recover();
+  void event_probe_failure();
 #endif

@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -34,6 +34,10 @@ GcodeSuite gcode;
 
 #if ENABLED(PRINTCOUNTER)
   #include "../module/printcounter.h"
+#endif
+
+#if ENABLED(HOST_PROMPT_SUPPORT)
+  #include "../feature/host_actions.h"
 #endif
 
 #include "../Marlin.h" // for idle() and suspend_auto_report
@@ -128,27 +132,17 @@ void GcodeSuite::dwell(millis_t time) {
   void GcodeSuite::G29_with_retry() {
     uint8_t retries = G29_MAX_RETRIES;
     while (G29()) { // G29 should return true for failed probes ONLY
-      if (retries--) {
-        #ifdef G29_ACTION_ON_RECOVER
-          SERIAL_ECHOLNPGM("//action:" G29_ACTION_ON_RECOVER);
-        #endif
-        #ifdef G29_RECOVER_COMMANDS
-          process_subcommands_now_P(PSTR(G29_RECOVER_COMMANDS));
-        #endif
-      }
+      if (retries--) event_probe_recover();
       else {
-        #ifdef G29_FAILURE_COMMANDS
-          process_subcommands_now_P(PSTR(G29_FAILURE_COMMANDS));
-        #endif
-        #ifdef G29_ACTION_ON_FAILURE
-          SERIAL_ECHOLNPGM("//action:" G29_ACTION_ON_FAILURE);
-        #endif
-        #if ENABLED(G29_HALT_ON_FAILURE)
-          kill(PSTR(MSG_ERR_PROBING_FAILED));
-        #endif
+        event_probe_failure();
         return;
       }
     }
+
+    #if ENABLED(HOST_PROMPT_SUPPORT)
+      if (host_prompt_reason == PROMPT_G29_RETRY) host_action_prompt_end();
+    #endif
+
     #ifdef G29_SUCCESS_COMMANDS
       process_subcommands_now_P(PSTR(G29_SUCCESS_COMMANDS));
     #endif
@@ -270,6 +264,10 @@ void GcodeSuite::process_parsed_command(
         case 42: G42(); break;                                    // G42: Coordinated move to a mesh point
       #endif
 
+      #if ENABLED(CALIBRATION_GCODE)
+        case 425: G425(); break;                                  // G425: Perform calibration with calibration cube
+      #endif
+
       #if ENABLED(DEBUG_GCODE_PARSER)
         case 800: parser.debug(); break;                          // G800: GCode Parser Test for G
       #endif
@@ -361,8 +359,15 @@ void GcodeSuite::process_parsed_command(
         case 108: M108(); break;                                  // M108: Cancel Waiting
         case 112: M112(); break;                                  // M112: Emergency Stop
         case 410: M410(); break;                                  // M410: Quickstop - Abort all the planned moves.
+        #if ENABLED(HOST_PROMPT_SUPPORT)
+          case 876: M876(); break;                                  // M876: Handle Host prompt responses
+        #endif
       #else
-        case 108: case 112: case 410: break;
+        case 108: case 112: case 410:
+        #if ENABLED(HOST_PROMPT_SUPPORT)
+          case 876:
+        #endif
+        break;
       #endif
 
       #if ENABLED(HOST_KEEPALIVE_FEATURE)
@@ -438,6 +443,9 @@ void GcodeSuite::process_parsed_command(
         case 164: M164(); break;                                  // M164: Save current mix as a virtual extruder
         #if ENABLED(DIRECT_MIXING_IN_G1)
           case 165: M165(); break;                                // M165: Set multiple mix weights
+        #endif
+        #if ENABLED(GRADIENT_MIX)
+          case 166: M166(); break;                                // M166: Set Gradient Mix
         #endif
       #endif
 
@@ -516,8 +524,8 @@ void GcodeSuite::process_parsed_command(
         case 304: M304(); break;                                  // M304: Set bed PID parameters
       #endif
 
-      #if PIN_EXISTS(CHDK) || HAS_PHOTOGRAPH
-        case 240: M240(); break;                                  // M240: Trigger a camera by emulating a Canon RC-1 : http://www.doc-diy.net/photo/rc-1_hacked/
+      #if ENABLED(PHOTO_GCODE)
+        case 240: M240(); break;                                  // M240: Trigger a camera
       #endif
 
       #if HAS_LCD_CONTRAST
@@ -547,7 +555,7 @@ void GcodeSuite::process_parsed_command(
 
       #if ENABLED(EXT_SOLENOID) || ENABLED(MANUAL_SOLENOID_CONTROL)
         case 380: M380(); break;                                  // M380: Activate solenoid on active (or specified) extruder
-        case 381: M381(); break;                                  // M381: Disable all solenoids
+        case 381: M381(); break;                                  // M381: Disable all solenoids or, if MANUAL_SOLENOID_CONTROL, active (or specified) solenoid
       #endif
 
       case 400: M400(); break;                                    // M400: Finish all moves
@@ -557,6 +565,10 @@ void GcodeSuite::process_parsed_command(
         case 402: M402(); break;                                  // M402: Stow probe
       #endif
 
+      #if ENABLED(PRUSA_MMU2)
+        case 403: M403(); break;
+      #endif
+
       #if ENABLED(FILAMENT_WIDTH_SENSOR)
         case 404: M404(); break;                                  // M404: Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or display nominal filament width
         case 405: M405(); break;                                  // M405: Turn on filament sensor for control
@@ -564,7 +576,7 @@ void GcodeSuite::process_parsed_command(
         case 407: M407(); break;                                  // M407: Display measured filament diameter
       #endif
 
-      #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+      #if HAS_FILAMENT_SENSOR
         case 412: M412(); break;                                  // M412: Enable/Disable filament runout detection
       #endif
 
@@ -699,6 +711,10 @@ void GcodeSuite::process_parsed_command(
         case 867: M867(); break;                                  // M867: Toggle error correction
         case 868: M868(); break;                                  // M868: Set error correction threshold
         case 869: M869(); break;                                  // M869: Report axis error
+      #endif
+
+      #if ENABLED(MAGNETIC_PARKING_EXTRUDER)
+        case 951: M951(); break;                                  // M951: Set Magnetic Parking Extruder parameters
       #endif
 
       #if ENABLED(Z_STEPPER_AUTO_ALIGN)

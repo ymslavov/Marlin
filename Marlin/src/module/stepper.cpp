@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -89,7 +89,7 @@ Stepper stepper; // Singleton
 #include "planner.h"
 #include "motion.h"
 
-#include "../module/temperature.h"
+#include "temperature.h"
 #include "../lcd/ultralcd.h"
 #include "../core/language.h"
 #include "../gcode/queue.h"
@@ -119,7 +119,7 @@ Stepper stepper; // Singleton
 
 // public:
 
-#if ENABLED(X_DUAL_ENDSTOPS) || ENABLED(Y_DUAL_ENDSTOPS) || Z_MULTI_ENDSTOPS || ENABLED(Z_STEPPER_AUTO_ALIGN)
+#if HAS_EXTRA_ENDSTOPS || ENABLED(Z_STEPPER_AUTO_ALIGN)
   bool Stepper::separate_multi_axis = false;
 #endif
 
@@ -129,10 +129,10 @@ Stepper stepper; // Singleton
 
 // private:
 
-block_t* Stepper::current_block = NULL; // A pointer to the block currently being traced
+block_t* Stepper::current_block; // (= NULL) A pointer to the block currently being traced
 
-uint8_t Stepper::last_direction_bits = 0,
-        Stepper::axis_did_move;
+uint8_t Stepper::last_direction_bits, // = 0
+        Stepper::axis_did_move; // = 0
 
 bool Stepper::abort_current_block;
 
@@ -1474,7 +1474,12 @@ void Stepper::stepper_pulse_phase_isr() {
       #endif
     #endif
 
-    #if MINIMUM_STEPPER_PULSE
+    #if ENABLED(I2S_STEPPER_STREAM)
+      i2s_push_sample();
+    #endif
+
+    // TODO: need to deal with MINIMUM_STEPPER_PULSE over i2s
+    #if MINIMUM_STEPPER_PULSE && DISABLED(I2S_STEPPER_STREAM)
       // Just wait for the requested pulse duration
       while (HAL_timer_get_count(PULSE_TIMER_NUM) < pulse_end) { /* nada */ }
     #endif
@@ -2143,16 +2148,19 @@ void Stepper::init() {
     E_AXIS_INIT(5);
   #endif
 
-  // Init Stepper ISR to 122 Hz for quick starting
-  HAL_timer_start(STEP_TIMER_NUM, 122);
+  #if DISABLED(I2S_STEPPER_STREAM)
+    HAL_timer_start(STEP_TIMER_NUM, 122); // Init Stepper ISR to 122 Hz for quick starting
+    ENABLE_STEPPER_DRIVER_INTERRUPT();
+    sei();
+  #endif
 
-  ENABLE_STEPPER_DRIVER_INTERRUPT();
+  // Init direction bits for first moves
+  last_direction_bits = 0
+    | (INVERT_X_DIR ? _BV(X_AXIS) : 0)
+    | (INVERT_Y_DIR ? _BV(Y_AXIS) : 0)
+    | (INVERT_Z_DIR ? _BV(Z_AXIS) : 0);
 
-  sei();
-
-  Z_DIR_WRITE(0);    // Init directions to last_direction_bits = 0  Keeps Z from being reversed
-  Z2_DIR_WRITE(0);
-  Z3_DIR_WRITE(0);
+  set_directions();
 }
 
 /**
