@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -56,9 +56,7 @@
 #define NANOSECONDS_PER_CYCLE (1000000000.0 / F_CPU)
 
 // Remove compiler warning on an unused variable
-#if !defined(ARDUINO_ARCH_STM32) || defined(STM32GENERIC)
-  #define UNUSED(x) ((void)(x))
-#endif
+#define UNUSED(x) ((void)(x))
 
 // Macros to make a string from a macro
 #define STRINGIFY_(M) #M
@@ -154,7 +152,10 @@
 #define DECIMAL_SIGNED(a) (DECIMAL(a) || (a) == '-' || (a) == '+')
 #define COUNT(a) (sizeof(a)/sizeof(*a))
 #define ZERO(a) memset(a,0,sizeof(a))
-#define COPY(a,b) memcpy(a,b,MIN(sizeof(a),sizeof(b)))
+#define COPY(a,b) do{ \
+    static_assert(sizeof(a[0]) == sizeof(b[0]), "COPY: '" STRINGIFY(a) "' and '" STRINGIFY(b) "' types (sizes) don't match!"); \
+    memcpy(&a[0],&b[0],MIN(sizeof(a),sizeof(b))); \
+  }while(0)
 
 // Macros for initializing arrays
 #define ARRAY_6(v1, v2, v3, v4, v5, v6, ...) { v1, v2, v3, v4, v5, v6 }

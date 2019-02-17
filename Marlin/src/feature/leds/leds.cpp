@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -60,6 +60,14 @@
 LEDLights leds;
 
 void LEDLights::setup() {
+  #if ENABLED(RGB_LED) || ENABLED(RGBW_LED)
+    SET_OUTPUT(RGB_LED_R_PIN);
+    SET_OUTPUT(RGB_LED_G_PIN);
+    SET_OUTPUT(RGB_LED_B_PIN);
+    #if ENABLED(RGBW_LED)
+      SET_OUTPUT(RGB_LED_W_PIN);
+    #endif
+  #endif
   #if ENABLED(NEOPIXEL_LED)
     setup_neopixel();
   #endif
