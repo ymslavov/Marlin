@@ -1068,7 +1068,9 @@
 //
 // G2/G3 Arc Support
 //
-#define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
+#if DISABLED(MachineCR10Orig)
+  #define ARC_SUPPORT               // Disable this feature to save ~3226 bytes
+#endif
 #if ENABLED(ARC_SUPPORT)
   #define MM_PER_ARC_SEGMENT  1   // Length of each arc segment
   #define N_ARC_CORRECTION   25   // Number of intertpolated segments between corrections
@@ -1144,8 +1146,8 @@
 // The number of linear motions that can be in the plan at any give time.
 // THE BLOCK_BUFFER_SIZE NEEDS TO BE A POWER OF 2 (e.g. 8, 16, 32) because shifts and ors are used to do the ring-buffering.
 #if ENABLED(SDSUPPORT)
- #if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
-  #define BLOCK_BUFFER_SIZE 4 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
+  #if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
+    #define BLOCK_BUFFER_SIZE 4 // SD,LCD,Buttons take more memory, block buffer needs to be smaller
   #else
     #define BLOCK_BUFFER_SIZE 16
   #endif
@@ -1157,7 +1159,7 @@
 
 // The ASCII buffer for serial input
 #define MAX_CMD_SIZE 96
-#if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
+  #if(ENABLED(MachineCR10Orig) || ENABLED(LowMemoryBoard))
 #define BUFSIZE 2
 #else
 #define BUFSIZE 4
