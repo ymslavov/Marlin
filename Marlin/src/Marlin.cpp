@@ -390,7 +390,7 @@ void disable_all_steppers() {
       gcode.process_subcommands_now_P(PSTR(G29_FAILURE_COMMANDS));
     #endif
     #ifdef ACTION_ON_G29_FAILURE
-      host_action(PSTR(ACTION_ON_G29_FAILURE)); }
+      host_action(PSTR(ACTION_ON_G29_FAILURE));
     #endif
     #if ENABLED(G29_HALT_ON_FAILURE)
       #ifdef ACTION_ON_CANCEL
