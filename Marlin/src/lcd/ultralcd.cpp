@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -83,6 +83,10 @@
 
 #if HAS_BUZZER
   #include "../libs/buzzer.h"
+#endif
+
+#if HAS_TRINAMIC
+  #include "../feature/tmc_util.h"
 #endif
 
 #if HAS_ENCODER_ACTION
@@ -254,6 +258,10 @@ void MarlinUI::init() {
 
   #if HAS_ENCODER_ACTION
     encoderDiff = 0;
+  #endif
+
+  #if HAS_TRINAMIC && HAS_LCD_MENU
+    init_tmc_section();
   #endif
 }
 
@@ -922,16 +930,46 @@ void MarlinUI::update() {
     uint8_t  ADCKeyNo;
   } _stADCKeypadTable_;
 
+  #ifndef ADC_BUTTONS_VALUE_SCALE
+    #define ADC_BUTTONS_VALUE_SCALE       1.0  // for the power voltage equal to the reference voltage
+  #endif
+  #ifndef ADC_BUTTONS_R_PULLUP
+    #define ADC_BUTTONS_R_PULLUP          4.7  // common pull-up resistor in the voltage divider
+  #endif
+  #ifndef ADC_BUTTONS_LEFT_R_PULLDOWN
+    #define ADC_BUTTONS_LEFT_R_PULLDOWN   0.47 // pull-down resistor for LEFT button voltage divider
+  #endif
+  #ifndef ADC_BUTTONS_RIGHT_R_PULLDOWN
+    #define ADC_BUTTONS_RIGHT_R_PULLDOWN  4.7  // pull-down resistor for RIGHT button voltage divider
+  #endif
+  #ifndef ADC_BUTTONS_UP_R_PULLDOWN
+    #define ADC_BUTTONS_UP_R_PULLDOWN     1.0  // pull-down resistor for UP button voltage divider
+  #endif
+  #ifndef ADC_BUTTONS_DOWN_R_PULLDOWN
+    #define ADC_BUTTONS_DOWN_R_PULLDOWN   10.0 // pull-down resistor for DOWN button voltage divider
+  #endif
+  #ifndef ADC_BUTTONS_MIDDLE_R_PULLDOWN
+    #define ADC_BUTTONS_MIDDLE_R_PULLDOWN 2.2  // pull-down resistor for MIDDLE button voltage divider
+  #endif
+
+  // Calculate the ADC value for the voltage divider with specified pull-down resistor value
+  #define ADC_BUTTON_VALUE(r)  (int(4096.0 * (ADC_BUTTONS_VALUE_SCALE) * r / (r + ADC_BUTTONS_R_PULLUP)))
+
   static const _stADCKeypadTable_ stADCKeyTable[] PROGMEM = {
     // VALUE_MIN, VALUE_MAX, KEY
     { 4000, 4096, 1 + BLEN_KEYPAD_F1     }, // F1
     { 4000, 4096, 1 + BLEN_KEYPAD_F2     }, // F2
     { 4000, 4096, 1 + BLEN_KEYPAD_F3     }, // F3
-    {  300,  500, 1 + BLEN_KEYPAD_LEFT   }, // LEFT
-    { 1900, 2200, 1 + BLEN_KEYPAD_RIGHT  }, // RIGHT
-    {  570,  870, 1 + BLEN_KEYPAD_UP     }, // UP
-    { 2670, 2870, 1 + BLEN_KEYPAD_DOWN   }, // DOWN
-    { 1150, 1450, 1 + BLEN_KEYPAD_MIDDLE }, // ENTER
+    {  ADC_BUTTON_VALUE(ADC_BUTTONS_LEFT_R_PULLDOWN)   - 100,
+       ADC_BUTTON_VALUE(ADC_BUTTONS_LEFT_R_PULLDOWN)   + 100, 1 + BLEN_KEYPAD_LEFT   }, // LEFT  ( 272 ...  472)
+    {  ADC_BUTTON_VALUE(ADC_BUTTONS_RIGHT_R_PULLDOWN)  - 100,
+       ADC_BUTTON_VALUE(ADC_BUTTONS_RIGHT_R_PULLDOWN)  + 100, 1 + BLEN_KEYPAD_RIGHT  }, // RIGHT (1948 ... 2148)
+    {  ADC_BUTTON_VALUE(ADC_BUTTONS_UP_R_PULLDOWN)     - 100,
+       ADC_BUTTON_VALUE(ADC_BUTTONS_UP_R_PULLDOWN)     + 100, 1 + BLEN_KEYPAD_UP     }, // UP    ( 618 ...  818)
+    {  ADC_BUTTON_VALUE(ADC_BUTTONS_DOWN_R_PULLDOWN)   - 100,
+       ADC_BUTTON_VALUE(ADC_BUTTONS_DOWN_R_PULLDOWN)   + 100, 1 + BLEN_KEYPAD_DOWN   }, // DOWN  (2686 ... 2886)
+    {  ADC_BUTTON_VALUE(ADC_BUTTONS_MIDDLE_R_PULLDOWN) - 100,
+       ADC_BUTTON_VALUE(ADC_BUTTONS_MIDDLE_R_PULLDOWN) + 100, 1 + BLEN_KEYPAD_MIDDLE }, // ENTER (1205 ... 1405)
   };
 
   uint8_t get_ADC_keyValue(void) {
@@ -948,7 +986,8 @@ void MarlinUI::update() {
     }
     return 0;
   }
-#endif
+
+#endif // HAS_ADC_BUTTONS
 
 #if HAS_ENCODER_ACTION
 
@@ -1247,6 +1286,15 @@ void MarlinUI::update() {
     static const char paused[] PROGMEM = MSG_PRINT_PAUSED;
     static const char printing[] PROGMEM = MSG_PRINTING;
     static const char welcome[] PROGMEM = WELCOME_MSG;
+    #if SERVICE_INTERVAL_1 > 0
+      static const char service1[] PROGMEM = { "> " SERVICE_NAME_1 "!" };
+    #endif
+    #if SERVICE_INTERVAL_2 > 0
+      static const char service2[] PROGMEM = { "> " SERVICE_NAME_2 "!" };
+    #endif
+    #if SERVICE_INTERVAL_3 > 0
+      static const char service3[] PROGMEM = { "> " SERVICE_NAME_3 "!" };
+    #endif
     PGM_P msg;
     if (!IS_SD_PRINTING() && print_job_timer.isPaused())
       msg = paused;
@@ -1256,6 +1304,17 @@ void MarlinUI::update() {
     #endif
     else if (print_job_timer.isRunning())
       msg = printing;
+
+    #if SERVICE_INTERVAL_1 > 0
+      else if (print_job_timer.needsService(1)) msg = service1;
+    #endif
+    #if SERVICE_INTERVAL_2 > 0
+      else if (print_job_timer.needsService(2)) msg = service2;
+    #endif
+    #if SERVICE_INTERVAL_3 > 0
+      else if (print_job_timer.needsService(3)) msg = service3;
+    #endif
+
     else
       msg = welcome;
 

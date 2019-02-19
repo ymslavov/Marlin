@@ -20,8 +20,7 @@
  *
  */
 
-#ifndef _VERSION_H_
-#define _VERSION_H_
+#pragma once
 
 #include "../core/macros.h" // for ENABLED
 
@@ -40,20 +39,20 @@
   /**
    * Marlin release version identifier
    */
-  #define SHORT_BUILD_VERSION "2.0.x_SX4A"
+  #define SHORT_BUILD_VERSION "2.0.x_SX4B"
 
   /**
    * Verbose version identifier which should contain a reference to the location
    * from where the binary was downloaded or the source code was compiled.
    */
-  //#define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (Github)"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D"
 
   /**
    * The STRING_DISTRIBUTION_DATE represents when the binary file was built,
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-  #define STRING_DISTRIBUTION_DATE "2019-01-16"
+  #define STRING_DISTRIBUTION_DATE "2019-02-19"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
@@ -75,7 +74,7 @@
   /**
    * Defines a generic printer name to be output to the LCD after booting Marlin.
    */
-  #define MACHINE_NAME "TM3D Creality"
+  #define MACHINE_NAME "TM3D SX4"
 
   /**
    * The SOURCE_CODE_URL is the location where users will find the Marlin Source
@@ -97,5 +96,3 @@
   #define WEBSITE_URL "tinymachines3d.com"
 
 #endif // USE_AUTOMATIC_VERSIONING
-
-#endif // _VERSION_H_
