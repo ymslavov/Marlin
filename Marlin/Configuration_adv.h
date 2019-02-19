@@ -2339,7 +2339,8 @@
 /**
  * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
  */
-#define PINS_DEBUGGING
-
+#if DISABLED(MachineCR10Orig)
+  #define PINS_DEBUGGING
+#endif
 // Enable Marlin dev mode which adds some special commands
 //#define MARLIN_DEV_MODE
