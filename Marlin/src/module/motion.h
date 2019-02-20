@@ -73,6 +73,7 @@ extern float cartes[XYZ];
  */
 extern const float homing_feedrate_mm_s[XYZ];
 FORCE_INLINE float homing_feedrate(const AxisEnum a) { return pgm_read_float(&homing_feedrate_mm_s[a]); }
+float get_homing_bump_feedrate(const AxisEnum axis);
 
 extern float feedrate_mm_s;
 
@@ -170,11 +171,11 @@ void do_blocking_move_to_x(const float &rx, const float &fr_mm_s=0);
 void do_blocking_move_to_z(const float &rz, const float &fr_mm_s=0);
 void do_blocking_move_to_xy(const float &rx, const float &ry, const float &fr_mm_s=0);
 
-FORCE_INLINE void do_blocking_move_to(const float (&raw)[XYZ], const float &fr_mm_s) {
+FORCE_INLINE void do_blocking_move_to(const float (&raw)[XYZ], const float &fr_mm_s=0) {
   do_blocking_move_to(raw[X_AXIS], raw[Y_AXIS], raw[Z_AXIS], fr_mm_s);
 }
 
-FORCE_INLINE void do_blocking_move_to(const float (&raw)[XYZE], const float &fr_mm_s) {
+FORCE_INLINE void do_blocking_move_to(const float (&raw)[XYZE], const float &fr_mm_s=0) {
   do_blocking_move_to(raw[X_AXIS], raw[Y_AXIS], raw[Z_AXIS], fr_mm_s);
 }
 
@@ -326,7 +327,7 @@ void homeaxis(const AxisEnum axis);
  */
 #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
   extern bool extruder_duplication_enabled,       // Used in Dual X mode 2
-              mirrored_duplication_mode;            // Used in Dual X mode 3
+              scaled_duplication_mode;            // Used in Dual X mode 3
 #endif
 
 /**
@@ -338,7 +339,7 @@ void homeaxis(const AxisEnum axis);
     DXC_FULL_CONTROL_MODE,
     DXC_AUTO_PARK_MODE,
     DXC_DUPLICATION_MODE,
-    DXC_MIRRORED_MODE
+    DXC_SCALED_DUPLICATION_MODE
   };
 
   extern DualXMode dual_x_carriage_mode;

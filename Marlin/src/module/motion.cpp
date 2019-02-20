@@ -294,7 +294,7 @@ void buffer_line_to_destination(const float fr_mm_s) {
 #endif // IS_KINEMATIC
 
 /**
- *  Plan a move to (X, Y, Z) and set the current_position
+ * Plan a move to (X, Y, Z) and set the current_position
  */
 void do_blocking_move_to(const float rx, const float ry, const float rz, const float &fr_mm_s/*=0.0*/) {
   const float old_feedrate_mm_s = feedrate_mm_s;
@@ -837,7 +837,7 @@ void clean_up_after_endstop_or_probe_move() { bracket_probe_move(false); }
 
 #if ENABLED(DUAL_X_CARRIAGE) || ENABLED(DUAL_NOZZLE_DUPLICATION_MODE)
   bool extruder_duplication_enabled = false,                              // Used in Dual X mode 2 & 3
-       mirrored_duplication_mode      = false;                              // Used in Dual X mode 2 & 3
+       scaled_duplication_mode      = false;                              // Used in Dual X mode 2 & 3
 #endif
 
 #if ENABLED(DUAL_X_CARRIAGE)
@@ -904,7 +904,7 @@ void clean_up_after_endstop_or_probe_move() { bracket_probe_move(false); }
             if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("Clear active_extruder_parked");
           #endif
           break;
-        case DXC_MIRRORED_MODE:
+        case DXC_SCALED_DUPLICATION_MODE:
         case DXC_DUPLICATION_MODE:
           if (active_extruder == 0) {
             #if ENABLED(DEBUG_LEVELING_FEATURE)
@@ -1032,7 +1032,7 @@ void prepare_move_to_destination() {
 /**
  * Homing bump feedrate (mm/s)
  */
-inline float get_homing_bump_feedrate(const AxisEnum axis) {
+float get_homing_bump_feedrate(const AxisEnum axis) {
   #if HOMING_Z_WITH_PROBE
     if (axis == Z_AXIS) return MMM_TO_MMS(Z_PROBE_SPEED_SLOW);
   #endif

@@ -45,7 +45,7 @@
 #define MSG_AUTOSTART                       _UxGT("Autostart")
 #define MSG_DISABLE_STEPPERS                _UxGT("Motoren deaktivieren") // M84
 #define MSG_DEBUG_MENU                      _UxGT("Debug-Menü")
-#define MSG_PROGRESS_BAR_TEST               _UxGT("Fortschrittsb.-Test")
+#define MSG_PROGRESS_BAR_TEST               _UxGT("Statusbalken-Test")
 #define MSG_AUTO_HOME                       _UxGT("Home XYZ") // G28
 #define MSG_AUTO_HOME_X                     _UxGT("Home X")
 #define MSG_AUTO_HOME_Y                     _UxGT("Home Y")
@@ -99,7 +99,7 @@
 #define MSG_IDEX_MENU                       _UxGT("IDEX-Modus")
 #define MSG_IDEX_MODE_AUTOPARK              _UxGT("Autom. Parken")
 #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Duplizieren")
-#define MSG_IDEX_MODE_MIRRORED_COPY           _UxGT("Skalierung kopieren")
+#define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Skalierung kopieren")
 #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("vollstä. Kontrolle")
 #define MSG_IDEX_X_OFFSET                   _UxGT("2. Düse X")
 #define MSG_IDEX_Y_OFFSET                   _UxGT("2. Düse Y")

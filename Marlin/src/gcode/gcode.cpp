@@ -140,7 +140,7 @@ void GcodeSuite::dwell(millis_t time) {
     }
 
     #if ENABLED(HOST_PROMPT_SUPPORT)
-      if (host_prompt_reason == PROMPT_G29_RETRY) host_action_prompt_end();
+      host_action_prompt_end();
     #endif
 
     #ifdef G29_SUCCESS_COMMANDS
@@ -524,8 +524,8 @@ void GcodeSuite::process_parsed_command(
         case 304: M304(); break;                                  // M304: Set bed PID parameters
       #endif
 
-      #if PIN_EXISTS(CHDK) || HAS_PHOTOGRAPH
-        case 240: M240(); break;                                  // M240: Trigger a camera by emulating a Canon RC-1 : http://www.doc-diy.net/photo/rc-1_hacked/
+      #if ENABLED(PHOTO_GCODE)
+        case 240: M240(); break;                                  // M240: Trigger a camera
       #endif
 
       #if HAS_LCD_CONTRAST
@@ -576,7 +576,7 @@ void GcodeSuite::process_parsed_command(
         case 407: M407(); break;                                  // M407: Display measured filament diameter
       #endif
 
-      #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+      #if HAS_FILAMENT_SENSOR
         case 412: M412(); break;                                  // M412: Enable/Disable filament runout detection
       #endif
 
@@ -662,7 +662,7 @@ void GcodeSuite::process_parsed_command(
       #endif
 
       #if HAS_TRINAMIC
-        case 122: M122(); break;
+        case 122: M122(); break;                                  // M122: Report driver configuration and status
         case 906: M906(); break;                                  // M906: Set motor current in milliamps using axis codes X, Y, Z, E
         #if HAS_STEALTHCHOP
           case 569: M569(); break;                                // M569: Enable stealthChop on an axis.

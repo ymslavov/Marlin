@@ -247,8 +247,8 @@
 #ifndef MSG_IDEX_MODE_DUPLICATE
   #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Duplication")
 #endif
-#ifndef MSG_IDEX_MODE_MIRRORED_COPY
-  #define MSG_IDEX_MODE_MIRRORED_COPY           _UxGT("Mirrored copy")
+#ifndef MSG_IDEX_MODE_SCALED_COPY
+  #define MSG_IDEX_MODE_SCALED_COPY           _UxGT("Scaled copy")
 #endif
 #ifndef MSG_IDEX_MODE_FULL_CTRL
   #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("Full control")
@@ -1360,5 +1360,8 @@
 #endif
 
 #ifndef MSG_SERVICE_RESET
-  #define MSG_SERVICE_RESET                           _UxGT("Reset")
+  #define MSG_SERVICE_RESET                   _UxGT("Reset")
+#endif
+#ifndef MSG_SERVICE_IN
+  #define MSG_SERVICE_IN                      _UxGT(" in:")
 #endif
