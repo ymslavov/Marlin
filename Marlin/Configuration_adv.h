@@ -75,7 +75,7 @@
  */
 #if ENABLED(THERMAL_PROTECTION_HOTENDS)
   #define THERMAL_PROTECTION_PERIOD 210        // Seconds
-  #define THERMAL_PROTECTION_HYSTERESIS 4     // Degrees Celsius
+  #define THERMAL_PROTECTION_HYSTERESIS 10     // Degrees Celsius
 
   #define ADAPTIVE_FAN_SLOWING              // Slow part cooling fan if temperature drops
   #if ENABLED(ADAPTIVE_FAN_SLOWING) && ENABLED(PIDTEMP)
@@ -380,27 +380,18 @@
       // override for X2_HOME_POS. This also allow recalibration of the distance between the two endstops
       // without modifying the firmware (through the "M218 T1 X???" command).
       // Remember: you should set the second extruder x-offset to 0 in your slicer.
-  /**
-   * There are a few selectable movement modes for dual x-carriages using M605 S<mode>
-   * 
-   * Mode 0 (DXC_FULL_CONTROL_MODE): Full control. The slicer has full control over both x-carriages and can achieve optimal travel results
-   *                                   as long as it supports dual x-carriages. (M605 S0)
-   * 
-   * Mode 1 (DXC_AUTO_PARK_MODE)   : Auto-park mode. The firmware will automatically park and unpark the x-carriages on tool changes so
-   *                                   that additional slicer support is not required. (M605 S1)
-   * 
-   * Mode 2 (DXC_DUPLICATION_MODE) : Duplication mode. The firmware will transparently make the second x-carriage and extruder copy all
-   *                                   actions of the first x-carriage. This allows the printer to print 2 arbitrary items at
-   *                                   once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
-   * 
-   * Mode 3 (DXC_MIRRORED_MODE)    : Enable the Formbot/Vivedino inspired Mirrored mode. The second extruder will duplicate the first extruder's
-   *                                   movement similar to DXC_DUPLICATION_MODE. However, the second extruder will be producing
-   *                                   a mirror image of the first extruder. The initial x-offset and temperature differential are
-   *                                   set with M605 S2 [Xnnn] [Rmmm] and then followed with a M605 S3 to start the mirrored movement.
-  */
+
+  // There are a few selectable movement modes for dual x-carriages using M605 S<mode>
+  //    Mode 0 (DXC_FULL_CONTROL_MODE): Full control. The slicer has full control over both x-carriages and can achieve optimal travel results
+  //                                    as long as it supports dual x-carriages. (M605 S0)
+  //    Mode 1 (DXC_AUTO_PARK_MODE)   : Auto-park mode. The firmware will automatically park and unpark the x-carriages on tool changes so
+  //                                    that additional slicer support is not required. (M605 S1)
+  //    Mode 2 (DXC_DUPLICATION_MODE) : Duplication mode. The firmware will transparently make the second x-carriage and extruder copy all
+  //                                    actions of the first x-carriage. This allows the printer to print 2 arbitrary items at
+  //                                    once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
 
   // This is the default power-up mode which can be later using M605.
-  #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE
+  #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_FULL_CONTROL_MODE
 
   // Default x offset in duplication mode (typically set to half print bed width)
   #define DEFAULT_DUPLICATION_X_OFFSET 100
@@ -848,7 +839,7 @@
   #endif
 
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
-  //#define FAST_FILE_TRANSFER
+  //#define BINARY_FILE_TRANSFER
 
 #endif // SDSUPPORT
 
@@ -949,6 +940,7 @@
  */
 #define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
+  //#define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
   #define BABYSTEP_MULTIPLICATOR  (Z_STEPSMM / 40)         // Babysteps are very small. Increase for faster motion.
@@ -957,12 +949,13 @@
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1250   // Maximum interval between clicks, in milliseconds.
                                             // Note: Extra time may be added to mitigate controller latency.
+    #define BABYSTEP_ALWAYS_AVAILABLE     // Allow babystepping at all times (not just during movement).
+    //#define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
+    #if ENABLED(MOVE_Z_WHEN_IDLE)
+      #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiply 1mm by this factor for the move step size.
+    #endif
   #endif
 
-  //#define MOVE_Z_WHEN_IDLE                // Jump to the move Z menu on doubleclick when printer is idle.
-  #if ENABLED(MOVE_Z_WHEN_IDLE)
-    #define MOVE_Z_IDLE_MULTIPLICATOR 1     // Multiply 1mm by this factor for the move step size.
-  #endif
 
   #define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
@@ -1575,7 +1568,7 @@
    * M906 - Set or get motor current in milliamps using axis codes X, Y, Z, E. Report values if no axis codes given.
    * M911 - Report stepper driver overtemperature pre-warn condition.
    * M912 - Clear stepper driver overtemperature pre-warn condition flag.
-   * M122 S0/1 - Report driver parameters (Requires TMC_DEBUG)
+   * M122 - Report driver parameters (Requires TMC_DEBUG)
    */
   //#define MONITOR_DRIVER_STATUS
 
@@ -1843,12 +1836,30 @@
 // @section extras
 
 /**
- * Canon Hack Development Kit
- * http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+ * Photo G-code
+ * Add the M240 G-code to take a photo.
+ * The photo can be triggered by a digital pin or a physical movement.
  */
-//#define CHDK_PIN    4   // Set and enable a pin for triggering CHDK to take a picture
-#if PIN_EXISTS(CHDK)
-  #define CHDK_DELAY 50   // (ms) How long the pin should remain HIGH
+//#define PHOTO_GCODE
+#if ENABLED(PHOTO_GCODE)
+  // A position to move to (and raise Z) before taking the photo
+  //#define PHOTO_POSITION { X_MAX_POS - 5, Y_MAX_POS, 0 }  // { xpos, ypos, zraise } (M240 X Y Z)
+  //#define PHOTO_DELAY_MS   100                            // (ms) Duration to pause before moving back (M240 P)
+  //#define PHOTO_RETRACT_MM   6.5                          // (mm) E retract/recover for the photo move (M240 R S)
+
+  // Canon RC-1 or homebrew digital camera trigger
+  // Data from: http://www.doc-diy.net/photo/rc-1_hacked/
+  //#define PHOTOGRAPH_PIN 23
+
+  // Canon Hack Development Kit
+  // http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+  //#define CHDK_PIN        4
+
+  // Optional second move with delay to trigger the camera shutter
+  //#define PHOTO_SWITCH_POSITION { X_MAX_POS, Y_MAX_POS }  // { xpos, ypos } (M240 I J)
+
+  // Duration to hold the switch or keep CHDK_PIN high
+  //#define PHOTO_SWITCH_MS   50 // (ms) (M240 D)
 #endif
 
 /**
@@ -2029,11 +2040,11 @@
   #define USER_SCRIPT_AUDIBLE_FEEDBACK
   #define USER_SCRIPT_RETURN  // Return to status screen after a script
 
-    #define USER_DESC_1 "UBL Commission Step 1"
-  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n G28 \n G29 P1 \n G29 S1 \n M117 Run Step 2"
+    #define USER_DESC_1 "UBL Commission 1"
+  #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S75 \n G28 \n G29 P1 \n G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M77 \n M117 Set Z Offset"
  
-  #define USER_DESC_2 "UBL Commission Step 2"
-  #define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset"
+  //#define USER_DESC_2 "UBL Commission 2"
+  //#define USER_GCODE_2 "G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M117 Set Z Offset"
 
   #define USER_DESC_3 "Prep for Z Adjust"
   #define USER_GCODE_3 "M190 75 \n M104 235 \n G28 \n G29 L1 \n G1 X150 Y 150 \n G1 Z0"
