@@ -23,10 +23,6 @@
 #include "../gcode.h"
 #include "../../inc/MarlinConfig.h"
 
-#if NUM_SERIAL > 1
-  #include "../../gcode/queue.h"
-#endif
-
 #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
   static void cap_line(PGM_P const name, bool ena=false) {
     SERIAL_ECHOPGM("Cap:");
@@ -48,6 +44,13 @@ void GcodeSuite::M115() {
     // SERIAL_XON_XOFF
     cap_line(PSTR("SERIAL_XON_XOFF")
       #if ENABLED(SERIAL_XON_XOFF)
+        , true
+      #endif
+    );
+
+    // BINARY_FILE_TRANSFER (M28 B1)
+    cap_line(PSTR("BINARY_FILE_TRANSFER")
+      #if ENABLED(BINARY_FILE_TRANSFER)
         , true
       #endif
     );
