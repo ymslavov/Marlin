@@ -44,14 +44,14 @@
 
    Configured with 5015 left wing, right wing ABL sensor (BLTouch or M18) only
 */
-#define HotendStock
-//#define HotendE3D
+//#define HotendStock
+#define HotendE3D
 
 /*
    Enable this if you have an all metal hotend capable of 300c
 
 */
-//#define HotendAllMetal
+#define HotendAllMetal
 
 /*
  * Select these if you have changed to a high performance extruder
@@ -91,16 +91,18 @@
    Leave all disabled if no sensor is available
 */
 //#define ABL_EZABL // TH3D EZABL or Any NO Sensor
-//#define ABL_NCSW //Creality ABL or Any NC Sensor
+#define ABL_NCSW //Creality ABL or Any NC Sensor
 //#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
+#define E3D_DUALFAN_MOUNT // Using HD Modular mount as above with 2 5015 blowers and sensor on the right
+
 /*
    Choose bed leveling type here
    Requires a sensor from above
    Melzi board users may only select ABL_BI for bilinear leveling
 */
-//#define ABL_BI
+#define ABL_BI
 //#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
@@ -112,8 +114,8 @@
    Standard is recommended in most other scenarios.
 */
 //#define MeshFast
-#define MeshStd
-//#define MeshFine
+//#define MeshStd
+#define MeshFine
 //#define MeshExtreme
 
 /*
@@ -692,9 +694,9 @@
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
 #if (ENABLED(HotendAllMetal))
-	#define HEATER_0_MAXTEMP 295
+	#define HEATER_0_MAXTEMP 315
 #else
-	#define HEATER_0_MAXTEMP 250
+	#define HEATER_0_MAXTEMP 255
 #endif
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
@@ -1274,28 +1276,41 @@
      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
    #endif
 
-   #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock)) && DISABLED(CREALITY_ABL_MOUNT)
-     #define X_PROBE_OFFSET_FROM_EXTRUDER -44  // X offset: -left  +right  [of the nozzle]
-     #define Y_PROBE_OFFSET_FROM_EXTRUDER -10  // Y offset: -front +behind [the nozzle]
-     #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
-   #endif
+  #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock))
+    #if ENABLED(CREALITY_ABL_MOUNT)
+      #define X_PROBE_OFFSET_FROM_EXTRUDER -55  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER -15  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #else
+      #define X_PROBE_OFFSET_FROM_EXTRUDER -44  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER -10  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #endif
+  #endif
 
-  #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendStock)) && ENABLED(CREALITY_ABL_MOUNT)
-     #define X_PROBE_OFFSET_FROM_EXTRUDER -55  // X offset: -left  +right  [of the nozzle]
-     #define Y_PROBE_OFFSET_FROM_EXTRUDER -15  // Y offset: -front +behind [the nozzle]
-     #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
-   #endif
 
    #if (ENABLED(ABL_BLTOUCH) && ENABLED(HotendE3D))
-     #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
-     #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
-     #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #if ENABLED(E3D_DUALFAN_MOUNT)
+      #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #else
+      #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #endif
    #endif
 
    #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendE3D))
-     #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
-     #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
-     #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #if ENABLED(E3D_DUALFAN_MOUNT)
+      #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #else
+      #define X_PROBE_OFFSET_FROM_EXTRUDER 33  // X offset: -left  +right  [of the nozzle]
+      #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
+      #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
+    #endif
    #endif
  #endif
 
@@ -1926,19 +1941,24 @@
 //
 #define Z_SAFE_HOMING
 
+#if ENABLED(E3D_DUALFAN_MOUNT)
+  #define HOMING_ADD 15
+#else
+  #define HOMING_ADD 0
+#endif
 #if ENABLED(Z_SAFE_HOMING)
   #if ENABLED(MachineS4)
-    #define Z_SAFE_HOMING_X_POINT 60    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 60    // Y point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_X_POINT 60 + HOMING_ADD   // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 60 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
   #elif ENABLED(MachineS5)
-    #define Z_SAFE_HOMING_X_POINT 80    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 80    // Y point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_X_POINT 80 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 80 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
   #elif ENABLED(MachineCRX) 
-    #define Z_SAFE_HOMING_X_POINT 50    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 70    // Y point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_X_POINT 50 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 70 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
   #else
-    #define Z_SAFE_HOMING_X_POINT 50    // X point for Z homing when homing all axis (G28).
-    #define Z_SAFE_HOMING_Y_POINT 50    // Y point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_X_POINT 50 + HOMING_ADD    // X point for Z homing when homing all axis (G28).
+    #define Z_SAFE_HOMING_Y_POINT 50 + HOMING_ADD    // Y point for Z homing when homing all axis (G28).
   #endif
 #endif
 
