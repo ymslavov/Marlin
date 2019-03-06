@@ -22,20 +22,22 @@
 #pragma once
 
  // If you have a trex 3, stock is this option plus 2208 on all axis. None in spreadcycle.
-//#define TREX3
+#define TREX3
 
 //#define X_2208
 //#define X_Spreadcycle
+#define X_S109
 //#define Y_2208 // Highly recommended as large prints with high mass can cause layer shifts with stealthchop at high speed
 //#define Y_Spreadcycle
 //#define Y_4988 // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
+#define Y_S109
 //#define Z_2208 // NOT Recommended! Dual stepper current draw is above the recommended limit for this driver
 //#define Z_4988 // Some machines shipped with 4988 drivers across the board. Set this if you arent sure what you have and all the drivers look identical
 //#define Y_Spreadcycle
 //#define E_2208 // Not Recommended! Stealthchop mode faults with linear advance
 //#define E_Spreadcycle
 
-//#define BedAC
+#define BedAC
 
 #define tallVersion
 
@@ -49,8 +51,12 @@
 //////////////////////////////////DO not edit below here unless you know what youre doing!  //////////////////////////////////
 
 #if ENABLED(TREX3)
-  #define X_2208
-  #define Y_2208
+  #if DISABLED(X_S109)
+    #define X_2208
+  #endif
+  #if DISABLED(Y_S109)
+    #define Y_2208
+  #endif
   #define Z_2208
   #define E_2208
   #define FilamentSensor
@@ -777,7 +783,7 @@
  */
 
 
-#if(ENABLED(Y_2208) || ENABLED(Y_4988))
+#if(ENABLED(Y_2208) || ENABLED(Y_4988) || ENABLED(Y_S109))
   #define Y_STEPSMM 80
 #else
   #define Y_STEPSMM 160
@@ -828,7 +834,7 @@
 //
 #define JUNCTION_DEVIATION
 #if ENABLED(JUNCTION_DEVIATION)
-  #define JUNCTION_DEVIATION_MM 0.02  // (mm) Distance from real junction edge
+  #define JUNCTION_DEVIATION_MM 0.12  // (mm) Distance from real junction edge
 #endif
 
 /**
