@@ -90,8 +90,8 @@
    Choose ABL sensor type below
    Leave all disabled if no sensor is available
 */
-//#define ABL_EZABL // TH3D EZABL or Any NO Sensor
-#define ABL_NCSW //Creality ABL or Any NC Sensor
+#define ABL_EZABL // TH3D EZABL or Any NO Sensor
+//#define ABL_NCSW //Creality ABL or Any NC Sensor
 //#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
@@ -338,7 +338,9 @@
 
 #if ENABLED(MachineCR20Pro)
   #define MachineCR20
-  #define ABL_BLTOUCH
+  #if DISABLED(ABL_EZABL) && DISABLED(ABL_NCSW)
+    #define ABL_BLTOUCH
+  #endif
   #define HotendAllMetal
   #if DISABLED(ABL_UBL)
     #define ABL_BI
@@ -1315,7 +1317,11 @@
  #endif
 
 // Certain types of probes need to stay away from edges
-#define MIN_PROBE_EDGE 10
+#if ENABLED(ABL_BLTOUCH)
+  #define MIN_PROBE_EDGE 3
+#else
+  #define MIN_PROBE_EDGE 5
+#endif
 
 // X and Y axis travel speed (mm/m) between probes
 #define XY_PROBE_SPEED 6000
@@ -1358,9 +1364,9 @@
 
 // Enable the M48 repeatability test to test probe accuracy
 #if (ENABLED(ABL_EZABL)|| ENABLED(ABL_BLTOUCH) || ENABLED(ABL_NCSW))
-#if(DISABLED(MachineCR10Orig))
-#define Z_MIN_PROBE_REPEATABILITY_TEST
-#endif
+  #if(DISABLED(MachineCR10Orig))
+    #define Z_MIN_PROBE_REPEATABILITY_TEST
+  #endif
 #endif
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
 // :{ 0:'Low', 1:'High' }
@@ -1724,32 +1730,32 @@
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
-
+#define MESH_INSET MIN_PROBE_EDGE
   // Set the number of grid points per dimension.
 
 // Set the boundaries for probing (where the probe can reach).
-#if( (X_PROBE_OFFSET_FROM_EXTRUDER ) > 3 )
-  #define LEFT_PROBE_BED_POSITION (X_PROBE_OFFSET_FROM_EXTRUDER )
+#if( (X_PROBE_OFFSET_FROM_EXTRUDER ) > MESH_INSET )
+  #define LEFT_PROBE_BED_POSITION (X_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET)
 #else
-  #define LEFT_PROBE_BED_POSITION 3
+  #define LEFT_PROBE_BED_POSITION MESH_INSET
 #endif
 
 #if( (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER) < X_BED_SIZE - MESH_INSET)
-  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - 5)
+  #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET)
 #else
   #define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - X_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET -1)
 #endif
 
-#if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + 25) > 10 )
-  #define FRONT_PROBE_BED_POSITION (Y_PROBE_OFFSET_FROM_EXTRUDER + 25)
+#if ( (Y_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET) > MESH_INSET )
+  #define FRONT_PROBE_BED_POSITION (Y_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET)
 #else
-  #define FRONT_PROBE_BED_POSITION 25
+  #define FRONT_PROBE_BED_POSITION MESH_INSET
 #endif
 
 #if( (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER ) < Y_BED_SIZE - MESH_INSET)
-#define BACK_PROBE_BED_POSITION (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - 25)
+#define BACK_PROBE_BED_POSITION (Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET)
 #else
-#define BACK_PROBE_BED_POSITION (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET - 1 )
+    #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET - 1 )
 #endif
 
   // Probe along the Y axis, advancing X after each column
