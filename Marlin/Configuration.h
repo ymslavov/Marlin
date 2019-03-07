@@ -96,6 +96,7 @@
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
 #define E3D_DUALFAN_MOUNT // Using HD Modular mount as above with 2 5015 blowers and sensor on the right
+#define E3D_PROBEMOUNT_LEFT // Default is probe mounted to the right for E3D. Set this to invert.
 
 /*
    Choose bed leveling type here
@@ -1293,7 +1294,11 @@
 
    #if (ENABLED(ABL_BLTOUCH) && ENABLED(HotendE3D))
     #if ENABLED(E3D_DUALFAN_MOUNT)
-      #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #if ENABLED(E3D_PROBEMOUNT_LEFT)
+        #define X_PROBE_OFFSET_FROM_EXTRUDER -63  // X offset: -left  +right  [of the nozzle]
+      #else
+        #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #endif
       #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
       #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
     #else
@@ -1305,7 +1310,11 @@
 
    #if ((ENABLED(ABL_EZABL) || ENABLED(ABL_NCSW)) && ENABLED(HotendE3D))
     #if ENABLED(E3D_DUALFAN_MOUNT)
-      #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #if ENABLED(E3D_PROBEMOUNT_LEFT)
+        #define X_PROBE_OFFSET_FROM_EXTRUDER -63  // X offset: -left  +right  [of the nozzle]
+      #else
+        #define X_PROBE_OFFSET_FROM_EXTRUDER 63  // X offset: -left  +right  [of the nozzle]
+      #endif
       #define Y_PROBE_OFFSET_FROM_EXTRUDER 5  // Y offset: -front +behind [the nozzle]
       #define Z_PROBE_OFFSET_FROM_EXTRUDER 0   // Z offset: -below +above  [the nozzle]
     #else
