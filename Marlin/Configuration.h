@@ -1739,10 +1739,14 @@
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
 #if ENABLED(AUTO_BED_LEVELING_LINEAR) || ENABLED(AUTO_BED_LEVELING_BILINEAR)
-#define MESH_INSET MIN_PROBE_EDGE
+
   // Set the number of grid points per dimension.
 
 // Set the boundaries for probing (where the probe can reach).
+/*
+
+#define MESH_INSET MIN_PROBE_EDGE
+
 #if( (X_PROBE_OFFSET_FROM_EXTRUDER ) > MESH_INSET )
   #define LEFT_PROBE_BED_POSITION (X_PROBE_OFFSET_FROM_EXTRUDER + MESH_INSET + 1)
 #else
@@ -1767,6 +1771,11 @@
     #define BACK_PROBE_BED_POSITION (Y_BED_SIZE - Y_PROBE_OFFSET_FROM_EXTRUDER - MESH_INSET - 1 )
 #endif
 
+*/
+  //#define LEFT_PROBE_BED_POSITION MIN_PROBE_EDGE
+  //#define RIGHT_PROBE_BED_POSITION (X_BED_SIZE - (MIN_PROBE_EDGE))
+  //#define FRONT_PROBE_BED_POSITION MIN_PROBE_EDGE
+  //#define BACK_PROBE_BED_POSITION (Y_BED_SIZE - (MIN_PROBE_EDGE))
   // Probe along the Y axis, advancing X after each column
   //#define PROBE_Y_FIRST
 
