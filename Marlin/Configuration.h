@@ -1754,6 +1754,7 @@
    */
 #if(DISABLED(MachineCR10Orig))
 #define G26_MESH_VALIDATION   // Enable G26 mesh validation
+#define G26_XYFEEDRATE 20
 #endif
   #if ENABLED(G26_MESH_VALIDATION)
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
