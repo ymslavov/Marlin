@@ -2,36 +2,35 @@
    Base machine
    Choose one option below to define machine size, board, and parameters
 
-
-   Choose this for CR10 Original Melzi Board
-   You still need to select a machine size below!
+   Select machine size
 */
-//#define MachineCR10Orig
+
+//#define MachineEnder2 // Must Select MachineCR10Orig above!
+//#define MachineEnder3 // Must Select MachineCR10Orig above!
+//#define MachineEnder4
+//#define MachineMini
+//#define MachineCR20 //Buzzer doesnt work
+#define MachineCR20Pro
+//#define MachineCR10
+//#define MachineCR10S
+//#define MachineCR10SPro //Currently only supports GraphicLCD. Graphics LCD Requires soldering R64 and R66
+//#define MachineCRX //Currently only supports GraphicLCD
+//#define MachineS4
+//#define MachineS5
+
+//#define MachineCR10Orig // Forces Melzi board
 
 /*
    Enabled this for linear advance instead of mesh leveling on a melzi board
 */
 //#define OrigLA
-/*
-   Select machine size
-*/
-//#define MachineEnder2 // Must Select MachineCR10Orig above!
-//#define MachineEnder3 // Must Select MachineCR10Orig above!
-//#define MachineEnder4
-//#define MachineMini
-//#define MachineCR20 //Buzzer doesnt work, need to map pin
-//#define MachineCR20Pro
-#define MachineCR10Std
-//#define MachineCRX
-//#define MachineS4
-//#define MachineS5
 
 //#define PLUS // Adds bltouch, allmetal, bilinear (standard), lerdge, 93 e steps/mm
 
-//#define Big_UI
+//#define Big_UI // Lightweight status screen
 
 #define BoardRev2 //Enable for SD detect function on Rev 2.1 boards or Ender 4
-//#define GraphicLCD //Full graphics LCD for Ender 4
+//#define GraphicLCD //Full graphics LCD for Ender 4, CR-X or CR10SPro
 //#define AddonFilSensor //Adds a filamnt runout sensor to the CR20 or Ender 4
 //#define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock
 //#define DualFilSensors //Using dual filament sensors on XMax and YMAX
@@ -44,20 +43,20 @@
 
    Configured with 5015 left wing, right wing ABL sensor (BLTouch or M18) only
 */
-//#define HotendStock
-#define HotendE3D
+#define HotendStock
+//#define HotendE3D
 
-/*
-   Enable this if you have an all metal hotend capable of 300c
-
-*/
+//Enable this if you have an all metal hotend capable of 300c
 #define HotendAllMetal
+
+// Enable this if you used a plug and play creality e3d kit with the Creality thermistor
+//#define CrealityThermistor
 
 /*
  * Select these if you have changed to a high performance extruder
  */
 
- //#define EZRstruder
+ #define EZRstruder
  //#define Bondtech
  //#define E3DTitan
 
@@ -90,7 +89,7 @@
    Choose ABL sensor type below
    Leave all disabled if no sensor is available
 */
-#define ABL_EZABL // TH3D EZABL or Any NO Sensor
+//#define ABL_EZABL // TH3D EZABL or Any NO Sensor
 //#define ABL_NCSW //Creality ABL or Any NC Sensor
 //#define ABL_BLTOUCH
 
@@ -103,7 +102,7 @@
    Requires a sensor from above
    Melzi board users may only select ABL_BI for bilinear leveling
 */
-#define ABL_BI
+//#define ABL_BI
 //#define ABL_UBL
 
 //#define POWER_LOSS_RECOVERY //Large and does not fit with any other features on Melzi, or UBL on Atmega
@@ -115,8 +114,8 @@
    Standard is recommended in most other scenarios.
 */
 //#define MeshFast
-#define MeshStd
-//#define MeshFine
+//#define MeshStd
+#define MeshFine
 //#define MeshExtreme
 
 /*
@@ -230,12 +229,68 @@
  */
 
 // Enable to show the bitmap in Marlin/_Bootscreen.h on startup.
+
+#if ENABLED(MachineEnder2) || ENABLED(MachineEnder3) || ENABLED(MachineCR10)
+  #define MachineCR10Orig
+#endif
+
+#if ENABLED(MachineCR10) || ENABLED(MachineCR10S)
+  #define MachineCR10Std
+#endif
+
+#if ENABLED(PLUS)
+  #define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock)
+  #define HotendAllMetal
+  #define EZRstruder
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+  #endif
+  #define ABL_BLTOUCH
+  #define HotendAllMetal
+#endif
+
+#if(ENABLED(MachineCRX))
+  #define MachineCR10Std
+  #define Dual_BowdenSplitterY
+#endif
+
+#if ENABLED(MachineCR20Pro)
+  #define MachineCR20
+  #if DISABLED(ABL_EZABL) && DISABLED(ABL_NCSW)
+    #define ABL_BLTOUCH
+  #endif
+  #define HotendAllMetal
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+    #define POWER_LOSS_RECOVERY
+  #endif
+  #define SolidBedMounts
+#endif
+
+#if(ENABLED(MachineCR10SPro))
+  #if DISABLED(GraphicLCD)
+    #define CREALITY_DWIN
+    #define FIL_RUNOUT_PIN 2
+    #define FIL_RUNOUT_INVERTING false
+    #define SD_DETECT_PIN 49
+  #endif
+  #define MachineCR10Std
+  #if DISABLED(ABL_BLTOUCH)
+    #define ABL_NCSW
+  #endif
+  #if DISABLED(ABL_UBL)
+    #define ABL_BI
+  #endif
+  #define MeshStd
+  #define BoardRev2
+#endif
+
 #if(DISABLED(MachineEnder4) && DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard))
-#define SHOW_CUSTOM_BOOTSCREEN
+  #define SHOW_CUSTOM_BOOTSCREEN
 #endif
 // Enable to show the bitmap in Marlin/_Statusscreen.h on the status screen.
 #if(DISABLED(MachineCR10Orig) && DISABLED(MachineEnder4))
-#define CUSTOM_STATUS_SCREEN_IMAGE
+  #define CUSTOM_STATUS_SCREEN_IMAGE
 #endif
 
 #if(ENABLED(MachineMini))
@@ -252,6 +307,8 @@
 #define CUSTOM_MACHINE_NAME "SuPeR CR-10"
 #elif(ENABLED(MachineCRX))
 #define CUSTOM_MACHINE_NAME "TM3D CR-X"
+#elif(ENABLED(MachineCR10SPro))
+#define CUSTOM_MACHINE_NAME "TM3D 10S Pro"
 #elif(ENABLED(MachineCR10Std))
 #define CUSTOM_MACHINE_NAME "300 SuPeR"
 #elif(ENABLED(MachineS4))
@@ -321,34 +378,6 @@
 
 #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " TM3D " VerChar1 VerChar2 VerChar3 VerChar4 VerChar5 VerChar6
 
-#if ENABLED(PLUS)
-  #define lerdgeFilSensor //Using lerdge filament sensor, which is opposite polarity to stock)
-  #define HotendAllMetal
-  #define EZRstruder
-  #if DISABLED(ABL_UBL)
-    #define ABL_BI
-  #endif
-  #define ABL_BLTOUCH
-  #define HotendAllMetal
-#endif
-
-#if(ENABLED(MachineCRX))
-  #define MachineCR10Std
-  #define Dual_BowdenSplitterY
-#endif
-
-#if ENABLED(MachineCR20Pro)
-  #define MachineCR20
-  #if DISABLED(ABL_EZABL) && DISABLED(ABL_NCSW)
-    #define ABL_BLTOUCH
-  #endif
-  #define HotendAllMetal
-  #if DISABLED(ABL_UBL)
-    #define ABL_BI
-    #define POWER_LOSS_RECOVERY
-  #endif
-  #define SolidBedMounts
-#endif
 /**
  * Select the serial port on the board to use for communication with the host.
  * This allows the connection of wireless adapters (for instance) to non-default port pins.
@@ -631,14 +660,13 @@
  *
  * :{ '0': "Not used", '1':"100k / 4.7k - EPCOS", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '501':"100K Zonestar (Tronxy X3A)", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '20':"PT100 (Ultimainboard V2.x)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '61':"100k Formbot / Vivedino 3950 350C thermistor 4.7k pullup", '66':"Dyze Design 4.7M High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-4':"Thermocouple + AD8495", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595",'998':"Dummy 1", '999':"Dummy 2" }
  */
-#if ENABLED(HotendStock)
+#if ENABLED(HotendStock) || ENABLED(CrealityThermistor)
 #define TEMP_SENSOR_0 1
   #if(ENABLED(Dual_ChimeraDualNozzle))
     #define TEMP_SENSOR_1 1
   #endif
-#endif
-#if ENABLED(HotendE3D)
-#define TEMP_SENSOR_0 5
+#else
+  #define TEMP_SENSOR_0 5
   #if(ENABLED(Dual_ChimeraDualNozzle))
     #define TEMP_SENSOR_1 5
   #endif
@@ -733,17 +761,16 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
 #if ENABLED(HotendStock)
-
-    #if(ENABLED(MachineCRX))
-      #define  DEFAULT_Kp 17.5
-      #define  DEFAULT_Ki 1.37
-      #define  DEFAULT_Kd 55.47
-    #else
-      // Stock CR-10 Hotend fan 100%
-      #define  DEFAULT_Kp 17.42
-      #define  DEFAULT_Ki 1.27
-      #define  DEFAULT_Kd 59.93
-    #endif
+  #if(ENABLED(MachineCRX) || ENABLED(MachineCR10SPro))
+    #define  DEFAULT_Kp 17.5
+    #define  DEFAULT_Ki 1.37
+    #define  DEFAULT_Kd 55.47
+  #else
+    // Stock CR-10 Hotend fan 100%
+    #define  DEFAULT_Kp 17.42
+    #define  DEFAULT_Ki 1.27
+    #define  DEFAULT_Kd 59.93
+  #endif
 #endif
 
 #if ENABLED(HotendE3D)
@@ -1012,6 +1039,8 @@
   #define EStepsmm 415
 #elif ENABLED(EZRstruder)
   #define EStepsmm 93
+#elif ENABLED(MachineCR10SPro)
+  #define EStepsmm 140
 #else
   #define EStepsmm 95
 #endif
@@ -1034,7 +1063,7 @@
   #define DEFAULT_ZJERK                  0.4
   #define DEFAULT_EJERK                  5.0
 #elif (ENABLED(MachineMini) || ENABLED(MachineCR20) || ENABLED(MachineEnder2) || ENABLED(MachineEnder3) || ENABLED(MachineEnder4))
-  #define DEFAULT_MAX_FEEDRATE          { 750, 750, 10, 25 }
+  #define DEFAULT_MAX_FEEDRATE          { 750, 750, 10, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 100, 25 }
   #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
@@ -1043,8 +1072,18 @@
   #define DEFAULT_YJERK                  8.0
   #define DEFAULT_ZJERK                  0.4
   #define DEFAULT_EJERK                  5.0
+#elif (ENABLED(MachineCR10SPro))
+  #define DEFAULT_MAX_FEEDRATE          { 500, 500, 10, 70 }
+  #define DEFAULT_MAX_ACCELERATION      { 750, 750, 100, 60 }
+  #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
+  #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
+  #define DEFAULT_TRAVEL_ACCELERATION   300    // X, Y, Z acceleration for travel (non printing) moves
+  #define DEFAULT_XJERK                 8.0
+  #define DEFAULT_YJERK                 8.0
+  #define DEFAULT_ZJERK                 0.4
+  #define DEFAULT_EJERK                 5.0
 #elif (ENABLED(MachineCR10Std))
-  #define DEFAULT_MAX_FEEDRATE          { 500, 500, 10, 25 }
+  #define DEFAULT_MAX_FEEDRATE          { 500, 500, 10, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 100, 25 }
   #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
@@ -1054,7 +1093,7 @@
   #define DEFAULT_ZJERK                  0.4
   #define DEFAULT_EJERK                  5.0
 #elif ENABLED( MachineS4)
-  #define DEFAULT_MAX_FEEDRATE          { 500, 400, 10, 25 }
+  #define DEFAULT_MAX_FEEDRATE          { 500, 400, 10, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 1000, 750, 100, 25 }
   #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
@@ -1064,7 +1103,7 @@
   #define DEFAULT_ZJERK                  0.4
   #define DEFAULT_EJERK                  5.0
 #elif ENABLED(MachineS5)
-  #define DEFAULT_MAX_FEEDRATE          { 300, 300, 10, 25 }
+  #define DEFAULT_MAX_FEEDRATE          { 300, 300, 10, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 1000, 500, 100, 25 }
   #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
@@ -1426,7 +1465,7 @@
   #endif
 #else
   #define INVERT_X_DIR false
-  #if(ENABLED(MachineCRX))
+  #if(ENABLED(MachineCRX) || ENABLED(MachineCR10SPro))
     #define INVERT_Y_DIR true
   #else
     #define INVERT_Y_DIR false

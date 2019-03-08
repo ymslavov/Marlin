@@ -1005,8 +1005,8 @@
  * See http://marlinfw.org/docs/features/lin_advance.html for full instructions.
  * Mention @Sebastianv650 on GitHub to alert the author of any issues.
  */
-  #if((DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard)) || ENABLED(OrigLA))
-#define LIN_ADVANCE
+#if((DISABLED(MachineCR10Orig) && DISABLED(LowMemoryBoard)) || ENABLED(OrigLA)) && DISABLED(MachineCR10SPro)
+  #define LIN_ADVANCE
 #endif
 #if ENABLED(LIN_ADVANCE)
   #define LIN_ADVANCE_K 0.5  // Unit: mm compression per 1mm/s extruder speed
@@ -2095,20 +2095,11 @@
 #else
   #define CommBedTmp "75"
 #endif
-
+  #define USER_DESC_1 "Mesh Commission"
   #if (ENABLED(ABL_UBL))
-    #define USER_DESC_1 "UBL Commission"
     #define USER_GCODE_1 "M502 \n M500 \n M501 \n M190 S" CommBedTmp" \n G28 \n G29 P1 \n G29 S1 \n G29 S0 \n G29 F 10.0 \n G29 A \n M500 \n G28 \n G29 L1 \n M109 S225 \n G1 X150 Y 150 \n G1 Z0 \n M77 \n M117 Set Z Offset"
-    
-    #define USER_DESC_4 "Fill Mesh Points"
-    #define USER_GCODE_4 "G29 P3 \n G29 P3 \n G29 P3 \n G29 T"
   #elif ENABLED(ABL_BI)
-    #define USER_DESC_1 "BIL Commission"
     #define USER_GCODE_1 "M117 \n M502 \n M500 \n M501 \n M190 S" CommBedTmp" \n M117 Probing.... \n M104 S225 \n G28 \n G29 \n M500 \n G28 \n M420 S \n M109 S225 \n G1 X100 Y 100 \n G1 Z0 \n M77 \n M117 Set Z Offset"
-
-    #define USER_DESC_4 "Store Settings"
-    #define USER_GCODE_4 "M500"
-
   #endif
   
   #define USER_DESC_2 "PID Tune"
@@ -2117,8 +2108,11 @@
   #define USER_DESC_3 "Prep for Z Adjust"
   #define USER_GCODE_3 "M190 S" CommBedTmp" \n M104 235 \n G28 \n G29 L1 \n G1 X100 Y 100 \n G1 Z0"
 
-  #define USER_DESC_5 "Run Mesh Validation"
-  #define USER_GCODE_5 "G26"
+  #define USER_DESC_4 "Store Settings"
+  #define USER_GCODE_4 "M500"
+
+  //#define USER_DESC_5 "Run Mesh Validation"
+  //#define USER_GCODE_5 "G26"
 #endif
 
 /**
