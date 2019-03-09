@@ -1135,7 +1135,7 @@
 //
 #define JUNCTION_DEVIATION
 #if ENABLED(JUNCTION_DEVIATION)
-  #define JUNCTION_DEVIATION_MM 0.02  // (mm) Distance from real junction edge
+  #define JUNCTION_DEVIATION_MM 0.08  // (mm) Distance from real junction edge
 #endif
 
 /**
@@ -1980,8 +1980,11 @@
  * Commands to execute at the end of G29 probing.
  * Useful to retract or move the Z probe out of the way.
  */
-#define Z_PROBE_END_SCRIPT "M280 P0 S90 \n G1 X0 Y0"
-
+#if ENABLED(ABL_BLTOUCH)
+  #define Z_PROBE_END_SCRIPT "M280 P0 S90 \n G1 X0 Y0"
+#else
+  #define Z_PROBE_END_SCRIPT "G1 X0 Y0"
+#endif
 
 // @section homing
 
@@ -2356,8 +2359,9 @@
 // This option overrides the default number of encoder pulses needed to
 // produce one step. Should be increased for high-resolution encoders.
 //
-//#define ENCODER_PULSES_PER_STEP 4
-
+#if ENABLED(MachineCR20)
+  #define ENCODER_PULSES_PER_STEP 2
+#endif
 //
 // Use this option to override the number of step signals required to
 // move between next/prev menu items.
