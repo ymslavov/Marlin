@@ -10,9 +10,9 @@
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work
-#define MachineCR20Pro
+//#define MachineCR20Pro
 //#define MachineCR10
-//#define MachineCR10S
+#define MachineCR10S
 //#define MachineCR10SPro //Currently only supports GraphicLCD. Graphics LCD Requires soldering R64 and R66
 //#define MachineCRX //Currently only supports GraphicLCD
 //#define MachineS4
@@ -43,7 +43,7 @@
 
    Configured with 5015 left wing, right wing ABL sensor (BLTouch or M18) only
 */
-#define HotendStock
+//#define HotendStock
 //#define HotendE3D
 
 //Enable this if you have an all metal hotend capable of 300c
@@ -56,7 +56,7 @@
  * Select these if you have changed to a high performance extruder
  */
 
- #define EZRstruder
+ //#define EZRstruder
  //#define Bondtech
  //#define E3DTitan
 
@@ -74,8 +74,8 @@
    Choose bed type below. If you have an extenrally controlled
    ac bed, leave both disabled
 */
-//#define BedAC
-#define BedDC
+#define BedAC
+//#define BedDC
 
 //#define SolidBedMounts //Removed a few LCD options to save some memory since not needed with solid mounts
 
@@ -94,8 +94,8 @@
 //#define ABL_BLTOUCH
 
 //#define CREALITY_ABL_MOUNT //Using creality ABL mount
-#define E3D_DUALFAN_MOUNT // Using HD Modular mount as above with 2 5015 blowers and sensor on the right
-#define E3D_PROBEMOUNT_LEFT // Default is probe mounted to the right for E3D. Set this to invert.
+//#define E3D_DUALFAN_MOUNT // Using HD Modular mount as above with 2 5015 blowers and sensor on the right
+//#define E3D_PROBEMOUNT_LEFT // Default is probe mounted to the right for E3D. Set this to invert.
 
 /*
    Choose bed leveling type here
@@ -114,8 +114,8 @@
    Standard is recommended in most other scenarios.
 */
 //#define MeshFast
-//#define MeshStd
-#define MeshFine
+#define MeshStd
+//#define MeshFine
 //#define MeshExtreme
 
 /*
