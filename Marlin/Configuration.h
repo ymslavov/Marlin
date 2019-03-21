@@ -74,8 +74,8 @@
    Choose bed type below. If you have an extenrally controlled
    ac bed, leave both disabled
 */
-#define BedAC
-//#define BedDC
+//#define BedAC
+#define BedDC
 
 //#define SolidBedMounts //Removed a few LCD options to save some memory since not needed with solid mounts
 
@@ -1053,7 +1053,7 @@
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
 #if ENABLED(MachineCR20Pro)
-  #define DEFAULT_MAX_FEEDRATE          { 7500, 7500, 10, 25 }
+  #define DEFAULT_MAX_FEEDRATE          { 7500, 7500, 10, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 100, 25 }
   #define DEFAULT_ACCELERATION          300    // X, Y, Z and E acceleration for printing moves
   #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts

@@ -37,7 +37,7 @@
   #include "../../module/configuration_store.h"
 #endif
 
-#if WATCH_HOTENDS || WATCH_THE_BED || ENABLED(BABYSTEP_ZPROBE_OFFSET)
+#if WATCH_HOTENDS || WATCH_BED || ENABLED(BABYSTEP_ZPROBE_OFFSET)
   #include "../../module/temperature.h"
 #endif
 
@@ -45,7 +45,7 @@
   #include "../../module/probe.h"
 #endif
 
-#if ENABLED(ENABLE_LEVELING_FADE_HEIGHT) || ENABLED(AUTO_BED_LEVELING_UBL)
+#if EITHER(ENABLE_LEVELING_FADE_HEIGHT, AUTO_BED_LEVELING_UBL)
   #include "../../feature/bedlevel/bedlevel.h"
 #endif
 
@@ -205,7 +205,7 @@ void MarlinUI::goto_screen(screenFunc_t screen, const uint32_t encoder/*=0*/) {
       lcd_z_fade_height = planner.z_fade_height;
     #endif
 
-    #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING) && ENABLED(BABYSTEPPING)
+    #if BOTH(DOUBLECLICK_FOR_Z_BABYSTEPPING, BABYSTEPPING)
       static millis_t doubleclick_expire_ms = 0;
       // Going to menu_main from status screen? Remember first click time.
       // Going back to status screen within a very short time? Go to Z babystepping.
@@ -405,40 +405,7 @@ void MarlinUI::completion_feedback(const bool good/*=true*/) {
 
 #endif // BABYSTEP_ZPROBE_OFFSET
 
-/**
- * Watch temperature callbacks
- */
-#if HAS_TEMP_HOTEND
-  #if WATCH_HOTENDS
-    #define _WATCH_FUNC(N) thermalManager.start_watching_heater(N)
-  #else
-    #define _WATCH_FUNC(N) NOOP
-  #endif
-  void watch_temp_callback_E0() { _WATCH_FUNC(0); }
-  #if HOTENDS > 1
-    void watch_temp_callback_E1() { _WATCH_FUNC(1); }
-    #if HOTENDS > 2
-      void watch_temp_callback_E2() { _WATCH_FUNC(2); }
-      #if HOTENDS > 3
-        void watch_temp_callback_E3() { _WATCH_FUNC(3); }
-        #if HOTENDS > 4
-          void watch_temp_callback_E4() { _WATCH_FUNC(4); }
-          #if HOTENDS > 5
-            void watch_temp_callback_E5() { _WATCH_FUNC(5); }
-          #endif // HOTENDS > 5
-        #endif // HOTENDS > 4
-      #endif // HOTENDS > 3
-    #endif // HOTENDS > 2
-  #endif // HOTENDS > 1
-#endif // HAS_TEMP_HOTEND
-
-void watch_temp_callback_bed() {
-  #if WATCH_THE_BED
-    thermalManager.start_watching_bed();
-  #endif
-}
-
-#if ENABLED(AUTO_BED_LEVELING_UBL) || ENABLED(PID_AUTOTUNE_MENU) || ENABLED(ADVANCED_PAUSE_FEATURE)
+#if ANY(AUTO_BED_LEVELING_UBL, PID_AUTOTUNE_MENU, ADVANCED_PAUSE_FEATURE)
 
   void lcd_enqueue_command(const char * const cmd) {
     no_reentry = true;
