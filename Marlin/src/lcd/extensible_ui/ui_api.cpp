@@ -51,10 +51,15 @@
 #include "../../module/planner.h"
 #include "../../module/probe.h"
 #include "../../module/temperature.h"
+#include "../../module/printcounter.h"
 #include "../../libs/duration_t.h"
 #include "../../HAL/shared/Delay.h"
 
-#if DO_SWITCH_EXTRUDER || ENABLED(SWITCHING_NOZZLE) || ENABLED(PARKING_EXTRUDER)
+#if ENABLED(PRINTCOUNTER)
+  #include "../../core/utility.h"
+#endif
+
+#if DO_SWITCH_EXTRUDER || EITHER(SWITCHING_NOZZLE, PARKING_EXTRUDER)
   #include "../../module/tool_change.h"
 #endif
 
@@ -69,11 +74,6 @@
   #define IFSD(A,B) (B)
 #endif
 
-#if ENABLED(PRINTCOUNTER)
-  #include "../../core/utility.h"
-  #include "../../module/printcounter.h"
-#endif
-
 #if HAS_TRINAMIC && HAS_LCD_MENU
   #include "../../feature/tmc_util.h"
 #endif
@@ -85,6 +85,10 @@
   #ifdef BACKLASH_SMOOTHING_MM
     extern float backlash_smoothing_mm;
   #endif
+#endif
+
+#if HAS_LEVELING
+  #include "../../feature/bedlevel.h"
 #endif
 
 #if HAS_FILAMENT_SENSOR
@@ -213,26 +217,26 @@ namespace ExtUI {
       if (soft_endstops_enabled) switch (axis) {
         case X_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_X)
-            min = soft_endstop_min[X_AXIS];
+            min = soft_endstop[X_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_X)
-            max = soft_endstop_max[X_AXIS];
+            max = soft_endstop[X_AXIS].max;
           #endif
           break;
         case Y_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_Y)
-            min = soft_endstop_min[Y_AXIS];
+            min = soft_endstop[Y_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_Y)
-            max = soft_endstop_max[Y_AXIS];
+            max = soft_endstop[Y_AXIS].max;
           #endif
           break;
         case Z_AXIS:
           #if ENABLED(MIN_SOFTWARE_ENDSTOP_Z)
-            min = soft_endstop_min[Z_AXIS];
+            min = soft_endstop[Z_AXIS].min;
           #endif
           #if ENABLED(MAX_SOFTWARE_ENDSTOP_Z)
-            max = soft_endstop_max[Z_AXIS];
+            max = soft_endstop[Z_AXIS].max;
           #endif
         default: break;
       }
@@ -297,7 +301,7 @@ namespace ExtUI {
   void setActiveTool(const extruder_t extruder, bool no_move) {
     #if EXTRUDERS > 1
       const uint8_t e = extruder - E0;
-      #if DO_SWITCH_EXTRUDER || ENABLED(SWITCHING_NOZZLE) || ENABLED(PARKING_EXTRUDER)
+      #if DO_SWITCH_EXTRUDER || EITHER(SWITCHING_NOZZLE, PARKING_EXTRUDER)
         if (e != active_extruder)
           tool_change(e, 0, no_move);
       #endif
@@ -417,7 +421,9 @@ namespace ExtUI {
 
     void setJunctionDeviation_mm(const float value) {
       planner.junction_deviation_mm = clamp(value, 0.01, 0.3);
-      planner.recalculate_max_e_jerk();
+      #if ENABLED(LIN_ADVANCE)
+        planner.recalculate_max_e_jerk();
+      #endif
     }
 
   #else
@@ -530,7 +536,7 @@ namespace ExtUI {
     }
   #endif // HAS_BED_PROBE
 
-  #if HOTENDS > 1
+  #if HAS_HOTEND_OFFSET
 
     float getNozzleOffset_mm(const axis_t axis, const extruder_t extruder) {
       if (extruder - E0 >= HOTENDS) return 0;
@@ -552,7 +558,7 @@ namespace ExtUI {
       HOTEND_LOOP() hotend_offset[axis][e] -= offs;
     }
 
-  #endif // HOTENDS > 1
+  #endif // HAS_HOTEND_OFFSET
 
   #if ENABLED(BACKLASH_GCODE)
     float getAxisBacklash_mm(const axis_t axis)       { return backlash_distance_mm[axis]; }
@@ -569,13 +575,34 @@ namespace ExtUI {
   #endif
 
   uint8_t getProgress_percent() {
-    return IFSD(card.percentDone(), 0);
+    return ui.get_progress();
   }
 
   uint32_t getProgress_seconds_elapsed() {
     const duration_t elapsed = print_job_timer.duration();
     return elapsed.value;
   }
+
+  #if HAS_LEVELING
+    bool getLevelingActive() { return planner.leveling_active; }
+    void setLevelingActive(const bool state) { set_bed_leveling_enabled(state); }
+    #if HAS_MESH
+      bool getMeshValid() { return leveling_is_valid(); }
+      bed_mesh_t getMeshArray() { return Z_VALUES_ARR; }
+      void setMeshPoint(const uint8_t xpos, const uint8_t ypos, const float zoff) {
+        if (WITHIN(xpos, 0, GRID_MAX_POINTS_X) && WITHIN(ypos, 0, GRID_MAX_POINTS_Y)) {
+          Z_VALUES(xpos, ypos) = zoff;
+          #if ENABLED(ABL_BILINEAR_SUBDIVISION)
+            bed_level_virt_interpolate();
+          #endif
+        }
+      }
+    #endif
+  #endif
+
+  #if ENABLED(HOST_PROMPT_SUPPORT)
+    void setHostResponse(const uint8_t response) { host_response_handler(response); }
+  #endif
 
   #if ENABLED(PRINTCOUNTER)
     char* getTotalPrints_str(char buffer[21])    { strcpy(buffer,i16tostr3left(print_job_timer.getStats().totalPrints));    return buffer; }
@@ -609,7 +636,7 @@ namespace ExtUI {
     const int16_t e = heater - H0;
     #if HAS_HEATED_BED
       if (heater == BED)
-        thermalManager.setTargetBed(clamp(value, 0, BED_MAXTEMP - 15));
+        thermalManager.setTargetBed(clamp(value, 0, BED_MAXTEMP - 10));
       else
     #endif
         thermalManager.setTargetHotend(clamp(value, 0, heater_maxtemp[e] - 15), e);
@@ -628,6 +655,12 @@ namespace ExtUI {
 
   void setFeedrate_percent(const float value) {
     feedrate_percentage = clamp(value, 10, 500);
+  }
+
+  void setUserConfirmed(void) {
+    #if HAS_RESUME_CONTINUE
+      wait_for_user = false;
+    #endif
   }
 
   void printFile(const char *filename) {
@@ -688,7 +721,7 @@ namespace ExtUI {
 
   bool FileList::seek(const uint16_t pos, const bool skip_range_check) {
     #if ENABLED(SDSUPPORT)
-      if (!skip_range_check && pos > (count() - 1)) return false;
+      if (!skip_range_check && (pos + 1) > count()) return false;
       const uint16_t nr =
         #if ENABLED(SDCARD_RATHERRECENTFIRST) && DISABLED(SDCARD_SORT_ALPHA)
           count() - 1 -
