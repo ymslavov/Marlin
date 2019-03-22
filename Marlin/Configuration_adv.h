@@ -78,7 +78,7 @@
   #define THERMAL_PROTECTION_HYSTERESIS 10     // Degrees Celsius
 
   #define ADAPTIVE_FAN_SLOWING              // Slow part cooling fan if temperature drops
-  #if ENABLED(ADAPTIVE_FAN_SLOWING) && ENABLED(PIDTEMP)
+  #if BOTH(ADAPTIVE_FAN_SLOWING, PIDTEMP)
     #define NO_FAN_SLOWING_IN_PID_TUNING    // Don't slow fan speed during M303
   #endif
 
@@ -110,6 +110,20 @@
    */
   #define WATCH_BED_TEMP_PERIOD 80                // Seconds
   #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
+#endif
+
+/**
+ * Thermal Protection parameters for the heated chamber.
+ */
+#if ENABLED(THERMAL_PROTECTION_CHAMBER)
+  #define THERMAL_PROTECTION_CHAMBER_PERIOD 20    // Seconds
+  #define THERMAL_PROTECTION_CHAMBER_HYSTERESIS 2 // Degrees Celsius
+
+  /**
+   * Heated chamber watch settings (M141/M191).
+   */
+  #define WATCH_CHAMBER_TEMP_PERIOD 60            // Seconds
+  #define WATCH_CHAMBER_TEMP_INCREASE 2           // Degrees Celsius
 #endif
 
 #if ENABLED(PIDTEMP)
@@ -224,8 +238,35 @@
  *
  * Define one or both of these to override the default 0-255 range.
  */
-#define FAN_MIN_PWM 0
-#define FAN_MAX_PWM 255
+//#define FAN_MIN_PWM 50
+//#define FAN_MAX_PWM 128
+
+/**
+ * FAST PWM FAN Settings
+ *
+ * Use to change the FAST FAN PWM frequency (if enabled in Configuration.h)
+ * Combinations of PWM Modes, prescale values and TOP resolutions are used internally to produce a
+ * frequency as close as possible to the desired frequency.
+ *
+ * FAST_PWM_FAN_FREQUENCY [undefined by default]
+ *   Set this to your desired frequency.
+ *   If left undefined this defaults to F = F_CPU/(2*255*1)
+ *   ie F = 31.4 Khz on 16 MHz microcontrollers or F = 39.2 KHz on 20 MHz microcontrollers
+ *   These defaults are the same as with the old FAST_PWM_FAN implementation - no migration is required
+ *   NOTE: Setting very low frequencies (< 10 Hz) may result in unexpected timer behaviour.
+ *
+ * USE_OCR2A_AS_TOP [undefined by default]
+ *   Boards that use TIMER2 for PWM have limitations resulting in only a few possible frequencies on TIMER2:
+ *   16MHz MCUs: [62.5KHz, 31.4KHz (default), 7.8KHz, 3.92KHz, 1.95KHz, 977Hz, 488Hz, 244Hz, 60Hz, 122Hz, 30Hz]
+ *   20MHz MCUs: [78.1KHz, 39.2KHz (default), 9.77KHz, 4.9KHz, 2.44KHz, 1.22KHz, 610Hz, 305Hz, 153Hz, 76Hz, 38Hz]
+ *   A greater range can be achieved by enabling USE_OCR2A_AS_TOP. But note that this option blocks the use of
+ *   PWM on pin OC2A. Only use this option if you don't need PWM on 0C2A. (Check your schematic.)
+ *   USE_OCR2A_AS_TOP sacrifices duty cycle control resolution to achieve this broader range of frequencies.
+ */
+#if ENABLED(FAST_PWM_FAN)
+  //#define FAST_PWM_FAN_FREQUENCY 31400
+  //#define USE_OCR2A_AS_TOP
+#endif
 
 // @section extruder
 
@@ -371,42 +412,41 @@
  * The inactive carriage is parked automatically to prevent oozing.
  * X1 is the left carriage, X2 the right. They park and home at opposite ends of the X axis.
  * By default the X2 stepper is assigned to the first unused E plug on the board.
+ * 
+ * The following Dual X Carriage modes can be selected with M605 S<mode>:
+ * 
+ *   0 : (FULL_CONTROL) The slicer has full control over both X-carriages and can achieve optimal travel
+ *       results as long as it supports dual X-carriages. (M605 S0)
+ * 
+ *   1 : (AUTO_PARK) The firmware automatically parks and unparks the X-carriages on tool-change so
+ *       that additional slicer support is not required. (M605 S1)
+ * 
+ *   2 : (DUPLICATION) The firmware moves the second X-carriage and extruder in synchronization with
+ *       the first X-carriage and extruder, to print 2 copies of the same object at the same time.
+ *       Set the constant X-offset and temperature differential with M605 S2 X[offs] R[deg] and
+ *       follow with M605 S2 to initiate duplicated movement.
+ * 
+ *   3 : (MIRRORED) Formbot/Vivedino-inspired mirrored mode in which the second extruder duplicates
+ *       the movement of the first except the second extruder is reversed in the X axis.
+ *       Set the initial X offset and temperature differential with M605 S2 X[offs] R[deg] and
+ *       follow with M605 S3 to initiate mirrored movement.
  */
 #define DUAL_X_CARRIAGE
 #if ENABLED(DUAL_X_CARRIAGE)
-  #define X1_MIN_POS X_MIN_POS     // set minimum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X1_MAX_POS X_BED_SIZE    // set maximum to ensure first x-carriage doesn't hit the parked second X-carriage
-  #define X2_MIN_POS 0     // set minimum to ensure second x-carriage doesn't hit the parked first X-carriage
-  // set maximum to the distance between toolheads when both heads are homed
+  #define X1_MIN_POS X_MIN_POS   // Set to X_MIN_POS
+  #define X1_MAX_POS X_BED_SIZE  // Set a maximum so the first X-carriage can't hit the parked second X-carriage
+  #define X2_MIN_POS    80       // Set a minimum to ensure the  second X-carriage can't hit the parked first X-carriage
   #if ENABLED(TREX3)
-    #define X2_MAX_POS 446 
+    #define X2_MAX_POS 446       // Set this to the distance between toolheads when both heads are homed
   #else
-    #define X2_MAX_POS 442 
+    #define X2_MAX_POS 442       // Set this to the distance between toolheads when both heads are homed
   #endif
-  #define X2_HOME_DIR 1     // the second X-carriage always homes to the maximum endstop position
-  #define X2_HOME_POS X2_MAX_POS // default home position is the maximum carriage position
-      // However: In this mode the HOTEND_OFFSET_X value for the second extruder provides a software
-      // override for X2_HOME_POS. This also allow recalibration of the distance between the two endstops
-      // without modifying the firmware (through the "M218 T1 X???" command).
-      // Remember: you should set the second extruder x-offset to 0 in your slicer.
-  /**
-   * There are a few selectable movement modes for dual x-carriages using M605 S<mode>
-   * 
-   * Mode 0 (DXC_FULL_CONTROL_MODE): Full control. The slicer has full control over both x-carriages and can achieve optimal travel results
-   *                                   as long as it supports dual x-carriages. (M605 S0)
-   * 
-   * Mode 1 (DXC_AUTO_PARK_MODE)   : Auto-park mode. The firmware will automatically park and unpark the x-carriages on tool changes so
-   *                                   that additional slicer support is not required. (M605 S1)
-   * 
-   * Mode 2 (DXC_DUPLICATION_MODE) : Duplication mode. The firmware will transparently make the second x-carriage and extruder copy all
-   *                                   actions of the first x-carriage. This allows the printer to print 2 arbitrary items at
-   *                                   once. (2nd extruder x offset and temp offset are set using: M605 S2 [Xnnn] [Rmmm])
-   * 
-   * Mode 3 (DXC_MIRRORED_MODE)    : Enable the Formbot/Vivedino inspired Mirrored mode. The second extruder will duplicate the first extruder's
-   *                                   movement similar to DXC_DUPLICATION_MODE. However, the second extruder will be producing
-   *                                   a mirror image of the first extruder. The initial x-offset and temperature differential are
-   *                                   set with M605 S2 [Xnnn] [Rmmm] and then followed with a M605 S3 to start the mirrored movement.
-  */
+  #define X2_HOME_DIR    1       // Set to 1. The second X-carriage always homes to the maximum endstop position
+  #define X2_HOME_POS X2_MAX_POS // Default X2 home position. Set to X2_MAX_POS.
+                      // However: In this mode the HOTEND_OFFSET_X value for the second extruder provides a software
+                      // override for X2_HOME_POS. This also allow recalibration of the distance between the two endstops
+                      // without modifying the firmware (through the "M218 T1 X???" command).
+                      // Remember: you should set the second extruder x-offset to 0 in your slicer.
 
   // This is the default power-up mode which can be later using M605.
   #define DEFAULT_DUAL_X_CARRIAGE_MODE DXC_AUTO_PARK_MODE
@@ -460,8 +500,8 @@
 
 #define AXIS_RELATIVE_MODES {false, false, false, false}
 
-// Allow duplication mode with a basic dual-nozzle extruder
-//#define DUAL_NOZZLE_DUPLICATION_MODE
+// Add a Duplicate option for well-separated conjoined nozzles
+//#define MULTI_NOZZLE_DUPLICATION
 
 // By default pololu step drivers require an active high signal. However, some high power drivers require an active low signal as step.
 #define INVERT_X_STEP_PIN false
@@ -485,8 +525,11 @@
 
 // @section lcd
 
-#if ENABLED(ULTIPANEL)
+#if EITHER(ULTIPANEL, EXTENSIBLE_UI)
   #define MANUAL_FEEDRATE {50*60, 50*60, 4*60, 60} // Feedrates for manual moves along X, Y, Z, E from panel
+#endif
+
+#if ENABLED(ULTIPANEL)
   #define MANUAL_E_MOVES_RELATIVE // Show LCD extruder moves as relative rather than absolute positions
   #define ULTIPANEL_FEEDMULTIPLY  // Comment to disable setting feedrate multiplier via encoder
 #endif
@@ -698,7 +741,7 @@
 // Add an 'M73' G-code to set the current percentage
 #define LCD_SET_PROGRESS_MANUALLY
 
-#if ENABLED(SDSUPPORT) || ENABLED(LCD_SET_PROGRESS_MANUALLY)
+#if HAS_CHARACTER_LCD && HAS_PRINT_PROGRESS
   //#define LCD_PROGRESS_BAR              // Show a progress bar on HD44780 LCDs for SD printing
   #if ENABLED(LCD_PROGRESS_BAR)
     #define PROGRESS_BAR_BAR_TIME 2000    // (ms) Amount of time to show the bar
@@ -707,7 +750,7 @@
     //#define PROGRESS_MSG_ONCE           // Show the message for MSG_TIME then clear it
     //#define LCD_PROGRESS_BAR_TEST       // Add a menu item to test the progress bar
   #endif
-#endif // SDSUPPORT || LCD_SET_PROGRESS_MANUALLY
+#endif
 
 /**
  * LED Control Menu
@@ -857,7 +900,7 @@
   #endif
 
   // Add an optimized binary file transfer mode, initiated with 'M28 B1'
-  //#define FAST_FILE_TRANSFER
+  //#define BINARY_FILE_TRANSFER
 
 #endif // SDSUPPORT
 
@@ -958,6 +1001,7 @@
  */
 #define BABYSTEPPING
 #if ENABLED(BABYSTEPPING)
+  //#define BABYSTEP_WITHOUT_HOMING
   //#define BABYSTEP_XY                     // Also enable X/Y Babystepping. Not supported on DELTA!
   #define BABYSTEP_INVERT_Z false           // Change if Z babysteps should go the other way
   #define BABYSTEP_MULTIPLICATOR  20         // Babysteps are very small. Increase for faster motion.
@@ -966,11 +1010,11 @@
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1250   // Maximum interval between clicks, in milliseconds.
                                             // Note: Extra time may be added to mitigate controller latency.
-  #endif
-
-  //#define MOVE_Z_WHEN_IDLE                // Jump to the move Z menu on doubleclick when printer is idle.
-  #if ENABLED(MOVE_Z_WHEN_IDLE)
-    #define MOVE_Z_IDLE_MULTIPLICATOR 1     // Multiply 1mm by this factor for the move step size.
+    #define BABYSTEP_ALWAYS_AVAILABLE     // Allow babystepping at all times (not just during movement).
+    //#define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
+    #if ENABLED(MOVE_Z_WHEN_IDLE)
+      #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiply 1mm by this factor for the move step size.
+    #endif
   #endif
 
   #define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
@@ -1002,13 +1046,13 @@
   #define LIN_ADVANCE
 #endif
 #if ENABLED(LIN_ADVANCE)
-  #define LIN_ADVANCE_K 0.07  // Unit: mm compression per 1mm/s extruder speed
+  #define LIN_ADVANCE_K 0.0  // Unit: mm compression per 1mm/s extruder speed
   //#define LA_DEBUG          // If enabled, this will generate debug information output over USB.
 #endif
 
 // @section leveling
 
-#if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_UBL)
+#if EITHER(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL)
   // Override the mesh area if the automatic (max) area is too large
   #if( (X_PROBE_OFFSET_FROM_EXTRUDER + (MIN_PROBE_EDGE + MESH_INSET)) > 0 )
     #define MESH_MIN_X (X_PROBE_OFFSET_FROM_EXTRUDER + MIN_PROBE_EDGE + MESH_INSET)
@@ -1069,11 +1113,17 @@
 // Support for G5 with XYZE destination and IJPQ offsets. Requires ~2666 bytes.
 #define BEZIER_CURVE_SUPPORT
 
-// G38.2 and G38.3 Probe Target
-// Set MULTIPLE_PROBING if you want G38 to double touch
+/**
+ * G38 Probe Target
+ *
+ * This option adds G38.2 and G38.3 (probe towards target)
+ * and optionally G38.4 and G38.5 (probe away from target).
+ * Set MULTIPLE_PROBING for G38 to probe more than once.
+ */
 //#define G38_PROBE_TARGET
 #if ENABLED(G38_PROBE_TARGET)
-  #define G38_MINIMUM_MOVE 0.0275 // minimum distance in mm that will produce a move (determined using the print statement in check_move)
+  //#define G38_PROBE_AWAY        // Include G38.4 and G38.5 to probe away from target
+  #define G38_MINIMUM_MOVE 0.0275 // (mm) Minimum distance that will produce a move.
 #endif
 
 // Moves (or segments) with fewer steps than this will be joined with the next move
@@ -1583,7 +1633,7 @@
    * M906 - Set or get motor current in milliamps using axis codes X, Y, Z, E. Report values if no axis codes given.
    * M911 - Report stepper driver overtemperature pre-warn condition.
    * M912 - Clear stepper driver overtemperature pre-warn condition flag.
-   * M122 S0/1 - Report driver parameters (Requires TMC_DEBUG)
+   * M122 - Report driver parameters (Requires TMC_DEBUG)
    */
   //#define MONITOR_DRIVER_STATUS
 
@@ -1639,7 +1689,7 @@
    */
   //#define SENSORLESS_PROBING // TMC2130 only
 
-  #if ENABLED(SENSORLESS_HOMING) || ENABLED(SENSORLESS_PROBING)
+  #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
     #define X_STALL_SENSITIVITY  8
     #define Y_STALL_SENSITIVITY  8
     //#define Z_STALL_SENSITIVITY  8
@@ -1851,12 +1901,30 @@
 // @section extras
 
 /**
- * Canon Hack Development Kit
- * http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+ * Photo G-code
+ * Add the M240 G-code to take a photo.
+ * The photo can be triggered by a digital pin or a physical movement.
  */
-//#define CHDK_PIN    4   // Set and enable a pin for triggering CHDK to take a picture
-#if PIN_EXISTS(CHDK)
-  #define CHDK_DELAY 50   // (ms) How long the pin should remain HIGH
+//#define PHOTO_GCODE
+#if ENABLED(PHOTO_GCODE)
+  // A position to move to (and raise Z) before taking the photo
+  //#define PHOTO_POSITION { X_MAX_POS - 5, Y_MAX_POS, 0 }  // { xpos, ypos, zraise } (M240 X Y Z)
+  //#define PHOTO_DELAY_MS   100                            // (ms) Duration to pause before moving back (M240 P)
+  //#define PHOTO_RETRACT_MM   6.5                          // (mm) E retract/recover for the photo move (M240 R S)
+
+  // Canon RC-1 or homebrew digital camera trigger
+  // Data from: http://www.doc-diy.net/photo/rc-1_hacked/
+  //#define PHOTOGRAPH_PIN 23
+
+  // Canon Hack Development Kit
+  // http://captain-slow.dk/2014/03/09/3d-printing-timelapses/
+  //#define CHDK_PIN        4
+
+  // Optional second move with delay to trigger the camera shutter
+  //#define PHOTO_SWITCH_POSITION { X_MAX_POS, Y_MAX_POS }  // { xpos, ypos } (M240 I J)
+
+  // Duration to hold the switch or keep CHDK_PIN high
+  //#define PHOTO_SWITCH_MS   50 // (ms) (M240 D)
 #endif
 
 /**
@@ -1908,15 +1976,6 @@
   //#define SPEED_POWER_MAX      100      // 0-100%
 #endif
 
-#if DISABLED(FilamentSensor) && DISABLED(TREX3)
-  #define FAN_AS_LASER
-#endif
-#if ENABLED(FAN_AS_LASER)
-  #define FAN_NUM_AS_LASER 1
-  #define LASER_PIN_DEDICATED true
-  #else
-  #define FAN_NUM_AS_LASER -1
-#endif
 /**
  * Filament Width Sensor
  *
@@ -2221,6 +2280,8 @@
 #if ENABLED(WIFISUPPORT)
   #define WIFI_SSID "Wifi SSID"
   #define WIFI_PWD  "Wifi Password"
+  //#define WEBSUPPORT        // Start a webserver with auto-discovery
+  //#define OTASUPPORT        // Support over-the-air firmware updates
 #endif
 
 /**
@@ -2295,7 +2356,7 @@
 /**
  * M43 - display pin status, watch pins for changes, watch endstops & toggle LED, Z servo probe test, toggle pins
  */
-#define PINS_DEBUGGING
+//#define PINS_DEBUGGING
 
 // Enable Marlin dev mode which adds some special commands
 //#define MARLIN_DEV_MODE
