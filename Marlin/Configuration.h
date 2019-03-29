@@ -1,3 +1,5 @@
+
+//#define BondtechBMG
 //#define FilamentSensorStd
 //#define FilamentSensorLerdge
 
@@ -413,13 +415,13 @@
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
-#define HEATER_0_MAXTEMP 290
+#define HEATER_0_MAXTEMP 305
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
 #define HEATER_4_MAXTEMP 275
 #define HEATER_5_MAXTEMP 275
-#define BED_MAXTEMP 110
+#define BED_MAXTEMP 125
 
 //===========================================================================
 //============================= PID Settings ================================
@@ -686,8 +688,11 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4[, E5]]]]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 100.3 }
-
+#if ENABLED(BondtechBMG)
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 415.0 }
+#else
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 100.3 }
+#endif
 /**
  * Default Max Feed Rate (mm/s)
  * Override with M203
@@ -956,7 +961,11 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true
+#if ENABLED(BondtechBMG)
+  #define INVERT_E0_DIR true
+#else
+  #define INVERT_E0_DIR true
+#endif
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
