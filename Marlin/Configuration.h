@@ -995,8 +995,13 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 398
-#define Y_BED_SIZE 398
+#if ENABLED(PetsfangMicroswiss)
+  #define X_BED_SIZE 398
+  #define Y_BED_SIZE 390
+#else
+  #define X_BED_SIZE 398
+  #define Y_BED_SIZE 398
+#endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -1425,7 +1430,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z }
-  #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MIN_POS + 10), 10 }
+  #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MIN_POS + 30), 10 }
   #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
   #define NOZZLE_PARK_Z_FEEDRATE 5      // Z axis feedrate in mm/s (not used for delta printers)
 #endif
