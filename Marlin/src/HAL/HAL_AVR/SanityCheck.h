@@ -46,7 +46,7 @@
  * Sanity checks for Spindle / Laser
  */
 #if ENABLED(SPINDLE_LASER_ENABLE)
-  #if SPINDLE_LASER_ENABLE_PIN <= 0
+  #if DISABLED(SPINDLE_LASER_ENABLE)
     #error "SPINDLE_LASER_ENABLE requires SPINDLE_LASER_ENABLE_PIN."
   #elif SPINDLE_DIR_CHANGE && !PIN_EXISTS(SPINDLE_DIR)
     #error "SPINDLE_DIR_PIN not defined."
