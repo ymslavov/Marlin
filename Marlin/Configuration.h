@@ -5,8 +5,8 @@
    Select machine size
 */
 
-//#define MachineEnder2 // Must Select MachineCR10Orig above!
-//#define MachineEnder3 // Must Select MachineCR10Orig above!
+//#define MachineEnder2
+//#define MachineEnder3
 //#define MachineEnder4
 //#define MachineMini
 //#define MachineCR20 //Buzzer doesnt work
@@ -1229,10 +1229,21 @@
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
 #if ENABLED(ABL_BLTOUCH)
-#define BLTOUCH
+  #define BLTOUCH
 #endif
 #if ENABLED(BLTOUCH)
-#define BLTOUCH_DELAY 375   // (ms) Enable and increase if needed
+  //#define BLTOUCH_DELAY 375   // (ms) Enable and increase if needed
+
+  /**
+   * BLTouch V3.0 and newer smart series
+   * For genuine BLTouch 3.0 sensors. Clones may be confused by 3.0 command angles. YMMV.
+   * If the pin trigger is not detected, first try swapping the black and white wires then toggle this.
+   */
+  #define BLTOUCH_V3
+  #if ENABLED(BLTOUCH_V3)
+    #define BLTOUCH_FORCE_5V_MODE
+    //#define BLTOUCH_FORCE_OPEN_DRAIN_MODE
+  #endif
 #endif
 
 /**
