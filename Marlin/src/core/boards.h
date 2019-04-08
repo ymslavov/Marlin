@@ -89,6 +89,7 @@
 #define BOARD_FYSETC_F6_13      541   // Fysetc F6
 #define BOARD_DUPLICATOR_I3_PLUS 31   // Wanhao Duplicator i3 Plus
 #define BOARD_VORON             441   // VORON Design
+#define BOARD_TRONXY_V3_1_0     442   // Tronxy TRONXY-V3-1.0
 
 //
 // Other ATmega1280, ATmega2560
@@ -252,6 +253,8 @@
 #define BOARD_STM32F4          1804   // STM32 STM32GENERIC based STM32F4 controller
 #define BOARD_ARMED            1807   // Arm'ed STM32F4 based controller
 #define BOARD_RUMBA32          1809   // RUMBA32 STM32F4 based controller
+#define BOARD_BLACK_STM32F407VE 1810  // BLACK_STM32F407VE
+#define BOARD_BLACK_STM32F407ZE 1811  // BLACK_STM32F407ZE
 #define BOARD_STEVAL           1866   // STEVAL-3DP001V1 3D PRINTER BOARD
 
 //
