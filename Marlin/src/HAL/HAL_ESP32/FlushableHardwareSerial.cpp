@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
  * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
@@ -20,24 +20,14 @@
  *
  */
 
-/**
- * Azteeg X5 MINI pin assignments
- */
+#include "FlushableHardwareSerial.h"
 
-#ifndef LPC1769
-  #error "Oops! Make sure you have the LPC1769 environment selected in your IDE."
-#endif
+#ifdef ARDUINO_ARCH_ESP32
 
-#define BOARD_NAME        "Azteeg X5 MINI WIFI"
+FlushableHardwareSerial::FlushableHardwareSerial(int uart_nr)
+    : HardwareSerial(uart_nr)
+{}
 
-//
-// DIGIPOT slave addresses
-//
-#ifndef DIGIPOT_I2C_ADDRESS_A
-  #define DIGIPOT_I2C_ADDRESS_A 0x58   // shifted slave address for first DIGIPOT (0x58 <- 0x2C << 1)
-#endif
-#ifndef DIGIPOT_I2C_ADDRESS_B
-  #define DIGIPOT_I2C_ADDRESS_B 0x5C   // shifted slave address for second DIGIPOT (0x5C <- 0x2E << 1)
-#endif
+FlushableHardwareSerial flushableSerial(0);
 
-#include "pins_AZTEEG_X5_MINI.h"
+#endif // ARDUINO_ARCH_ESP32
