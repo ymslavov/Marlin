@@ -590,10 +590,10 @@ void clean_up_after_endstop_or_probe_move() {
 
     #if HAS_HOTEND_OFFSET
       #if !HAS_SOFTWARE_ENDSTOPS || ENABLED(MIN_SOFTWARE_ENDSTOP_Z)
-        NOLESS(target[Z_AXIS], soft_endstop[Z_AXIS].min - (HOTEND_OFFSET_LIMIT_Z));
+        NOLESS(target[Z_AXIS], soft_endstop[Z_AXIS].min);
       #endif
       #if !HAS_SOFTWARE_ENDSTOPS || ENABLED(MAX_SOFTWARE_ENDSTOP_Z)
-        NOMORE(target[Z_AXIS], soft_endstop[Z_AXIS].max + HOTEND_OFFSET_LIMIT_Z);
+        NOMORE(target[Z_AXIS], soft_endstop[Z_AXIS].max);
       #endif
     #else
       #if !HAS_SOFTWARE_ENDSTOPS || ENABLED(MIN_SOFTWARE_ENDSTOP_Z)
