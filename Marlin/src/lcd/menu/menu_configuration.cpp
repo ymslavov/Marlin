@@ -133,13 +133,9 @@ static void lcd_factory_settings() {
   void menu_tool_offsets() {
     START_MENU();
     MENU_BACK(MSG_MAIN);
-    #if ENABLED(DUAL_X_CARRIAGE)
-      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_X_OFFSET, &hotend_offset[X_AXIS][1], MIN(X2_HOME_POS, X2_MAX_POS) - HOTEND_OFFSET_LIMIT_X, MAX(X2_HOME_POS, X2_MAX_POS) + HOTEND_OFFSET_LIMIT_X, _recalc_offsets);
-    #else
-      MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_X_OFFSET, &hotend_offset[X_AXIS][1], (0.0 - HOTEND_OFFSET_LIMIT_X), HOTEND_OFFSET_LIMIT_X, _recalc_offsets);
-    #endif
-    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_Y_OFFSET, &hotend_offset[Y_AXIS][1], (0.0 - HOTEND_OFFSET_LIMIT_Y), HOTEND_OFFSET_LIMIT_Y, _recalc_offsets);
-    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_Z_OFFSET, &hotend_offset[Z_AXIS][1], MIN(Z_PROBE_LOW_POINT (0.0 - HOTEND_OFFSET_LIMIT_Z)), HOTEND_OFFSET_LIMIT_Z, _recalc_offsets);
+    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_X_OFFSET, &hotend_offset[X_AXIS][1], hotend_offset_min, hotend_offset_max, _recalc_offsets);
+    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_Y_OFFSET, &hotend_offset[Y_AXIS][1], -(HOTEND_OFFSET_LIMIT_Y), HOTEND_OFFSET_LIMIT_Y, _recalc_offsets);
+    MENU_MULTIPLIER_ITEM_EDIT_CALLBACK(float52, MSG_Z_OFFSET, &hotend_offset[Z_AXIS][1], MIN(Z_PROBE_LOW_POINT, -(HOTEND_OFFSET_LIMIT_Z)), HOTEND_OFFSET_LIMIT_Z, _recalc_offsets);
     #if ENABLED(EEPROM_SETTINGS)
       MENU_ITEM(function, MSG_STORE_EEPROM, lcd_store_settings);
     #endif

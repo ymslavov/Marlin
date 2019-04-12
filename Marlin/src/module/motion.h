@@ -360,3 +360,11 @@ void homeaxis(const AxisEnum axis);
 #if HAS_M206_COMMAND
   void set_home_offset(const AxisEnum axis, const float v);
 #endif
+
+#if ENABLED(DUAL_X_CARRIAGE)
+  constexpr float hotend_offset_min = MIN(X2_HOME_POS, X2_MAX_POS) - (HOTEND_OFFSET_LIMIT_X),
+                  hotend_offset_max = MAX(X2_HOME_POS, X2_MAX_POS) + HOTEND_OFFSET_LIMIT_X;
+#elif HAS_HOTEND_OFFSET
+  constexpr float hotend_offset_min = -(HOTEND_OFFSET_LIMIT_X),
+                  hotend_offset_max = HOTEND_OFFSET_LIMIT_X;
+#endif
