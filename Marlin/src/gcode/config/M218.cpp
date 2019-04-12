@@ -44,9 +44,14 @@ void GcodeSuite::M218() {
   const int8_t target_extruder = get_target_extruder_from_command();
   if (target_extruder < 0) return;
 
-  if (parser.seenval('X')) hotend_offset[X_AXIS][target_extruder] = parser.value_linear_units();
-  if (parser.seenval('Y')) hotend_offset[Y_AXIS][target_extruder] = parser.value_linear_units();
-  if (parser.seenval('Z')) hotend_offset[Z_AXIS][target_extruder] = parser.value_linear_units();
+    #if ENABLED(DUAL_X_CARRIAGE)
+      if (parser.seenval('X')) hotend_offset[X_AXIS][target_extruder] = limit(parser.value_linear_units(), MIN(X2_HOME_POS, X2_MAX_POS) - HOTEND_OFFSET_LIMIT_X, MAX(X2_HOME_POS, X2_MAX_POS) + HOTEND_OFFSET_LIMIT_X);
+    #else
+      if (parser.seenval('X')) hotend_offset[X_AXIS][target_extruder] = limit(parser.value_linear_units(), (0.0 - HOTEND_OFFSET_LIMIT_X), HOTEND_OFFSET_LIMIT_X);
+    #endif
+
+  if (parser.seenval('Y')) hotend_offset[Y_AXIS][target_extruder] = limit(parser.value_linear_units(), (0.0 - HOTEND_OFFSET_LIMIT_Y), HOTEND_OFFSET_LIMIT_Y);;
+  if (parser.seenval('Z')) hotend_offset[Z_AXIS][target_extruder] = limit(parser.value_linear_units(), (0.0 - HOTEND_OFFSET_LIMIT_Z), HOTEND_OFFSET_LIMIT_Z);;
 
   if (!parser.seen("XYZ")) {
     SERIAL_ECHO_START();

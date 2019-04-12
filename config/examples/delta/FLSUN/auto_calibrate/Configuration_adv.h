@@ -1277,7 +1277,15 @@
  */
 #if EXTRUDERS > 1
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE     2  // (mm)
+  #define TOOLCHANGE_ZRAISE     2   // (mm)
+
+  /**
+   * Apply limits to the HOTEND offset values that may be applied
+   * DUAL_X_CARRIAGE uses HOTEND_OFFSET_LIMIT_X as a maximum deviaton from X2_MAX_POS
+  */
+  #define HOTEND_OFFSET_LIMIT_X 50.0  // (mm)
+  #define HOTEND_OFFSET_LIMIT_Y 50.0  // (mm)
+  #define HOTEND_OFFSET_LIMIT_Z  3.0  // (mm)
 
   // Retract and prime filament on tool-change
   //#define TOOLCHANGE_FILAMENT_SWAP
