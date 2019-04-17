@@ -54,7 +54,7 @@
 //////////////////////////////////DO not edit below here unless you know what youre doing!  //////////////////////////////////
 
 // The TREX2+ upgraded to the 3 enables most of the same options, simplify here
-#if ENABLED(TREX3_UPGRADED_FROM_2_PLUS)
+#if ENABLED(TREX3_UPGRADE)
   #define TREX3
 #endif
 
