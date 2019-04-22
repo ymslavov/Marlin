@@ -73,8 +73,7 @@ void GcodeSuite::M290() {
   #else
     if (parser.seenval('Z') || parser.seenval('S')) {
       const float offs = constrain(parser.value_axis_units(Z_AXIS), -2, 2);
-      if ((zprobe_zoffset + offs) > Z_PROBE_LOW_POINT)
-        offs = Z_PROBE_LOW_POINT - zprobe_zoffset;
+      //NOMORE(offs, Z_PROBE_LOW_POINT - zprobe_zoffset);
       babystep.add_mm(Z_AXIS, offs);
       #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
         if (!parser.seen('P') || parser.value_bool()) mod_zprobe_zoffset(offs);
