@@ -65,6 +65,9 @@ void GcodeSuite::M290() {
     for (uint8_t a = X_AXIS; a <= Z_AXIS; a++)
       if (parser.seenval(axis_codes[a]) || (a == Z_AXIS && parser.seenval('S'))) {
         const float offs = constrain(parser.value_axis_units((AxisEnum)a), -2, 2);
+        //#if HAS_BED_PROBE
+        //  if (a == Z_AXIS) NOMORE(offs, Z_PROBE_LOW_POINT - zprobe_zoffset);
+        //#endif
         babystep.add_mm((AxisEnum)a, offs);
         #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
           if (a == Z_AXIS && (!parser.seen('P') || parser.value_bool())) mod_zprobe_zoffset(offs);
@@ -73,7 +76,9 @@ void GcodeSuite::M290() {
   #else
     if (parser.seenval('Z') || parser.seenval('S')) {
       const float offs = constrain(parser.value_axis_units(Z_AXIS), -2, 2);
-      //NOMORE(offs, Z_PROBE_LOW_POINT - zprobe_zoffset);
+      //#if HAS_BED_PROBE
+      //  NOMORE(offs, Z_PROBE_LOW_POINT - zprobe_zoffset);
+      //#endif
       babystep.add_mm(Z_AXIS, offs);
       #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
         if (!parser.seen('P') || parser.value_bool()) mod_zprobe_zoffset(offs);
