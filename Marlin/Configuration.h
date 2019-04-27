@@ -447,10 +447,15 @@
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
   // Ultimaker
-  #define DEFAULT_Kp 18.74
-  #define DEFAULT_Ki 0.71
-  #define DEFAULT_Kd 123.56
-
+  #if ENABLED(PetsfangMicroswiss)
+    #define DEFAULT_Kp 18.74
+    #define DEFAULT_Ki 0.71
+    #define DEFAULT_Kd 123.56
+  #else
+    #define DEFAULT_Kp 10.59
+    #define DEFAULT_Ki 0.37
+    #define DEFAULT_Kd 75.24
+  #endif
   // MakerGear
   //#define DEFAULT_Kp 7.0
   //#define DEFAULT_Ki 0.1
